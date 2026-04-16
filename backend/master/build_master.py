@@ -8,8 +8,6 @@ from pathlib import Path
 from typing import Iterable
 
 from backend.config import BASE_DIR, DATA_DIR
-from backend.scrapers.cn_akshare import AkshareCNClient
-from backend.scrapers.tw_twse import TwseClient
 
 
 MASTER_DIR = BASE_DIR / "master"
@@ -36,6 +34,9 @@ def build_company_master(
     include_tw: bool = True,
     require_live: bool = False,
 ) -> dict[str, int]:
+    from backend.scrapers.cn_akshare import AkshareCNClient
+    from backend.scrapers.tw_twse import TwseClient
+
     records: list[CompanyMasterRecord] = []
     updated_at = datetime.now(timezone.utc).isoformat()
 
