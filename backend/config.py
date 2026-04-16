@@ -3,6 +3,12 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+# Load .env file in development (no-op if file missing or python-dotenv not installed)
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+except ImportError:
+    pass
 
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent
