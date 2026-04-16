@@ -7,7 +7,12 @@
    ============================================================ */
 
 // Production backend on Railway. Override via Settings page (localStorage 'fsm_api_base').
-const API_BASE = localStorage.getItem('fsm_api_base') || 'https://tender-fascination-production.up.railway.app';
+// If stored value is a localhost address, fall back to Railway (handles dev→prod transition).
+const _RAILWAY = 'https://tender-fascination-production.up.railway.app';
+const _stored  = localStorage.getItem('fsm_api_base') || '';
+const API_BASE = (_stored && !_stored.includes('localhost') && !_stored.includes('127.0.0.1'))
+  ? _stored
+  : _RAILWAY;
 
 async function apiFetch(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
