@@ -1,0 +1,569 @@
+/* ============================================================
+   COMPANY DETAIL PAGE — supplemental to styles.css
+   ============================================================ */
+
+/* ============================================================
+   TOPBAR OVERRIDES for company page
+   ============================================================ */
+.topbar-left {
+  align-items: center;
+  gap: var(--s3);
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  padding: 0 var(--s3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  font-size: var(--f-sm);
+  font-weight: 600;
+  color: var(--txt-2);
+  background: transparent;
+  transition: background var(--t), border-color var(--t), color var(--t);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-back svg { width: 14px; height: 14px; }
+.btn-back:hover {
+  background: var(--page-bg);
+  border-color: var(--border-mid);
+  color: var(--txt-1);
+}
+
+.co-topbar-id {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.co-topbar-name {
+  font-size: var(--f-base);
+  font-weight: 700;
+  color: var(--txt-1);
+  letter-spacing: -0.2px;
+}
+
+.co-topbar-code {
+  font-size: var(--f-sm);
+  color: var(--txt-3);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* ============================================================
+   COMPANY INFO CARD
+   ============================================================ */
+.co-info-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  padding: var(--s5) var(--s6);
+  display: flex;
+  align-items: center;
+  gap: var(--s6);
+}
+
+.co-info-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+}
+
+.co-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-md);
+  background: var(--page-bg);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--brand);
+  letter-spacing: -1px;
+  flex-shrink: 0;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+.co-info-text { display: flex; flex-direction: column; gap: 4px; }
+
+.co-name {
+  font-size: var(--f-xl);
+  font-weight: 800;
+  color: var(--txt-1);
+  letter-spacing: -0.4px;
+  line-height: 1.2;
+}
+
+.co-meta-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  flex-wrap: wrap;
+}
+
+.co-code-mono {
+  font-size: var(--f-sm);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--txt-3);
+  background: var(--page-bg);
+  border: 1px solid var(--border);
+  padding: 1px 6px;
+  border-radius: var(--r-xs);
+}
+
+.co-industry {
+  font-size: var(--f-sm);
+  color: var(--txt-3);
+}
+
+.co-separator {
+  color: var(--border-mid);
+  font-size: var(--f-sm);
+}
+
+.co-info-aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--s2);
+  flex-shrink: 0;
+}
+
+.co-tier-display {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  font-size: var(--f-sm);
+  color: var(--txt-3);
+}
+
+/* ============================================================
+   SUMMARY CARDS OVERRIDES for company page
+   ============================================================ */
+.scard-icon--total  { background: #f1f5f9; color: #374151; }
+.scard-icon--signal { background: #fee2e2; color: #dc2626; }
+.scard-icon--tier   { background: #dbeafe; color: #1e40af; }
+.scard-icon--status { background: #dcfce7; color: #15803d; }
+
+.status-breakdown {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.status-dot-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--f-xs);
+  color: var(--txt-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.status-dot--triggered { background: var(--c-triggered); }
+.status-dot--ok        { background: var(--c-ok); }
+.status-dot--na        { background: var(--txt-3); }
+
+/* ============================================================
+   COMPANY DETAIL GRID
+   ============================================================ */
+.co-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--s5);
+  align-items: start;
+}
+
+.co-signals-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ============================================================
+   SIGNAL CARDS
+   ============================================================ */
+.signal-cards {
+  padding: var(--s4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.sig-card {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  transition: box-shadow var(--t);
+}
+.sig-card:hover { box-shadow: var(--card-shadow-hover); }
+
+.sig-card--triggered {
+  border-left: 4px solid var(--c-triggered);
+  border-color: #fecaca;
+  background: linear-gradient(to right, #fff9f9, #fff);
+}
+
+.sig-card--ok {
+  border-left: 4px solid var(--c-ok);
+}
+
+.sig-card--na {
+  border-left: 4px solid var(--border-mid);
+  opacity: 0.75;
+}
+
+.sig-card-hd {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s3) var(--s4);
+  background: #fafbfc;
+  border-bottom: 1px solid var(--border);
+}
+
+.sig-card--triggered .sig-card-hd {
+  background: #fff5f5;
+}
+
+.sig-card-badges {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  flex: 1;
+  min-width: 0;
+}
+
+.sig-name {
+  font-size: var(--f-md);
+  font-weight: 600;
+  color: var(--txt-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sig-card-status {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  flex-shrink: 0;
+}
+
+.sig-card-body {
+  padding: var(--s3) var(--s4);
+}
+
+.sig-message {
+  font-size: var(--f-md);
+  color: var(--txt-2);
+  line-height: 1.55;
+  margin-bottom: var(--s3);
+}
+
+.sig-card--triggered .sig-message {
+  color: var(--c-triggered-tx);
+}
+
+/* Threshold line */
+.sig-threshold {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  font-size: var(--f-sm);
+  color: var(--txt-3);
+  margin-bottom: var(--s3);
+  padding: 6px var(--s3);
+  background: var(--page-bg);
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+}
+
+.sig-threshold-label {
+  font-weight: 600;
+  color: var(--txt-2);
+  white-space: nowrap;
+}
+
+.sig-threshold-val {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--txt-2);
+}
+
+/* Value grid */
+.val-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 6px var(--s4);
+  margin-bottom: var(--s3);
+}
+
+.val-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.val-key {
+  font-size: var(--f-xs);
+  color: var(--txt-3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.val-value {
+  font-size: var(--f-md);
+  font-weight: 600;
+  color: var(--txt-1);
+  font-variant-numeric: tabular-nums;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* Mini table for array values */
+.val-mini-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--f-sm);
+  margin-bottom: var(--s3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+
+.val-mini-table th {
+  padding: 5px var(--s3);
+  text-align: left;
+  background: #fafbfc;
+  font-size: var(--f-xs);
+  font-weight: 600;
+  color: var(--txt-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+}
+
+.val-mini-table td {
+  padding: 5px var(--s3);
+  color: var(--txt-2);
+  border-bottom: 1px solid #f3f4f6;
+  font-variant-numeric: tabular-nums;
+}
+.val-mini-table tr:last-child td { border-bottom: none; }
+
+/* Signal card footer */
+.sig-card-ft {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: 6px var(--s4);
+  background: #fafbfc;
+  border-top: 1px solid var(--border);
+  font-size: var(--f-xs);
+  color: var(--txt-3);
+}
+
+.sig-ft-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sig-ft-label {
+  font-weight: 600;
+  color: var(--txt-3);
+}
+
+/* ============================================================
+   REPORT PANEL
+   ============================================================ */
+.co-report-col {
+  position: sticky;
+  top: calc(var(--topbar-h) + var(--s6));
+}
+
+.report-panel {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - var(--topbar-h) - 80px);
+}
+
+.report-panel-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--s3) var(--s4);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.report-panel-title {
+  font-size: var(--f-sm);
+  font-weight: 700;
+  color: var(--txt-1);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+}
+.report-panel-title svg {
+  width: 14px;
+  height: 14px;
+  color: var(--brand);
+}
+
+.report-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--s4);
+}
+
+.report-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s3);
+  padding: var(--s8) var(--s4);
+  text-align: center;
+  color: var(--txt-3);
+}
+
+.report-placeholder svg {
+  width: 36px;
+  height: 36px;
+  color: var(--txt-3);
+  opacity: 0.5;
+}
+
+.report-placeholder p {
+  font-size: var(--f-md);
+  font-weight: 600;
+  color: var(--txt-2);
+}
+
+.report-placeholder span {
+  font-size: var(--f-sm);
+  color: var(--txt-3);
+  line-height: 1.5;
+}
+
+.report-content {
+  font-size: var(--f-md);
+  line-height: 1.7;
+  color: var(--txt-2);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.report-generating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s4);
+  padding: var(--s8) var(--s4);
+  color: var(--txt-3);
+  font-size: var(--f-sm);
+}
+
+/* ============================================================
+   SKELETON
+   ============================================================ */
+.skeleton-wrap { overflow: hidden; }
+
+.skeleton-block {
+  background: linear-gradient(90deg, #f0f2f7 25%, #e8eaf0 50%, #f0f2f7 75%);
+  background-size: 200% 100%;
+  border-radius: var(--r-sm);
+  animation: skeletonShimmer 1.5s infinite;
+}
+
+@keyframes skeletonShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ============================================================
+   EMPTY STATES IN SIGNAL SECTIONS
+   ============================================================ */
+.sig-empty {
+  padding: var(--s5) var(--s4);
+  text-align: center;
+  font-size: var(--f-sm);
+  color: var(--txt-3);
+}
+
+/* ============================================================
+   SPARKLINES
+   ============================================================ */
+.sparkline-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s4);
+  margin-top: var(--s3);
+  padding-top: var(--s3);
+  border-top: 1px solid var(--border);
+}
+
+.sparkline-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sparkline-label {
+  font-size: var(--f-xs);
+  font-weight: 600;
+  color: var(--txt-3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.sparkline-canvas {
+  display: block;
+  border-radius: var(--r-sm);
+  background: var(--page-bg);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1100px) {
+  .co-grid {
+    grid-template-columns: 1fr;
+  }
+  .co-report-col {
+    position: static;
+  }
+}
+
+@media (max-width: 860px) {
+  .summary-row { grid-template-columns: repeat(2, 1fr); }
+  .co-info-card { flex-direction: column; align-items: flex-start; gap: var(--s4); }
+  .co-info-aside { align-items: flex-start; }
+}

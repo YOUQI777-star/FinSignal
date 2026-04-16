@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reports — FinSignal</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+      </div>
+      <span class="brand-name">FinSignal</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-group-label">Monitor</div>
+      <a href="index.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect>
+          <rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="ranking.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line>
+          <circle cx="3" cy="6" r="1" fill="currentColor"></circle><circle cx="3" cy="12" r="1" fill="currentColor"></circle><circle cx="3" cy="18" r="1" fill="currentColor"></circle>
+        </svg>
+        <span>Signal Ranking</span>
+      </a>
+      <a href="search.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span>Company Search</span>
+      </a>
+      <div class="nav-group-label">Analysis</div>
+      <a href="compare.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <span>Compare</span>
+      </a>
+      <a href="reports.html" class="nav-item nav-item--active">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+        <span>Reports</span>
+      </a>
+      <div class="nav-group-label">System</div>
+      <a href="settings.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="health-row">
+        <span class="health-dot" id="healthDot"></span>
+        <span class="health-label" id="healthLabel">Connecting…</span>
+      </div>
+      <div class="sidebar-meta">FSM v0.1 &nbsp;·&nbsp; CN + TW</div>
+    </div>
+  </aside>
+
+  <div class="main-wrapper">
+
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title">Reports</h1>
+        <span class="page-crumb">AI Risk Analysis</span>
+      </div>
+      <div class="topbar-right">
+        <span class="loading-tag" id="loadingTag" style="display:none">
+          <span class="spinner"></span>Generating…
+        </span>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- Form + output two-column -->
+      <div class="rpt-grid">
+
+        <!-- Left: form + meta -->
+        <div class="rpt-form-col">
+
+          <!-- Input form -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-header-left">
+                <h2 class="panel-title">Generate Report</h2>
+                <span class="panel-meta">Select a company to run an AI risk analysis</span>
+              </div>
+            </div>
+            <div class="rpt-form-body">
+              <div class="rpt-field-row">
+                <label class="rpt-label" for="marketSelect">Market</label>
+                <select id="marketSelect" class="filter-select" style="flex:1">
+                  <option value="">Select market…</option>
+                  <option value="CN">A-Share (CN)</option>
+                  <option value="TW">Taiwan (TW)</option>
+                </select>
+              </div>
+              <div class="rpt-field-row">
+                <label class="rpt-label" for="codeInput">Code</label>
+                <input id="codeInput" type="text" class="rpt-text-input"
+                  placeholder="e.g. 600519 or 2330"
+                  autocomplete="off" spellcheck="false" />
+              </div>
+              <div id="formError" class="rpt-form-error" style="display:none"></div>
+              <button id="generateBtn" class="btn btn--primary" style="width:100%;height:40px;margin-top:var(--s2)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                Generate Report
+              </button>
+              <div class="rpt-presets">
+                <span class="rpt-preset-label">Quick examples:</span>
+                <button class="btn btn--outline btn--sm" onclick="setPreset('CN','600519')">贵州茅台</button>
+                <button class="btn btn--outline btn--sm" onclick="setPreset('TW','2330')">台積電</button>
+                <button class="btn btn--outline btn--sm" onclick="setPreset('CN','000002')">万科A</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Company meta card (hidden until loaded) -->
+          <div id="metaCard" class="panel" style="display:none;margin-top:var(--s4)">
+            <div class="panel-header">
+              <div class="panel-header-left">
+                <h2 class="panel-title">Company</h2>
+              </div>
+            </div>
+            <div id="metaCardBody" class="rpt-meta-body"></div>
+          </div>
+
+        </div>
+
+        <!-- Right: report output -->
+        <div class="rpt-output-col">
+          <div class="panel rpt-output-panel">
+            <div class="panel-header">
+              <div class="panel-header-left">
+                <h2 class="panel-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:6px;color:var(--brand)">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                  </svg>
+                  AI Risk Report
+                </h2>
+                <span class="panel-meta" id="reportMeta"></span>
+              </div>
+              <div class="panel-header-right">
+                <button id="copyBtn" class="btn-text" style="display:none">Copy</button>
+              </div>
+            </div>
+            <div id="reportOutput" class="rpt-output-body">
+              <div class="empty-state" style="padding:var(--s8) var(--s6)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                <p>No report generated yet</p>
+                <span>Select a company and click Generate Report</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <footer class="sys-footer">
+      <span>Data source: backend API</span>
+      <span class="dot">·</span>
+      <span>Base URL: <code>localhost:5000</code></span>
+      <span class="dot">·</span>
+      <span id="lastUpdated">—</span>
+    </footer>
+
+  </div>
+</div>
+
+<div id="toastContainer" class="toast-container"></div>
+<script src="api.js"></script>
+<script src="reports.js"></script>
+</body>
+</html>

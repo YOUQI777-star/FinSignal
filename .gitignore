@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.env
+.env.*
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Data files (too large / local only)
+backend/master/company_master.db
+data/cn/*.json
+data/tw/*.json
+data/signals/*.json
+data/chain_kg/
+data/sync_reports/
+
+# Frontend build artifacts
+frontend/node_modules/
+frontend/dist/
+frontend/.DS_Store
+frontend/src/
+frontend/package.json
+frontend/vite.config.js
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log

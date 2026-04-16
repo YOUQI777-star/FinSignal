@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings — FinSignal</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+      </div>
+      <span class="brand-name">FinSignal</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-group-label">Monitor</div>
+      <a href="index.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect>
+          <rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="ranking.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line>
+          <circle cx="3" cy="6" r="1" fill="currentColor"></circle><circle cx="3" cy="12" r="1" fill="currentColor"></circle><circle cx="3" cy="18" r="1" fill="currentColor"></circle>
+        </svg>
+        <span>Signal Ranking</span>
+      </a>
+      <a href="search.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span>Company Search</span>
+      </a>
+      <div class="nav-group-label">Analysis</div>
+      <a href="compare.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <span>Compare</span>
+      </a>
+      <a href="reports.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+        <span>Reports</span>
+      </a>
+      <div class="nav-group-label">System</div>
+      <a href="settings.html" class="nav-item nav-item--active">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="health-row">
+        <span class="health-dot" id="healthDot"></span>
+        <span class="health-label" id="healthLabel">Connecting…</span>
+      </div>
+      <div class="sidebar-meta">FSM v0.1 &nbsp;·&nbsp; CN + TW</div>
+    </div>
+  </aside>
+
+  <div class="main-wrapper">
+
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title">Settings</h1>
+        <span class="page-crumb">System</span>
+      </div>
+    </header>
+
+    <main class="content" style="max-width:680px">
+
+      <!-- API Connection -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <h2 class="panel-title">API Connection</h2>
+            <span class="panel-meta">Backend server configuration</span>
+          </div>
+        </div>
+        <div class="stg-section">
+          <div class="stg-row">
+            <div class="stg-row-label">
+              <span class="stg-label">Base URL</span>
+              <span class="stg-hint">All API calls are sent to this address</span>
+            </div>
+            <div class="stg-row-control">
+              <input id="apiBaseInput" type="text" class="rpt-text-input" style="width:100%" />
+              <button id="saveApiBase" class="btn btn--primary" style="height:34px;margin-top:var(--s2);width:100%">Save</button>
+            </div>
+          </div>
+          <div class="stg-divider"></div>
+          <div class="stg-row">
+            <div class="stg-row-label">
+              <span class="stg-label">Connection Status</span>
+              <span class="stg-hint">Live health check result</span>
+            </div>
+            <div class="stg-row-control">
+              <div class="stg-health-display" id="healthDisplay">
+                <span class="health-dot" id="settingsHealthDot"></span>
+                <span id="settingsHealthLabel">Checking…</span>
+              </div>
+              <button id="recheckBtn" class="btn btn--outline" style="height:34px;margin-top:var(--s2);width:100%">Re-check</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Display -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <h2 class="panel-title">Display</h2>
+            <span class="panel-meta">Table and list preferences</span>
+          </div>
+        </div>
+        <div class="stg-section">
+          <div class="stg-row">
+            <div class="stg-row-label">
+              <span class="stg-label">Default Row Limit</span>
+              <span class="stg-hint">Number of rows loaded on the ranking and dashboard pages</span>
+            </div>
+            <div class="stg-row-control">
+              <select id="defaultLimit" class="filter-select" style="width:100%;height:34px">
+                <option value="20">20 rows</option>
+                <option value="50" selected>50 rows</option>
+                <option value="100">100 rows</option>
+                <option value="200">200 rows</option>
+              </select>
+            </div>
+          </div>
+          <div class="stg-divider"></div>
+          <div class="stg-row">
+            <div class="stg-row-label">
+              <span class="stg-label">Default Market</span>
+              <span class="stg-hint">Pre-selected market filter when pages load</span>
+            </div>
+            <div class="stg-row-control">
+              <select id="defaultMarket" class="filter-select" style="width:100%;height:34px">
+                <option value="">All Markets</option>
+                <option value="CN">A-Share (CN)</option>
+                <option value="TW">Taiwan (TW)</option>
+              </select>
+            </div>
+          </div>
+          <div class="stg-save-row">
+            <button id="saveDisplay" class="btn btn--primary" style="height:34px">Save Display Settings</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <h2 class="panel-title">Local Data</h2>
+            <span class="panel-meta">Browser storage management</span>
+          </div>
+        </div>
+        <div class="stg-section">
+          <div class="stg-row">
+            <div class="stg-row-label">
+              <span class="stg-label">Recently Viewed</span>
+              <span class="stg-hint" id="recentCount">Stored in localStorage</span>
+            </div>
+            <div class="stg-row-control">
+              <button id="clearRecentBtn" class="btn btn--outline" style="height:34px;width:100%">Clear History</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- About -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <h2 class="panel-title">About</h2>
+          </div>
+        </div>
+        <div class="stg-section stg-about">
+          <div class="stg-kv"><span class="stg-kv-key">Version</span><span class="stg-kv-val">FSM v0.1</span></div>
+          <div class="stg-kv"><span class="stg-kv-key">Markets</span><span class="stg-kv-val">CN A-Share · TW Stock Exchange</span></div>
+          <div class="stg-kv"><span class="stg-kv-key">Signal Rules</span><span class="stg-kv-val">F1 · F2 · F3 · F4 · G1 · G3</span></div>
+          <div class="stg-kv"><span class="stg-kv-key">CN Coverage</span><span class="stg-kv-val">5,502 companies</span></div>
+          <div class="stg-kv"><span class="stg-kv-key">TW Coverage</span><span class="stg-kv-val">1,081 companies</span></div>
+          <div class="stg-kv"><span class="stg-kv-key">Backend</span><span class="stg-kv-val">Flask · Python 3.x</span></div>
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="sys-footer">
+      <span>FSM v0.1</span>
+      <span class="dot">·</span>
+      <span>CN + TW Markets</span>
+    </footer>
+
+  </div>
+</div>
+
+<div id="toastContainer" class="toast-container"></div>
+<script src="api.js"></script>
+<script src="settings.js"></script>
+</body>
+</html>

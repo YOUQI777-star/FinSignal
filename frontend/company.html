@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Company Detail — FinSignal</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="company.css" />
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ================================================================
+       SIDEBAR (same as index.html)
+  ================================================================ -->
+  <aside class="sidebar">
+
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+      </div>
+      <span class="brand-name">FinSignal</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-label">Monitor</div>
+
+      <a href="index.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+          <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+          <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+          <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+
+      <a href="ranking.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="8" y1="6" x2="21" y2="6"></line>
+          <line x1="8" y1="12" x2="21" y2="12"></line>
+          <line x1="8" y1="18" x2="21" y2="18"></line>
+          <circle cx="3" cy="6" r="1" fill="currentColor"></circle>
+          <circle cx="3" cy="12" r="1" fill="currentColor"></circle>
+          <circle cx="3" cy="18" r="1" fill="currentColor"></circle>
+        </svg>
+        <span>Signal Ranking</span>
+      </a>
+
+      <a href="search.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span>Company Search</span>
+      </a>
+
+      <div class="nav-group-label">Analysis</div>
+
+      <a href="compare.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <span>Compare</span>
+      </a>
+
+      <a href="reports.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+        <span>Reports</span>
+      </a>
+
+      <div class="nav-group-label">System</div>
+
+      <a href="settings.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="health-row" id="healthIndicator">
+        <span class="health-dot" id="healthDot"></span>
+        <span class="health-label" id="healthLabel">Connecting…</span>
+      </div>
+      <div class="sidebar-meta">FSM v0.1 &nbsp;·&nbsp; CN + TW</div>
+    </div>
+
+  </aside>
+
+  <!-- ================================================================
+       MAIN
+  ================================================================ -->
+  <div class="main-wrapper">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <a href="javascript:history.back()" class="btn-back" id="backBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Back
+        </a>
+        <div class="co-topbar-id" id="coTopbarId">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <span class="loading-tag" id="loadingTag" style="display:none">
+          <span class="spinner"></span>Loading
+        </span>
+        <button id="refreshBtn" class="btn-refresh">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+          Refresh
+        </button>
+        <button id="generateReportBtn" class="btn btn--primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          Generate Report
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="content">
+
+      <!-- Company Info Card -->
+      <section id="coInfoCard" class="co-info-card skeleton-wrap">
+        <div class="skeleton-block" style="height:88px"></div>
+      </section>
+
+      <!-- Summary Cards -->
+      <section class="summary-row" id="summaryCards">
+        <div class="scard skeleton-wrap"><div class="skeleton-block" style="height:76px"></div></div>
+        <div class="scard skeleton-wrap"><div class="skeleton-block" style="height:76px"></div></div>
+        <div class="scard skeleton-wrap"><div class="skeleton-block" style="height:76px"></div></div>
+        <div class="scard skeleton-wrap"><div class="skeleton-block" style="height:76px"></div></div>
+      </section>
+
+      <!-- Signals + Report two-column grid -->
+      <div class="co-grid">
+
+        <!-- Left: signal sections -->
+        <div class="co-signals-col">
+
+          <!-- Financial Signals -->
+          <section class="panel">
+            <div class="panel-header">
+              <div class="panel-header-left">
+                <h2 class="panel-title">Financial Signals</h2>
+                <span class="panel-meta" id="finMeta"></span>
+              </div>
+            </div>
+            <div id="financialSignals" class="signal-cards">
+              <!-- skeleton -->
+              <div class="sig-card skeleton-wrap"><div class="skeleton-block" style="height:120px"></div></div>
+              <div class="sig-card skeleton-wrap"><div class="skeleton-block" style="height:120px"></div></div>
+            </div>
+          </section>
+
+          <!-- Governance Signals -->
+          <section class="panel" style="margin-top:var(--s5)">
+            <div class="panel-header">
+              <div class="panel-header-left">
+                <h2 class="panel-title">Governance Signals</h2>
+                <span class="panel-meta" id="govMeta"></span>
+              </div>
+            </div>
+            <div id="governanceSignals" class="signal-cards">
+              <div class="sig-card skeleton-wrap"><div class="skeleton-block" style="height:120px"></div></div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Right: sticky report panel -->
+        <aside class="co-report-col">
+          <div class="report-panel" id="reportPanel">
+            <div class="report-panel-hd">
+              <h3 class="report-panel-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                AI Risk Report
+              </h3>
+              <button id="copyReportBtn" class="btn-text" style="display:none">Copy</button>
+            </div>
+            <div class="report-panel-body" id="reportBody">
+              <div class="report-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                <p>No report generated yet</p>
+                <span>Click "Generate Report" to create an AI risk analysis for this company.</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+      </div><!-- /co-grid -->
+
+    </main>
+
+    <footer class="sys-footer">
+      <span>Data source: backend API</span>
+      <span class="dot">·</span>
+      <span>Base URL: <code>localhost:5000</code></span>
+      <span class="dot">·</span>
+      <span id="lastUpdated">—</span>
+    </footer>
+
+  </div><!-- /main-wrapper -->
+</div><!-- /layout -->
+
+<!-- Toast container -->
+<div id="toastContainer" class="toast-container"></div>
+
+<script src="api.js"></script>
+<script src="company.js"></script>
+</body>
+</html>
