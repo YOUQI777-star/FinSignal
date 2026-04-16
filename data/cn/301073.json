@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301073",
+  "company_id": "CN:301073",
+  "name": "君亭酒店",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 675849372.65,
+        "net_profit": 25199661.98,
+        "operating_cash_flow": 261418596.53,
+        "accounts_receivable": 72441737.54,
+        "inventory": 4663976.38,
+        "goodwill": null,
+        "total_assets": 2547336789.82,
+        "total_liabilities": 1574763539.23,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 533978862.98,
+        "net_profit": 30519867.0,
+        "operating_cash_flow": 244852479.67,
+        "accounts_receivable": 75977413.6,
+        "inventory": 6671628.14,
+        "goodwill": null,
+        "total_assets": 2424794765.49,
+        "total_liabilities": 1448939759.81,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 341937569.43,
+        "net_profit": 29745862.48,
+        "operating_cash_flow": 120094802.1,
+        "accounts_receivable": 64337031.66,
+        "inventory": 894519.69,
+        "goodwill": null,
+        "total_assets": 2022218279.6,
+        "total_liabilities": 1062350169.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

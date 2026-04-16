@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301262",
+  "company_id": "CN:301262",
+  "name": "海看股份",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 978651883.73,
+        "net_profit": 400263887.78,
+        "operating_cash_flow": 170907548.25,
+        "accounts_receivable": 922097576.44,
+        "inventory": 1699104.55,
+        "goodwill": null,
+        "total_assets": 4212935512.19,
+        "total_liabilities": 503308297.28,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 992273955.17,
+        "net_profit": 410027591.53,
+        "operating_cash_flow": 389027597.03,
+        "accounts_receivable": 647001699.74,
+        "inventory": 0.0,
+        "goodwill": null,
+        "total_assets": 3856452622.87,
+        "total_liabilities": 426993295.74,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1020859795.63,
+        "net_profit": 413960966.34,
+        "operating_cash_flow": 292575430.41,
+        "accounts_receivable": 596060182.04,
+        "inventory": 42056.65,
+        "goodwill": null,
+        "total_assets": 2590759822.87,
+        "total_liabilities": 386354993.99,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

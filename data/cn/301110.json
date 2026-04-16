@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301110",
+  "company_id": "CN:301110",
+  "name": "青木科技",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1153155310.05,
+        "net_profit": 90539807.86,
+        "operating_cash_flow": 180245397.36,
+        "accounts_receivable": 163341600.76,
+        "inventory": 91323921.86,
+        "goodwill": null,
+        "total_assets": 1729098415.2,
+        "total_liabilities": 308763686.33,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 967446047.98,
+        "net_profit": 52082963.94,
+        "operating_cash_flow": 33899869.47,
+        "accounts_receivable": 226954279.7,
+        "inventory": 89906308.56,
+        "goodwill": null,
+        "total_assets": 1583418697.27,
+        "total_liabilities": 159836527.36,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 846627097.45,
+        "net_profit": 65883395.23,
+        "operating_cash_flow": 101930143.74,
+        "accounts_receivable": 154529055.3,
+        "inventory": 144706727.76,
+        "goodwill": null,
+        "total_assets": 1603700368.15,
+        "total_liabilities": 181072264.77,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

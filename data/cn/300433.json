@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300433",
+  "company_id": "CN:300433",
+  "name": "蓝思科技",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 69896776437.83,
+        "net_profit": 3623900967.3,
+        "operating_cash_flow": 10888841042.18,
+        "accounts_receivable": 10858221539.57,
+        "inventory": 7160552530.45,
+        "goodwill": null,
+        "total_assets": 81016048312.53,
+        "total_liabilities": 32170136422.55,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 54490733538.84,
+        "net_profit": 3021340311.13,
+        "operating_cash_flow": 9300199131.87,
+        "accounts_receivable": 9302293752.05,
+        "inventory": 6682659419.2,
+        "goodwill": null,
+        "total_assets": 77469744108.46,
+        "total_liabilities": 30948112466.42,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 46698545632.87,
+        "net_profit": 2448037370.32,
+        "operating_cash_flow": 9180531955.14,
+        "accounts_receivable": 9021067841.83,
+        "inventory": 6685008694.81,
+        "goodwill": null,
+        "total_assets": 78345772710.32,
+        "total_liabilities": 33964527565.03,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

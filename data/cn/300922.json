@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300922",
+  "company_id": "CN:300922",
+  "name": "天秦装备",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 230539547.17,
+        "net_profit": 41680765.73,
+        "operating_cash_flow": 75731965.43,
+        "accounts_receivable": 81723128.58,
+        "inventory": 34466172.54,
+        "goodwill": null,
+        "total_assets": 1044767829.21,
+        "total_liabilities": 141320803.65,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 154579356.21,
+        "net_profit": 32188855.93,
+        "operating_cash_flow": 101347816.98,
+        "accounts_receivable": 41443387.55,
+        "inventory": 40898424.64,
+        "goodwill": null,
+        "total_assets": 965296355.87,
+        "total_liabilities": 83198015.51,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 147906593.69,
+        "net_profit": 26891771.33,
+        "operating_cash_flow": 47062058.27,
+        "accounts_receivable": 72642132.1,
+        "inventory": 36920855.16,
+        "goodwill": null,
+        "total_assets": 927118507.99,
+        "total_liabilities": 61141197.4,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

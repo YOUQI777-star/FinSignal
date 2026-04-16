@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300008",
+  "company_id": "CN:300008",
+  "name": "天海防务",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 3945321826.42,
+        "net_profit": 138545469.0,
+        "operating_cash_flow": -359818175.22,
+        "accounts_receivable": 461256865.49,
+        "inventory": 297287995.23,
+        "goodwill": null,
+        "total_assets": 4670063842.72,
+        "total_liabilities": 2561455011.19,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 3606454146.82,
+        "net_profit": 101574444.58,
+        "operating_cash_flow": 130118518.21,
+        "accounts_receivable": 343732118.86,
+        "inventory": 367779442.45,
+        "goodwill": null,
+        "total_assets": 4336604234.33,
+        "total_liabilities": 2391364989.19,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 2729514252.76,
+        "net_profit": 138415640.95,
+        "operating_cash_flow": 343004740.47,
+        "accounts_receivable": 206053602.0,
+        "inventory": 316136169.53,
+        "goodwill": null,
+        "total_assets": 3821042830.28,
+        "total_liabilities": 2040273601.12,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

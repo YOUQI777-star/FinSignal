@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301293",
+  "company_id": "CN:301293",
+  "name": "三博脑科",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1429393738.08,
+        "net_profit": 105030532.39,
+        "operating_cash_flow": 161876126.16,
+        "accounts_receivable": 120027369.32,
+        "inventory": 53741109.74,
+        "goodwill": null,
+        "total_assets": 3531288628.12,
+        "total_liabilities": 901385348.22,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 1313345263.69,
+        "net_profit": 78238115.58,
+        "operating_cash_flow": 245537597.66,
+        "accounts_receivable": 96678611.41,
+        "inventory": 31336288.86,
+        "goodwill": null,
+        "total_assets": 3134086644.39,
+        "total_liabilities": 625949273.42,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1070083206.62,
+        "net_profit": 63447260.16,
+        "operating_cash_flow": 152912475.69,
+        "accounts_receivable": 69209382.12,
+        "inventory": 31698067.0,
+        "goodwill": null,
+        "total_assets": 1938853809.09,
+        "total_liabilities": 558033039.27,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

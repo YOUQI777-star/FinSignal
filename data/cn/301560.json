@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301560",
+  "company_id": "CN:301560",
+  "name": "众捷汽车",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 978291164.85,
+        "net_profit": 95386616.31,
+        "operating_cash_flow": 199787076.52,
+        "accounts_receivable": 227312357.12,
+        "inventory": 310311868.77,
+        "goodwill": null,
+        "total_assets": 1449620332.88,
+        "total_liabilities": 986265268.84,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 822082964.27,
+        "net_profit": 82552163.34,
+        "operating_cash_flow": 112857291.5,
+        "accounts_receivable": 194939753.75,
+        "inventory": 263596215.49,
+        "goodwill": null,
+        "total_assets": 1254326784.62,
+        "total_liabilities": 832223400.89,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 713293139.35,
+        "net_profit": 78310392.88,
+        "operating_cash_flow": 100513628.53,
+        "accounts_receivable": 178402806.65,
+        "inventory": 178334787.83,
+        "goodwill": null,
+        "total_assets": 882755348.35,
+        "total_liabilities": 547109027.43,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

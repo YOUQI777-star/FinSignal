@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301330",
+  "company_id": "CN:301330",
+  "name": "熵基科技",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1991200391.75,
+        "net_profit": 183045997.93,
+        "operating_cash_flow": 228336583.05,
+        "accounts_receivable": 519014337.89,
+        "inventory": 335306397.14,
+        "goodwill": null,
+        "total_assets": 4014623523.49,
+        "total_liabilities": 636623060.37,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 1970183682.34,
+        "net_profit": 177263675.15,
+        "operating_cash_flow": 236000890.21,
+        "accounts_receivable": 479803313.66,
+        "inventory": 372714784.31,
+        "goodwill": null,
+        "total_assets": 3923900732.7,
+        "total_liabilities": 633111389.42,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1918559191.76,
+        "net_profit": 192502163.93,
+        "operating_cash_flow": 124520033.18,
+        "accounts_receivable": 403497924.27,
+        "inventory": 348280641.59,
+        "goodwill": null,
+        "total_assets": 3664679907.15,
+        "total_liabilities": 563959200.46,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

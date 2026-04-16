@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600689",
+  "company_id": "CN:600689",
+  "name": "上海三毛",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1202873547.37,
+        "net_profit": 18450302.69,
+        "operating_cash_flow": -52735965.01,
+        "accounts_receivable": 175759031.4,
+        "inventory": 438067.96,
+        "goodwill": null,
+        "total_assets": 908646170.78,
+        "total_liabilities": 447275992.16,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 1093820090.55,
+        "net_profit": 17598818.31,
+        "operating_cash_flow": 54211460.17,
+        "accounts_receivable": 137818319.14,
+        "inventory": 465419.03,
+        "goodwill": null,
+        "total_assets": 799728638.42,
+        "total_liabilities": 356809821.32,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1033664834.74,
+        "net_profit": -12915738.83,
+        "operating_cash_flow": 28486052.8,
+        "accounts_receivable": 124807121.32,
+        "inventory": 1127879.09,
+        "goodwill": null,
+        "total_assets": 800221561.81,
+        "total_liabilities": 374902679.25,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

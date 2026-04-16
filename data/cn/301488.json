@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301488",
+  "company_id": "CN:301488",
+  "name": "豪恩汽电",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1415945556.35,
+        "net_profit": 99501629.72,
+        "operating_cash_flow": 74921140.97,
+        "accounts_receivable": 385897800.83,
+        "inventory": 266753766.46,
+        "goodwill": null,
+        "total_assets": 2388946365.86,
+        "total_liabilities": 973850563.57,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 1201702268.6,
+        "net_profit": 113569218.49,
+        "operating_cash_flow": 170480345.08,
+        "accounts_receivable": 305029255.6,
+        "inventory": 208617404.56,
+        "goodwill": null,
+        "total_assets": 1998274816.72,
+        "total_liabilities": 744916434.89,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1078826557.32,
+        "net_profit": 104684209.46,
+        "operating_cash_flow": 108704690.55,
+        "accounts_receivable": 239451155.41,
+        "inventory": 268670697.71,
+        "goodwill": null,
+        "total_assets": 986393654.41,
+        "total_liabilities": 637112711.7,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

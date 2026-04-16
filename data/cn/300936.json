@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300936",
+  "company_id": "CN:300936",
+  "name": "中英科技",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 275377740.7,
+        "net_profit": 31638190.24,
+        "operating_cash_flow": 20681723.63,
+        "accounts_receivable": 143360547.28,
+        "inventory": 46449823.02,
+        "goodwill": null,
+        "total_assets": 1104966462.15,
+        "total_liabilities": 92994248.04,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 278044367.43,
+        "net_profit": 146012383.36,
+        "operating_cash_flow": 32185554.54,
+        "accounts_receivable": 136314847.6,
+        "inventory": 49214701.71,
+        "goodwill": null,
+        "total_assets": 1101422637.52,
+        "total_liabilities": 66692564.71,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 247951718.82,
+        "net_profit": 34436616.23,
+        "operating_cash_flow": 45662939.54,
+        "accounts_receivable": 125185040.42,
+        "inventory": 48489093.74,
+        "goodwill": null,
+        "total_assets": 1016252700.02,
+        "total_liabilities": 126788967.39,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

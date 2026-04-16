@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300500",
+  "company_id": "CN:300500",
+  "name": "启迪设计",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1184792877.33,
+        "net_profit": -99442055.79,
+        "operating_cash_flow": 104439023.81,
+        "accounts_receivable": 1005961283.32,
+        "inventory": 4233829.95,
+        "goodwill": null,
+        "total_assets": 3028078626.68,
+        "total_liabilities": 1896048877.46,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 1240159668.1,
+        "net_profit": -329769629.04,
+        "operating_cash_flow": 309212970.71,
+        "accounts_receivable": 1057356900.62,
+        "inventory": 7557887.56,
+        "goodwill": null,
+        "total_assets": 3423827615.11,
+        "total_liabilities": 2174303583.24,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1898119826.77,
+        "net_profit": 23594712.3,
+        "operating_cash_flow": 12580142.46,
+        "accounts_receivable": 961481070.05,
+        "inventory": 3268860.41,
+        "goodwill": null,
+        "total_assets": 3715939536.36,
+        "total_liabilities": 2111553950.45,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301239",
+  "company_id": "CN:301239",
+  "name": "普瑞眼科",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 2678279126.15,
+        "net_profit": -101862127.9,
+        "operating_cash_flow": 382426169.01,
+        "accounts_receivable": 101080594.08,
+        "inventory": 148312611.64,
+        "goodwill": null,
+        "total_assets": 4598026724.34,
+        "total_liabilities": 2476861122.42,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 2717873370.9,
+        "net_profit": 267913456.76,
+        "operating_cash_flow": 614461445.75,
+        "accounts_receivable": 119291063.08,
+        "inventory": 151526659.11,
+        "goodwill": null,
+        "total_assets": 4815000387.93,
+        "total_liabilities": 2496787457.87,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1725640393.39,
+        "net_profit": 20568200.89,
+        "operating_cash_flow": 319302623.24,
+        "accounts_receivable": 58144343.69,
+        "inventory": 107618084.59,
+        "goodwill": null,
+        "total_assets": 3676965643.95,
+        "total_liabilities": 1609443357.54,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

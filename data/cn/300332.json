@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300332",
+  "company_id": "CN:300332",
+  "name": "天壕能源",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 3843866824.91,
+        "net_profit": 124811017.33,
+        "operating_cash_flow": 454862530.31,
+        "accounts_receivable": 245481516.46,
+        "inventory": 74055419.12,
+        "goodwill": null,
+        "total_assets": 8266070256.57,
+        "total_liabilities": 3827356600.44,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 4521982780.31,
+        "net_profit": 240018924.64,
+        "operating_cash_flow": 540496172.48,
+        "accounts_receivable": 442570830.72,
+        "inventory": 153579550.15,
+        "goodwill": null,
+        "total_assets": 9127096771.95,
+        "total_liabilities": 4706763384.24,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 3841838988.88,
+        "net_profit": 365787429.23,
+        "operating_cash_flow": 469328296.13,
+        "accounts_receivable": 519028912.2,
+        "inventory": 115001532.96,
+        "goodwill": null,
+        "total_assets": 9293684221.08,
+        "total_liabilities": 5120567414.21,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

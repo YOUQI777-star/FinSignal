@@ -1,0 +1,97 @@
+{
+  "market": "CN",
+  "code": "688807",
+  "company_id": "CN:688807",
+  "name": "优迅股份",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 486129407.63,
+        "net_profit": 88126059.11,
+        "operating_cash_flow": 146563975.03,
+        "accounts_receivable": 135725178.86,
+        "inventory": 140866206.87,
+        "goodwill": null,
+        "total_assets": 1870533865.16,
+        "total_liabilities": 104623297.73,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      },
+      {
+        "period": "2024",
+        "revenue": 410559117.39,
+        "net_profit": 77866366.08,
+        "operating_cash_flow": 3912964.96,
+        "accounts_receivable": 108940153.18,
+        "inventory": 174966256.07,
+        "goodwill": null,
+        "total_assets": 817455139.58,
+        "total_liabilities": 92333211.49,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 313133371.77,
+        "net_profit": 72083474.81,
+        "operating_cash_flow": 57913117.38,
+        "accounts_receivable": 126609922.54,
+        "inventory": 90358518.49,
+        "goodwill": null,
+        "total_assets": 587399920.56,
+        "total_liabilities": 80094249.44,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 339072292.02,
+        "net_profit": 81398412.05,
+        "operating_cash_flow": 32945689.66,
+        "accounts_receivable": 60970663.74,
+        "inventory": 129784309.37,
+        "goodwill": null,
+        "total_assets": 422819371.02,
+        "total_liabilities": 89184476.3,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

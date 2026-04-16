@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300289",
+  "company_id": "CN:300289",
+  "name": "利德曼",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 370226869.13,
+        "net_profit": -75101335.67,
+        "operating_cash_flow": 62406242.67,
+        "accounts_receivable": 97338769.25,
+        "inventory": 89450933.13,
+        "goodwill": null,
+        "total_assets": 1822421427.54,
+        "total_liabilities": 103838532.38,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 461554624.4,
+        "net_profit": 15337378.72,
+        "operating_cash_flow": 130796495.28,
+        "accounts_receivable": 149666498.47,
+        "inventory": 88277014.26,
+        "goodwill": null,
+        "total_assets": 1938398607.33,
+        "total_liabilities": 133769179.89,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 705976839.21,
+        "net_profit": -56271757.9,
+        "operating_cash_flow": 108933825.7,
+        "accounts_receivable": 184081260.63,
+        "inventory": 97439215.65,
+        "goodwill": null,
+        "total_assets": 1999821293.41,
+        "total_liabilities": 219353890.29,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

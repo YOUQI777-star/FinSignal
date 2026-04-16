@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600599",
+  "company_id": "CN:600599",
+  "name": "*ST熊猫",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 323859830.32,
+        "net_profit": -474462124.97,
+        "operating_cash_flow": -29123859.75,
+        "accounts_receivable": 105896685.4,
+        "inventory": 34329105.43,
+        "goodwill": null,
+        "total_assets": 312871890.12,
+        "total_liabilities": 253979345.7,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 228352264.53,
+        "net_profit": -212362915.44,
+        "operating_cash_flow": 217996659.51,
+        "accounts_receivable": 47524978.07,
+        "inventory": 26874114.84,
+        "goodwill": null,
+        "total_assets": 795312544.43,
+        "total_liabilities": 199079428.21,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 329310315.14,
+        "net_profit": 90363867.65,
+        "operating_cash_flow": -204471551.76,
+        "accounts_receivable": 44880145.45,
+        "inventory": 19715846.32,
+        "goodwill": null,
+        "total_assets": 990092168.45,
+        "total_liabilities": 202788874.33,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

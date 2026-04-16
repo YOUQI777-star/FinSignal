@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600010",
+  "company_id": "CN:600010",
+  "name": "包钢股份",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 68089440629.67,
+        "net_profit": 264629175.96,
+        "operating_cash_flow": 2377288640.25,
+        "accounts_receivable": 3855735508.9,
+        "inventory": 14780255970.94,
+        "goodwill": null,
+        "total_assets": 155125400366.74,
+        "total_liabilities": 93819588934.83,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 70565388599.27,
+        "net_profit": 515270562.53,
+        "operating_cash_flow": -988633395.95,
+        "accounts_receivable": 3604967062.23,
+        "inventory": 16506867799.36,
+        "goodwill": null,
+        "total_assets": 151775636822.69,
+        "total_liabilities": 90312365348.1,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 72171753910.7,
+        "net_profit": -726393292.86,
+        "operating_cash_flow": 2066857519.91,
+        "accounts_receivable": 2836432467.62,
+        "inventory": 17418133447.81,
+        "goodwill": null,
+        "total_assets": 146730092026.64,
+        "total_liabilities": 85327488131.17,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

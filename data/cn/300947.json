@@ -1,0 +1,80 @@
+{
+  "market": "CN",
+  "code": "300947",
+  "company_id": "CN:300947",
+  "name": "德必集团",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1259633134.04,
+        "net_profit": 34147168.86,
+        "operating_cash_flow": 809396724.53,
+        "accounts_receivable": 45061545.69,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 5923717804.19,
+        "total_liabilities": 4546325257.23,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 1169239831.98,
+        "net_profit": 33238488.88,
+        "operating_cash_flow": 778100642.14,
+        "accounts_receivable": 32985661.1,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 6320937521.39,
+        "total_liabilities": 4931479576.91,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 778849827.58,
+        "net_profit": 32493907.35,
+        "operating_cash_flow": 434859628.79,
+        "accounts_receivable": 29267022.57,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 6168058235.38,
+        "total_liabilities": 4825446637.34,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance",
+      "inventory"
+    ]
+  }
+}

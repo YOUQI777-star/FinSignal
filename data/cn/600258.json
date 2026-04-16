@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600258",
+  "company_id": "CN:600258",
+  "name": "首旅酒店",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 7751223528.97,
+        "net_profit": 806313276.29,
+        "operating_cash_flow": 3370866578.48,
+        "accounts_receivable": 269077246.39,
+        "inventory": 40593866.45,
+        "goodwill": null,
+        "total_assets": 24885179791.5,
+        "total_liabilities": 13064669248.36,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 7792924439.0,
+        "net_profit": 795072731.99,
+        "operating_cash_flow": 4013777901.35,
+        "accounts_receivable": 359442033.71,
+        "inventory": 43643628.4,
+        "goodwill": null,
+        "total_assets": 25240145119.98,
+        "total_liabilities": 13967224014.58,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 5090223628.7,
+        "net_profit": -576786957.69,
+        "operating_cash_flow": 1483175170.41,
+        "accounts_receivable": 520973053.33,
+        "inventory": 36218129.69,
+        "goodwill": null,
+        "total_assets": 25507810884.22,
+        "total_liabilities": 14838145578.41,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

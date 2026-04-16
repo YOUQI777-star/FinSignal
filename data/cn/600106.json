@@ -1,0 +1,80 @@
+{
+  "market": "CN",
+  "code": "600106",
+  "company_id": "CN:600106",
+  "name": "重庆路桥",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 113039142.27,
+        "net_profit": 157451143.99,
+        "operating_cash_flow": 147653045.76,
+        "accounts_receivable": null,
+        "inventory": 359067583.29,
+        "goodwill": null,
+        "total_assets": 7060921766.1,
+        "total_liabilities": 2010269989.87,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 116727514.63,
+        "net_profit": 211472018.0,
+        "operating_cash_flow": 172531408.9,
+        "accounts_receivable": null,
+        "inventory": 356493862.59,
+        "goodwill": null,
+        "total_assets": 6705027009.53,
+        "total_liabilities": 2031167742.99,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 121324362.89,
+        "net_profit": 202901441.26,
+        "operating_cash_flow": 186642310.5,
+        "accounts_receivable": null,
+        "inventory": 355311094.01,
+        "goodwill": null,
+        "total_assets": 6903304821.23,
+        "total_liabilities": 2438431995.53,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance",
+      "accounts_receivable"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300076",
+  "company_id": "CN:300076",
+  "name": "GQY视讯",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 140741125.09,
+        "net_profit": -56700765.15,
+        "operating_cash_flow": -89416690.5,
+        "accounts_receivable": 91951969.37,
+        "inventory": 33897277.65,
+        "goodwill": null,
+        "total_assets": 1047443675.0,
+        "total_liabilities": 116207222.67,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 135024531.65,
+        "net_profit": -20191507.83,
+        "operating_cash_flow": -54496039.36,
+        "accounts_receivable": 119563279.11,
+        "inventory": 38202916.98,
+        "goodwill": null,
+        "total_assets": 1078494092.02,
+        "total_liabilities": 90631299.31,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 163277496.97,
+        "net_profit": -16028978.14,
+        "operating_cash_flow": -16089366.86,
+        "accounts_receivable": 91934967.91,
+        "inventory": 50841720.54,
+        "goodwill": null,
+        "total_assets": 1120458243.27,
+        "total_liabilities": 109024554.83,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

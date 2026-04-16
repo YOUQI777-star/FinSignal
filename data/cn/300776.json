@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300776",
+  "company_id": "CN:300776",
+  "name": "帝尔激光",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 2014351498.22,
+        "net_profit": 527611342.35,
+        "operating_cash_flow": -163836726.04,
+        "accounts_receivable": 895165852.96,
+        "inventory": 1722996131.99,
+        "goodwill": null,
+        "total_assets": 6620776016.29,
+        "total_liabilities": 3156366470.25,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 1608896942.4,
+        "net_profit": 461187200.35,
+        "operating_cash_flow": 776699638.21,
+        "accounts_receivable": 738710410.25,
+        "inventory": 1917584156.93,
+        "goodwill": null,
+        "total_assets": 6869985074.89,
+        "total_liabilities": 3798039717.31,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1324311071.55,
+        "net_profit": 411193958.44,
+        "operating_cash_flow": 509656233.9,
+        "accounts_receivable": 489473810.61,
+        "inventory": 858045189.32,
+        "goodwill": null,
+        "total_assets": 4706983904.13,
+        "total_liabilities": 2027785089.24,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

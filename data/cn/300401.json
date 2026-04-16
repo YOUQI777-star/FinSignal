@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300401",
+  "company_id": "CN:300401",
+  "name": "花园生物",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1243283228.76,
+        "net_profit": 309212798.15,
+        "operating_cash_flow": 466406332.89,
+        "accounts_receivable": 155616951.66,
+        "inventory": 838228733.15,
+        "goodwill": null,
+        "total_assets": 5612645527.96,
+        "total_liabilities": 2394249260.65,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 1094651559.54,
+        "net_profit": 192348873.69,
+        "operating_cash_flow": 159984577.98,
+        "accounts_receivable": 92775888.26,
+        "inventory": 780039441.34,
+        "goodwill": null,
+        "total_assets": 5260592068.07,
+        "total_liabilities": 2367461801.07,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1417511816.01,
+        "net_profit": 383722581.79,
+        "operating_cash_flow": 377039761.35,
+        "accounts_receivable": 169398585.99,
+        "inventory": 545874555.66,
+        "goodwill": null,
+        "total_assets": 4131859509.89,
+        "total_liabilities": 1559684578.1,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

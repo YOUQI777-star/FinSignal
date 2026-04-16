@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300450",
+  "company_id": "CN:300450",
+  "name": "先导智能",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 11855098145.55,
+        "net_profit": 286100791.8,
+        "operating_cash_flow": -1567132795.63,
+        "accounts_receivable": 8626123639.16,
+        "inventory": 13580020978.81,
+        "goodwill": null,
+        "total_assets": 36182558952.99,
+        "total_liabilities": 24603174560.28,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 16628361009.42,
+        "net_profit": 1774565501.49,
+        "operating_cash_flow": -862790560.8,
+        "accounts_receivable": 9748842377.8,
+        "inventory": 13207042564.78,
+        "goodwill": null,
+        "total_assets": 35293330312.84,
+        "total_liabilities": 23445863959.06,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 13932352081.34,
+        "net_profit": 2318133360.87,
+        "operating_cash_flow": 1691030346.5,
+        "accounts_receivable": 6446272200.08,
+        "inventory": 12405401314.63,
+        "goodwill": null,
+        "total_assets": 32977103065.35,
+        "total_liabilities": 21851889874.59,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

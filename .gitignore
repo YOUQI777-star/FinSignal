@@ -14,10 +14,13 @@ build/
 .DS_Store
 **/.DS_Store
 
-# Data files (too large / local only)
-data/cn/*.json
+# Data files
 data/chain_kg/
 data/sync_reports/
+
+# CN + TW snapshots included in git (needed for Railway)
+# data/cn/*.json  ← included in git
+# data/tw/*.json  ← included in git
 
 # TW snapshots included in git (5.3MB, needed for Railway)
 # data/tw/*.json  ← included in git

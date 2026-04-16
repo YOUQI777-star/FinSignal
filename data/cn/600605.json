@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600605",
+  "company_id": "CN:600605",
+  "name": "汇通能源",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 136522804.15,
+        "net_profit": 95102554.02,
+        "operating_cash_flow": 72431262.41,
+        "accounts_receivable": 20181849.42,
+        "inventory": 391938.05,
+        "goodwill": null,
+        "total_assets": 1648371604.79,
+        "total_liabilities": 265583714.31,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 129985575.58,
+        "net_profit": 56454045.07,
+        "operating_cash_flow": 290308334.5,
+        "accounts_receivable": 21083076.47,
+        "inventory": 2984143.26,
+        "goodwill": null,
+        "total_assets": 1501351656.87,
+        "total_liabilities": 207022433.56,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 108483750.1,
+        "net_profit": 9267953.76,
+        "operating_cash_flow": 357132974.06,
+        "accounts_receivable": 25728125.87,
+        "inventory": 1605552477.48,
+        "goodwill": null,
+        "total_assets": 2288206146.2,
+        "total_liabilities": 1156828750.7,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

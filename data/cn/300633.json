@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300633",
+  "company_id": "CN:300633",
+  "name": "开立医疗",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 2013856558.55,
+        "net_profit": 142397376.09,
+        "operating_cash_flow": 306658255.38,
+        "accounts_receivable": 211817864.58,
+        "inventory": 653076170.19,
+        "goodwill": null,
+        "total_assets": 4312997155.23,
+        "total_liabilities": 1204774675.82,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 2120251604.73,
+        "net_profit": 454437474.61,
+        "operating_cash_flow": 489468852.65,
+        "accounts_receivable": 174224263.72,
+        "inventory": 531476404.12,
+        "goodwill": null,
+        "total_assets": 3771417094.83,
+        "total_liabilities": 625463443.55,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1762648981.93,
+        "net_profit": 369807923.05,
+        "operating_cash_flow": 473255552.95,
+        "accounts_receivable": 198688437.28,
+        "inventory": 514382635.06,
+        "goodwill": null,
+        "total_assets": 3544275877.21,
+        "total_liabilities": 804427458.86,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

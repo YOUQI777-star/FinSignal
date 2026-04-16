@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300942",
+  "company_id": "CN:300942",
+  "name": "易瑞生物",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 224249109.55,
+        "net_profit": 17116524.08,
+        "operating_cash_flow": 34258202.6,
+        "accounts_receivable": 94058738.25,
+        "inventory": 40430062.74,
+        "goodwill": null,
+        "total_assets": 1457165935.92,
+        "total_liabilities": 586923364.94,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 254106487.66,
+        "net_profit": -184907769.73,
+        "operating_cash_flow": -37249852.89,
+        "accounts_receivable": 76148249.35,
+        "inventory": 31460650.93,
+        "goodwill": null,
+        "total_assets": 1356339278.93,
+        "total_liabilities": 507611047.32,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 686897476.53,
+        "net_profit": 82965490.95,
+        "operating_cash_flow": 152554531.97,
+        "accounts_receivable": 83877942.22,
+        "inventory": 100608210.17,
+        "goodwill": null,
+        "total_assets": 1282455601.74,
+        "total_liabilities": 317754458.88,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

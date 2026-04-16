@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300606",
+  "company_id": "CN:300606",
+  "name": "金太阳",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 492545069.43,
+        "net_profit": -16397811.52,
+        "operating_cash_flow": 53992571.76,
+        "accounts_receivable": 197109041.86,
+        "inventory": 186242772.05,
+        "goodwill": null,
+        "total_assets": 1234013293.53,
+        "total_liabilities": 557629466.17,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 565140268.29,
+        "net_profit": 52333715.77,
+        "operating_cash_flow": 114012803.99,
+        "accounts_receivable": 246919884.39,
+        "inventory": 153550666.87,
+        "goodwill": null,
+        "total_assets": 1105862281.71,
+        "total_liabilities": 400438559.77,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 395226319.46,
+        "net_profit": 25842918.86,
+        "operating_cash_flow": 21074840.55,
+        "accounts_receivable": 227753143.0,
+        "inventory": 163833657.66,
+        "goodwill": null,
+        "total_assets": 835861551.13,
+        "total_liabilities": 232054638.9,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

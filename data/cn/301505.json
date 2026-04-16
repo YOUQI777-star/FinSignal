@@ -1,0 +1,80 @@
+{
+  "market": "CN",
+  "code": "301505",
+  "company_id": "CN:301505",
+  "name": "苏州规划",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 307806689.72,
+        "net_profit": 29058782.56,
+        "operating_cash_flow": 34982704.87,
+        "accounts_receivable": 288684483.01,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 1380475601.48,
+        "total_liabilities": 384299176.25,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 390819128.91,
+        "net_profit": 78053288.37,
+        "operating_cash_flow": 39834469.67,
+        "accounts_receivable": 298046051.9,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 1346693118.69,
+        "total_liabilities": 340843278.25,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 404365586.25,
+        "net_profit": 79546569.69,
+        "operating_cash_flow": 58725529.53,
+        "accounts_receivable": 244389247.22,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 769945629.47,
+        "total_liabilities": 306558764.32,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance",
+      "inventory"
+    ]
+  }
+}

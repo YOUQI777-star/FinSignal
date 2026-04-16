@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300653",
+  "company_id": "CN:300653",
+  "name": "正海生物",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 363225351.49,
+        "net_profit": 134639109.0,
+        "operating_cash_flow": 151383955.72,
+        "accounts_receivable": 48495150.99,
+        "inventory": 35183154.31,
+        "goodwill": null,
+        "total_assets": 980113621.99,
+        "total_liabilities": 91329490.25,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 413652710.67,
+        "net_profit": 190957573.45,
+        "operating_cash_flow": 180477813.36,
+        "accounts_receivable": 51114660.03,
+        "inventory": 36717909.37,
+        "goodwill": null,
+        "total_assets": 1053824628.67,
+        "total_liabilities": 105759263.57,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 433224730.58,
+        "net_profit": 185436805.06,
+        "operating_cash_flow": 187838040.27,
+        "accounts_receivable": 45617298.27,
+        "inventory": 40694964.04,
+        "goodwill": null,
+        "total_assets": 986904775.5,
+        "total_liabilities": 121796983.85,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "market": "CN",
+  "code": "001386",
+  "company_id": "CN:001386",
+  "name": "马可波罗",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 7324308987.8,
+        "net_profit": 1326906560.66,
+        "operating_cash_flow": 1806310719.39,
+        "accounts_receivable": 1213562253.68,
+        "inventory": 1598551218.04,
+        "goodwill": null,
+        "total_assets": 14233330315.32,
+        "total_liabilities": 4571348808.76,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 8924750069.85,
+        "net_profit": 1352937150.78,
+        "operating_cash_flow": 3048411000.7,
+        "accounts_receivable": 1599387521.41,
+        "inventory": 1875859529.04,
+        "goodwill": 6778257.79,
+        "total_assets": 13339698688.15,
+        "total_liabilities": 5024640507.62,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 8660929189.47,
+        "net_profit": 1514346133.04,
+        "operating_cash_flow": 3021156883.5,
+        "accounts_receivable": 2027780066.52,
+        "inventory": 2126105945.18,
+        "goodwill": 6778257.79,
+        "total_assets": 12801739145.5,
+        "total_liabilities": 5647306196.96,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      },
+      {
+        "period": "2021",
+        "revenue": 9364829028.26,
+        "net_profit": 1653217156.61,
+        "operating_cash_flow": 1312982315.54,
+        "accounts_receivable": 2243114936.25,
+        "inventory": 2365508185.86,
+        "goodwill": 6778257.79,
+        "total_assets": 13489938506.56,
+        "total_liabilities": 7480122085.43,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2021-12-31"
+      },
+      {
+        "period": "2020",
+        "revenue": 8591422866.1,
+        "net_profit": 1422336417.9,
+        "operating_cash_flow": 2211523529.64,
+        "accounts_receivable": 2166283873.94,
+        "inventory": 1941362498.42,
+        "goodwill": null,
+        "total_assets": 13246425794.39,
+        "total_liabilities": 9475666116.52,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2020-12-31"
+      },
+      {
+        "period": "2019",
+        "revenue": 8129622160.6,
+        "net_profit": 984204007.02,
+        "operating_cash_flow": 1015900811.83,
+        "accounts_receivable": 1921498266.76,
+        "inventory": 1736227791.95,
+        "goodwill": null,
+        "total_assets": 11941773935.15,
+        "total_liabilities": 8782308132.85,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2019-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

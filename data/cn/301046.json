@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301046",
+  "company_id": "CN:301046",
+  "name": "能辉科技",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1097296501.11,
+        "net_profit": 52541237.48,
+        "operating_cash_flow": -160562481.94,
+        "accounts_receivable": 673532473.93,
+        "inventory": 272464415.58,
+        "goodwill": null,
+        "total_assets": 1966055344.65,
+        "total_liabilities": 1118319213.63,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 590783844.77,
+        "net_profit": 58193857.95,
+        "operating_cash_flow": -160347055.55,
+        "accounts_receivable": 334191504.62,
+        "inventory": 151836727.33,
+        "goodwill": null,
+        "total_assets": 1741995191.91,
+        "total_liabilities": 901878957.11,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 381672608.47,
+        "net_profit": 26142707.54,
+        "operating_cash_flow": -114321935.01,
+        "accounts_receivable": 293032904.5,
+        "inventory": 69310471.91,
+        "goodwill": null,
+        "total_assets": 1164306687.23,
+        "total_liabilities": 400833315.5,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301151",
+  "company_id": "CN:301151",
+  "name": "冠龙节能",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 914696860.48,
+        "net_profit": 75867017.37,
+        "operating_cash_flow": 28210901.28,
+        "accounts_receivable": 509774984.06,
+        "inventory": 263370939.8,
+        "goodwill": null,
+        "total_assets": 2706095709.59,
+        "total_liabilities": 634831496.02,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 1057029246.54,
+        "net_profit": 98500659.43,
+        "operating_cash_flow": 196662827.54,
+        "accounts_receivable": 513211621.26,
+        "inventory": 262452254.2,
+        "goodwill": null,
+        "total_assets": 2646835776.88,
+        "total_liabilities": 568094330.83,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 933341911.74,
+        "net_profit": 101697390.02,
+        "operating_cash_flow": 62499.29,
+        "accounts_receivable": 482563845.15,
+        "inventory": 318898478.84,
+        "goodwill": null,
+        "total_assets": 2632146410.41,
+        "total_liabilities": 623610090.37,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301306",
+  "company_id": "CN:301306",
+  "name": "西测测试",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 388808212.69,
+        "net_profit": -158268738.44,
+        "operating_cash_flow": -100554836.97,
+        "accounts_receivable": 419228384.33,
+        "inventory": 65566624.86,
+        "goodwill": null,
+        "total_assets": 1604327813.54,
+        "total_liabilities": 563646985.44,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 291094205.34,
+        "net_profit": -51699274.22,
+        "operating_cash_flow": -128360160.24,
+        "accounts_receivable": 378111752.48,
+        "inventory": 55591992.88,
+        "goodwill": null,
+        "total_assets": 1529468409.39,
+        "total_liabilities": 336737148.02,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 304150585.39,
+        "net_profit": 64667157.83,
+        "operating_cash_flow": 18116370.03,
+        "accounts_receivable": 285268794.21,
+        "inventory": 6997100.25,
+        "goodwill": null,
+        "total_assets": 1411935814.83,
+        "total_liabilities": 164514760.38,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300622",
+  "company_id": "CN:300622",
+  "name": "博士眼镜",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1202816100.75,
+        "net_profit": 103628433.57,
+        "operating_cash_flow": 275514887.24,
+        "accounts_receivable": 75979279.51,
+        "inventory": 186463335.97,
+        "goodwill": null,
+        "total_assets": 1253370901.92,
+        "total_liabilities": 482147643.08,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 1175865495.37,
+        "net_profit": 128064789.56,
+        "operating_cash_flow": 280936613.38,
+        "accounts_receivable": 64348941.76,
+        "inventory": 174417485.86,
+        "goodwill": null,
+        "total_assets": 1121775074.61,
+        "total_liabilities": 309486440.76,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 962236989.55,
+        "net_profit": 75809877.26,
+        "operating_cash_flow": 208414149.84,
+        "accounts_receivable": 48676780.29,
+        "inventory": 161757702.49,
+        "goodwill": null,
+        "total_assets": 976670998.16,
+        "total_liabilities": 283031722.08,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

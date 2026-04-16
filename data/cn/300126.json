@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300126",
+  "company_id": "CN:300126",
+  "name": "锐奇股份",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 437180991.31,
+        "net_profit": -19264406.98,
+        "operating_cash_flow": -35485055.44,
+        "accounts_receivable": 73887523.41,
+        "inventory": 141856397.72,
+        "goodwill": null,
+        "total_assets": 1275885045.17,
+        "total_liabilities": 218779235.24,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 501181138.25,
+        "net_profit": 4054002.36,
+        "operating_cash_flow": 36664031.17,
+        "accounts_receivable": 82446220.86,
+        "inventory": 161768690.85,
+        "goodwill": null,
+        "total_assets": 1347600610.21,
+        "total_liabilities": 255353910.55,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 434704626.42,
+        "net_profit": 3934196.89,
+        "operating_cash_flow": -66825972.11,
+        "accounts_receivable": 120915341.31,
+        "inventory": 153280959.15,
+        "goodwill": null,
+        "total_assets": 1324874266.38,
+        "total_liabilities": 233077371.27,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

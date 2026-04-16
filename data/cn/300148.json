@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300148",
+  "company_id": "CN:300148",
+  "name": "天舟文化",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 460890509.01,
+        "net_profit": 32801183.72,
+        "operating_cash_flow": -38168993.29,
+        "accounts_receivable": 43425329.11,
+        "inventory": 26625147.42,
+        "goodwill": null,
+        "total_assets": 1426823900.8,
+        "total_liabilities": 357291620.65,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 447886635.37,
+        "net_profit": -59826211.89,
+        "operating_cash_flow": 71991379.93,
+        "accounts_receivable": 24288359.15,
+        "inventory": 10800494.97,
+        "goodwill": null,
+        "total_assets": 1474015846.55,
+        "total_liabilities": 368407986.33,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 605838110.06,
+        "net_profit": -329285631.08,
+        "operating_cash_flow": 110967186.87,
+        "accounts_receivable": 55418889.03,
+        "inventory": 10764675.25,
+        "goodwill": null,
+        "total_assets": 1597348676.03,
+        "total_liabilities": 384518414.12,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

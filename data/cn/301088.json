@@ -1,0 +1,80 @@
+{
+  "market": "CN",
+  "code": "301088",
+  "company_id": "CN:301088",
+  "name": "戎美股份",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 689046192.35,
+        "net_profit": 106703688.45,
+        "operating_cash_flow": 96673477.02,
+        "accounts_receivable": null,
+        "inventory": 358858863.73,
+        "goodwill": null,
+        "total_assets": 2646628100.29,
+        "total_liabilities": 80314866.65,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 767316817.65,
+        "net_profit": 84719397.91,
+        "operating_cash_flow": -7344227.07,
+        "accounts_receivable": null,
+        "inventory": 393717469.09,
+        "goodwill": null,
+        "total_assets": 2667766675.11,
+        "total_liabilities": 98036021.92,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 948811767.71,
+        "net_profit": 167040817.13,
+        "operating_cash_flow": 125309020.66,
+        "accounts_receivable": null,
+        "inventory": 361661336.69,
+        "goodwill": null,
+        "total_assets": 2713064879.72,
+        "total_liabilities": 144605624.44,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance",
+      "accounts_receivable"
+    ]
+  }
+}

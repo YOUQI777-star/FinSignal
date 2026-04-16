@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300169",
+  "company_id": "CN:300169",
+  "name": "天晟新材",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 531198867.82,
+        "net_profit": -58651825.17,
+        "operating_cash_flow": -69452143.35,
+        "accounts_receivable": 201977159.8,
+        "inventory": 66069342.93,
+        "goodwill": null,
+        "total_assets": 853923855.32,
+        "total_liabilities": 804041752.77,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 574227880.18,
+        "net_profit": -160229146.99,
+        "operating_cash_flow": 148026985.02,
+        "accounts_receivable": 349100249.75,
+        "inventory": 75403355.38,
+        "goodwill": null,
+        "total_assets": 1160041808.31,
+        "total_liabilities": 1048876708.64,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 584659616.5,
+        "net_profit": -187721964.07,
+        "operating_cash_flow": -9300068.48,
+        "accounts_receivable": 572195670.75,
+        "inventory": 113736702.95,
+        "goodwill": null,
+        "total_assets": 1364108240.85,
+        "total_liabilities": 1094624194.12,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

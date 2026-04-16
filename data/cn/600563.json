@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600563",
+  "company_id": "CN:600563",
+  "name": "法拉电子",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 4771751247.83,
+        "net_profit": 1039196100.11,
+        "operating_cash_flow": 1258335086.51,
+        "accounts_receivable": 1706766736.44,
+        "inventory": 802717017.28,
+        "goodwill": null,
+        "total_assets": 7817751349.84,
+        "total_liabilities": 2469460524.28,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 3879793275.8,
+        "net_profit": 1024049476.14,
+        "operating_cash_flow": 1124943191.49,
+        "accounts_receivable": 1136955583.44,
+        "inventory": 671237057.32,
+        "goodwill": null,
+        "total_assets": 6305733192.07,
+        "total_liabilities": 1550766617.64,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 3836216258.99,
+        "net_profit": 1006777692.24,
+        "operating_cash_flow": 1041171096.77,
+        "accounts_receivable": 1163469509.36,
+        "inventory": 729481033.42,
+        "goodwill": null,
+        "total_assets": 5670485839.54,
+        "total_liabilities": 1528688419.51,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

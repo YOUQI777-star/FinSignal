@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300923",
+  "company_id": "CN:300923",
+  "name": "研奥股份",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 471448384.22,
+        "net_profit": 42346763.65,
+        "operating_cash_flow": 33757803.44,
+        "accounts_receivable": 526470005.98,
+        "inventory": 120681294.2,
+        "goodwill": null,
+        "total_assets": 1367871194.76,
+        "total_liabilities": 218353860.64,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 423608790.56,
+        "net_profit": 47014684.67,
+        "operating_cash_flow": -118403740.03,
+        "accounts_receivable": 435032528.27,
+        "inventory": 104276706.89,
+        "goodwill": null,
+        "total_assets": 1273280354.67,
+        "total_liabilities": 117029620.43,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 422634327.68,
+        "net_profit": 49914963.71,
+        "operating_cash_flow": 5362061.58,
+        "accounts_receivable": 403163874.8,
+        "inventory": 121455441.37,
+        "goodwill": null,
+        "total_assets": 1363656339.52,
+        "total_liabilities": 220716268.14,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

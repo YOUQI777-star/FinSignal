@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300698",
+  "company_id": "CN:300698",
+  "name": "万马科技",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 560876751.7,
+        "net_profit": 41307526.85,
+        "operating_cash_flow": -8274165.39,
+        "accounts_receivable": 408149709.17,
+        "inventory": 67858282.14,
+        "goodwill": null,
+        "total_assets": 1088325736.8,
+        "total_liabilities": 606182548.3,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 520677190.88,
+        "net_profit": 64458153.46,
+        "operating_cash_flow": 8282035.46,
+        "accounts_receivable": 321581359.38,
+        "inventory": 63735743.21,
+        "goodwill": null,
+        "total_assets": 895424873.83,
+        "total_liabilities": 423769212.18,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 508727409.72,
+        "net_profit": 30748215.58,
+        "operating_cash_flow": -21443285.04,
+        "accounts_receivable": 300875644.41,
+        "inventory": 80692569.81,
+        "goodwill": null,
+        "total_assets": 819075030.92,
+        "total_liabilities": 409601858.27,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600576",
+  "company_id": "CN:600576",
+  "name": "祥源文旅",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 864119442.85,
+        "net_profit": 146550202.82,
+        "operating_cash_flow": 236292083.59,
+        "accounts_receivable": 58802661.47,
+        "inventory": 113047368.72,
+        "goodwill": null,
+        "total_assets": 4589299272.66,
+        "total_liabilities": 1553560844.85,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 722261478.8,
+        "net_profit": 151296275.35,
+        "operating_cash_flow": 315071808.52,
+        "accounts_receivable": 52343453.16,
+        "inventory": 96501283.0,
+        "goodwill": null,
+        "total_assets": 3804503917.52,
+        "total_liabilities": 923091524.97,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 463560502.78,
+        "net_profit": 22525833.22,
+        "operating_cash_flow": -16537243.6,
+        "accounts_receivable": 251437139.39,
+        "inventory": 17184334.29,
+        "goodwill": null,
+        "total_assets": 3364487671.14,
+        "total_liabilities": 654610494.98,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

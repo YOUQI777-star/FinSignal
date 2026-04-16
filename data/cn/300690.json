@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300690",
+  "company_id": "CN:300690",
+  "name": "双一科技",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 943552669.35,
+        "net_profit": 85951505.42,
+        "operating_cash_flow": 115104670.76,
+        "accounts_receivable": 424188342.52,
+        "inventory": 206679698.46,
+        "goodwill": null,
+        "total_assets": 1920030443.8,
+        "total_liabilities": 446252592.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 749243092.96,
+        "net_profit": 87938827.79,
+        "operating_cash_flow": 128833491.29,
+        "accounts_receivable": 338681754.6,
+        "inventory": 194471950.46,
+        "goodwill": null,
+        "total_assets": 1780971045.98,
+        "total_liabilities": 358215160.87,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1031336944.03,
+        "net_profit": 81922668.63,
+        "operating_cash_flow": 33418710.96,
+        "accounts_receivable": 363254930.66,
+        "inventory": 149586763.6,
+        "goodwill": null,
+        "total_assets": 1739974571.53,
+        "total_liabilities": 380173685.11,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

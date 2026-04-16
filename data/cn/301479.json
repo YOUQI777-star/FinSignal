@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301479",
+  "company_id": "CN:301479",
+  "name": "弘景光电",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1091785568.65,
+        "net_profit": 165227269.14,
+        "operating_cash_flow": 225926901.12,
+        "accounts_receivable": 226751492.55,
+        "inventory": 203214380.05,
+        "goodwill": null,
+        "total_assets": 1068525443.19,
+        "total_liabilities": 478506979.52,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 773021623.02,
+        "net_profit": 116430007.86,
+        "operating_cash_flow": 154541535.45,
+        "accounts_receivable": 163179111.7,
+        "inventory": 125044366.54,
+        "goodwill": null,
+        "total_assets": 752689061.42,
+        "total_liabilities": 328860622.92,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 446496508.27,
+        "net_profit": 56453730.42,
+        "operating_cash_flow": 44277669.77,
+        "accounts_receivable": 139538579.84,
+        "inventory": 92185614.68,
+        "goodwill": null,
+        "total_assets": 592928160.64,
+        "total_liabilities": 286334773.89,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

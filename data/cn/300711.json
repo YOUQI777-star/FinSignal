@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300711",
+  "company_id": "CN:300711",
+  "name": "广哈通信",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 543627547.48,
+        "net_profit": 73873838.22,
+        "operating_cash_flow": 75523774.18,
+        "accounts_receivable": 297995879.57,
+        "inventory": 202280552.68,
+        "goodwill": null,
+        "total_assets": 1191628823.6,
+        "total_liabilities": 413685165.47,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 450898261.11,
+        "net_profit": 61210607.43,
+        "operating_cash_flow": 49632270.98,
+        "accounts_receivable": 220499300.15,
+        "inventory": 195882455.37,
+        "goodwill": null,
+        "total_assets": 1010226116.36,
+        "total_liabilities": 304854198.63,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 383359652.55,
+        "net_profit": 48815226.53,
+        "operating_cash_flow": 80051210.96,
+        "accounts_receivable": 216050986.89,
+        "inventory": 189492639.52,
+        "goodwill": null,
+        "total_assets": 958280305.03,
+        "total_liabilities": 297507620.97,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

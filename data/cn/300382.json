@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300382",
+  "company_id": "CN:300382",
+  "name": "斯莱克",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1511859042.96,
+        "net_profit": -137320693.55,
+        "operating_cash_flow": 36201363.9,
+        "accounts_receivable": 653642282.86,
+        "inventory": 930908642.6,
+        "goodwill": null,
+        "total_assets": 5050416981.17,
+        "total_liabilities": 3019405761.81,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 1651433458.67,
+        "net_profit": 129067246.6,
+        "operating_cash_flow": -9234066.59,
+        "accounts_receivable": 738438427.89,
+        "inventory": 793736971.62,
+        "goodwill": null,
+        "total_assets": 4363367495.29,
+        "total_liabilities": 2062389651.06,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1731318733.36,
+        "net_profit": 225916846.72,
+        "operating_cash_flow": -53505522.44,
+        "accounts_receivable": 682817474.94,
+        "inventory": 690546197.3,
+        "goodwill": null,
+        "total_assets": 4090169571.4,
+        "total_liabilities": 1631790525.11,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600096",
+  "company_id": "CN:600096",
+  "name": "云天化",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 61654338924.1,
+        "net_profit": 5337308422.59,
+        "operating_cash_flow": 10746803695.08,
+        "accounts_receivable": 1671256332.82,
+        "inventory": 6089412412.91,
+        "goodwill": null,
+        "total_assets": 51527990417.76,
+        "total_liabilities": 26915384244.99,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 69060212634.49,
+        "net_profit": 4522198165.85,
+        "operating_cash_flow": 9437165845.79,
+        "accounts_receivable": 903091441.5,
+        "inventory": 7544576139.23,
+        "goodwill": null,
+        "total_assets": 52570781784.14,
+        "total_liabilities": 30560299665.3,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 75313292457.62,
+        "net_profit": 6021322993.75,
+        "operating_cash_flow": 10550590353.01,
+        "accounts_receivable": 1833185966.55,
+        "inventory": 7967926568.79,
+        "goodwill": null,
+        "total_assets": 53222799570.07,
+        "total_liabilities": 33810031282.23,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

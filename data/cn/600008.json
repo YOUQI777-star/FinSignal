@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600008",
+  "company_id": "CN:600008",
+  "name": "首创环保",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 20049988923.69,
+        "net_profit": 3528057052.75,
+        "operating_cash_flow": 4082799965.42,
+        "accounts_receivable": 14659048735.93,
+        "inventory": 1043858601.34,
+        "goodwill": null,
+        "total_assets": 111183026215.34,
+        "total_liabilities": 72018368707.05,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 21332108192.99,
+        "net_profit": 1609923557.46,
+        "operating_cash_flow": 3422295223.11,
+        "accounts_receivable": 12044729095.38,
+        "inventory": 1280175399.65,
+        "goodwill": null,
+        "total_assets": 109373039349.14,
+        "total_liabilities": 70980633596.86,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 22164200826.9,
+        "net_profit": 3155104773.43,
+        "operating_cash_flow": 3023357286.77,
+        "accounts_receivable": 10160194411.34,
+        "inventory": 1351072650.34,
+        "goodwill": null,
+        "total_assets": 104895186942.19,
+        "total_liabilities": 66393952982.82,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

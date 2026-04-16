@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300399",
+  "company_id": "CN:300399",
+  "name": "天利科技",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 513653130.69,
+        "net_profit": 1657897.7,
+        "operating_cash_flow": 30443844.97,
+        "accounts_receivable": 22826424.83,
+        "inventory": 127970.76,
+        "goodwill": null,
+        "total_assets": 564104583.14,
+        "total_liabilities": 38058302.39,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 444355771.1,
+        "net_profit": 38361340.01,
+        "operating_cash_flow": -27341317.92,
+        "accounts_receivable": 47949034.97,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 581871397.54,
+        "total_liabilities": 49728970.55,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 450105602.7,
+        "net_profit": 16883581.76,
+        "operating_cash_flow": 83441206.25,
+        "accounts_receivable": 43157016.06,
+        "inventory": 550675.07,
+        "goodwill": null,
+        "total_assets": 541516896.12,
+        "total_liabilities": 47423816.25,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

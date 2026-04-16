@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600325",
+  "company_id": "CN:600325",
+  "name": "华发股份",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 59992367667.72,
+        "net_profit": 951304049.12,
+        "operating_cash_flow": 15899668761.6,
+        "accounts_receivable": 1583640167.0,
+        "inventory": 247950540075.83,
+        "goodwill": null,
+        "total_assets": 420377031018.16,
+        "total_liabilities": 295370575829.06,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 72144909943.75,
+        "net_profit": 1837841852.48,
+        "operating_cash_flow": 50543848009.6,
+        "accounts_receivable": 1248369463.63,
+        "inventory": 275031708061.13,
+        "goodwill": null,
+        "total_assets": 451699413671.47,
+        "total_liabilities": 319999856599.69,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 60446879717.26,
+        "net_profit": 2609889760.75,
+        "operating_cash_flow": 38546311496.45,
+        "accounts_receivable": 1231177920.89,
+        "inventory": 243553119334.95,
+        "goodwill": null,
+        "total_assets": 403598575931.28,
+        "total_liabilities": 294426667043.22,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

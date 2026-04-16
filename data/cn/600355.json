@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600355",
+  "company_id": "CN:600355",
+  "name": "*ST精伦",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 142496116.46,
+        "net_profit": -42060135.61,
+        "operating_cash_flow": -12684515.96,
+        "accounts_receivable": 9605523.43,
+        "inventory": 43089543.3,
+        "goodwill": null,
+        "total_assets": 255844146.74,
+        "total_liabilities": 124531108.58,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 140962572.79,
+        "net_profit": -43360419.81,
+        "operating_cash_flow": -655299.51,
+        "accounts_receivable": 28137494.97,
+        "inventory": 50592287.16,
+        "goodwill": null,
+        "total_assets": 296920970.33,
+        "total_liabilities": 123547796.56,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 178629135.07,
+        "net_profit": -32272822.44,
+        "operating_cash_flow": -9238729.05,
+        "accounts_receivable": 21906520.59,
+        "inventory": 71639385.89,
+        "goodwill": null,
+        "total_assets": 331203429.74,
+        "total_liabilities": 114469836.16,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

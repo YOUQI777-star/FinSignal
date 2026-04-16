@@ -1,0 +1,80 @@
+{
+  "market": "CN",
+  "code": "300668",
+  "company_id": "CN:300668",
+  "name": "杰恩设计",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 585924773.75,
+        "net_profit": -11995500.85,
+        "operating_cash_flow": -35940963.52,
+        "accounts_receivable": 600068169.21,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 1170201607.57,
+        "total_liabilities": 427037082.18,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 748689390.03,
+        "net_profit": 57374073.82,
+        "operating_cash_flow": -2723021.0,
+        "accounts_receivable": 567808111.05,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 1178780410.91,
+        "total_liabilities": 393641993.95,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 436892326.56,
+        "net_profit": 22877978.9,
+        "operating_cash_flow": 1127505.32,
+        "accounts_receivable": 323514403.38,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 903494947.54,
+        "total_liabilities": 185436601.19,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance",
+      "inventory"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600354",
+  "company_id": "CN:600354",
+  "name": "敦煌种业",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1155927318.74,
+        "net_profit": 49876394.67,
+        "operating_cash_flow": 276550980.42,
+        "accounts_receivable": 42144442.44,
+        "inventory": 518875529.78,
+        "goodwill": null,
+        "total_assets": 1994093930.13,
+        "total_liabilities": 1164012513.13,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 1157762417.27,
+        "net_profit": 40795232.42,
+        "operating_cash_flow": 242696128.26,
+        "accounts_receivable": 60641845.73,
+        "inventory": 443810927.59,
+        "goodwill": null,
+        "total_assets": 1918250310.1,
+        "total_liabilities": 1144967986.16,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1004680753.38,
+        "net_profit": 20009529.61,
+        "operating_cash_flow": 337481295.63,
+        "accounts_receivable": 77551534.72,
+        "inventory": 363573564.67,
+        "goodwill": null,
+        "total_assets": 1947139674.14,
+        "total_liabilities": 1217066302.04,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

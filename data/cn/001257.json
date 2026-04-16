@@ -1,0 +1,97 @@
+{
+  "market": "CN",
+  "code": "001257",
+  "company_id": "CN:001257",
+  "name": "盛龙股份",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 3502512845.96,
+        "net_profit": 883918343.8,
+        "operating_cash_flow": 908591068.06,
+        "accounts_receivable": 109133362.7,
+        "inventory": 493683525.76,
+        "goodwill": 108059149.25,
+        "total_assets": 7666191701.16,
+        "total_liabilities": 1980719313.5,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      },
+      {
+        "period": "2024",
+        "revenue": 2863687151.29,
+        "net_profit": 756801759.69,
+        "operating_cash_flow": 1069529455.9,
+        "accounts_receivable": 47906814.1,
+        "inventory": 705964472.73,
+        "goodwill": 108059149.25,
+        "total_assets": 6890142384.47,
+        "total_liabilities": 2142405088.74,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 1957398175.94,
+        "net_profit": 619182340.5,
+        "operating_cash_flow": 450397323.79,
+        "accounts_receivable": 57835138.01,
+        "inventory": 600097941.67,
+        "goodwill": 108059149.25,
+        "total_assets": 6042632922.75,
+        "total_liabilities": 2128231058.36,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1911411216.32,
+        "net_profit": 343887467.86,
+        "operating_cash_flow": 346728763.41,
+        "accounts_receivable": 51614457.43,
+        "inventory": 122314496.81,
+        "goodwill": 108059149.25,
+        "total_assets": 4828369085.1,
+        "total_liabilities": 2387997958.15,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

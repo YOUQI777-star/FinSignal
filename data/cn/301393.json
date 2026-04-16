@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301393",
+  "company_id": "CN:301393",
+  "name": "昊帆生物",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 451874668.1,
+        "net_profit": 134052917.06,
+        "operating_cash_flow": 126373559.65,
+        "accounts_receivable": 93213572.97,
+        "inventory": 116702724.85,
+        "goodwill": null,
+        "total_assets": 2349619175.62,
+        "total_liabilities": 81350559.78,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 388794947.08,
+        "net_profit": 98973754.53,
+        "operating_cash_flow": 87829868.67,
+        "accounts_receivable": 60358487.41,
+        "inventory": 114997735.93,
+        "goodwill": null,
+        "total_assets": 2286941939.28,
+        "total_liabilities": 75077619.91,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 447457811.11,
+        "net_profit": 129370943.06,
+        "operating_cash_flow": 138673297.82,
+        "accounts_receivable": 51160096.09,
+        "inventory": 113450365.68,
+        "goodwill": null,
+        "total_assets": 600048041.53,
+        "total_liabilities": 117772088.58,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

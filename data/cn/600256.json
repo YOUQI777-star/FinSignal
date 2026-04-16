@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600256",
+  "company_id": "CN:600256",
+  "name": "广汇能源",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 36441416956.54,
+        "net_profit": 2960979512.16,
+        "operating_cash_flow": 5675362638.18,
+        "accounts_receivable": 2309102205.2,
+        "inventory": 1881099296.0,
+        "goodwill": null,
+        "total_assets": 56945177206.2,
+        "total_liabilities": 30795147587.66,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 61475131175.08,
+        "net_profit": 5158212373.86,
+        "operating_cash_flow": 6807851417.48,
+        "accounts_receivable": 1920168396.34,
+        "inventory": 1351335158.49,
+        "goodwill": null,
+        "total_assets": 58738969950.1,
+        "total_liabilities": 30402463545.94,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 59408725478.43,
+        "net_profit": 11336706120.74,
+        "operating_cash_flow": 10146342999.33,
+        "accounts_receivable": 1914691027.9,
+        "inventory": 1560001453.25,
+        "goodwill": null,
+        "total_assets": 61588728345.74,
+        "total_liabilities": 32980367854.64,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "market": "CN",
+  "code": "300649",
+  "company_id": "CN:300649",
+  "name": "杭州园林",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 209114189.1,
+        "net_profit": -37172959.58,
+        "operating_cash_flow": 71768544.79,
+        "accounts_receivable": 213399086.86,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 1001521131.15,
+        "total_liabilities": 501276709.31,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 309303307.7,
+        "net_profit": 9342348.29,
+        "operating_cash_flow": -2638591.64,
+        "accounts_receivable": 174333749.55,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 1091699518.23,
+        "total_liabilities": 550244595.84,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 656695404.32,
+        "net_profit": 11306942.76,
+        "operating_cash_flow": -23055881.86,
+        "accounts_receivable": 179988197.79,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 1240003710.48,
+        "total_liabilities": 701607690.23,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance",
+      "inventory"
+    ]
+  }
+}

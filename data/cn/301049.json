@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301049",
+  "company_id": "CN:301049",
+  "name": "超越科技",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 290546392.91,
+        "net_profit": -69340829.58,
+        "operating_cash_flow": 17647463.61,
+        "accounts_receivable": 178115872.38,
+        "inventory": 13637336.54,
+        "goodwill": null,
+        "total_assets": 1258171935.34,
+        "total_liabilities": 558685679.95,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 263560519.23,
+        "net_profit": -119815959.73,
+        "operating_cash_flow": 18145642.67,
+        "accounts_receivable": 187450848.43,
+        "inventory": 21973395.44,
+        "goodwill": null,
+        "total_assets": 1248036857.23,
+        "total_liabilities": 478110963.26,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 211086515.35,
+        "net_profit": -21625588.62,
+        "operating_cash_flow": 40822420.31,
+        "accounts_receivable": 170220941.56,
+        "inventory": 9360048.12,
+        "goodwill": null,
+        "total_assets": 1183803968.14,
+        "total_liabilities": 312667300.93,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

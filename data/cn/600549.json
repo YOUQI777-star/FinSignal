@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600549",
+  "company_id": "CN:600549",
+  "name": "厦门钨业",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 35196461168.62,
+        "net_profit": 1727933706.71,
+        "operating_cash_flow": 3098647105.57,
+        "accounts_receivable": 5178228133.78,
+        "inventory": 8383477749.47,
+        "goodwill": null,
+        "total_assets": 45463760382.89,
+        "total_liabilities": 21112734443.78,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 39397905990.66,
+        "net_profit": 1601699946.56,
+        "operating_cash_flow": 4285779929.44,
+        "accounts_receivable": 6200615374.66,
+        "inventory": 7418938646.84,
+        "goodwill": null,
+        "total_assets": 39272520363.25,
+        "total_liabilities": 20201328318.49,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 48222787044.91,
+        "net_profit": 1446186670.24,
+        "operating_cash_flow": -360431107.59,
+        "accounts_receivable": 7455051766.27,
+        "inventory": 8707192887.12,
+        "goodwill": null,
+        "total_assets": 39810758463.18,
+        "total_liabilities": 23750723627.12,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

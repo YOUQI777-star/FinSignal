@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "002910",
+  "company_id": "CN:002910",
+  "name": "庄园牧场",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 890015746.08,
+        "net_profit": -166208347.47,
+        "operating_cash_flow": 62979819.52,
+        "accounts_receivable": 52391001.74,
+        "inventory": 223066425.54,
+        "goodwill": null,
+        "total_assets": 2408107627.19,
+        "total_liabilities": 1316030050.79,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 955672655.71,
+        "net_profit": -81475121.47,
+        "operating_cash_flow": 161499917.02,
+        "accounts_receivable": 44061398.44,
+        "inventory": 211409562.33,
+        "goodwill": null,
+        "total_assets": 2532432457.37,
+        "total_liabilities": 1265973984.51,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1049876988.11,
+        "net_profit": 60939745.73,
+        "operating_cash_flow": 179954867.48,
+        "accounts_receivable": 65543264.41,
+        "inventory": 224482677.74,
+        "goodwill": null,
+        "total_assets": 2689701952.13,
+        "total_liabilities": 1329573038.96,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

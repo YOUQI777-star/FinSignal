@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301021",
+  "company_id": "CN:301021",
+  "name": "英诺激光",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 446679865.1,
+        "net_profit": 21831755.73,
+        "operating_cash_flow": -29799257.15,
+        "accounts_receivable": 210253674.63,
+        "inventory": 215434928.86,
+        "goodwill": null,
+        "total_assets": 1184697555.46,
+        "total_liabilities": 196925845.15,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 367902556.51,
+        "net_profit": -4499211.46,
+        "operating_cash_flow": 25505833.43,
+        "accounts_receivable": 183502823.61,
+        "inventory": 171481843.83,
+        "goodwill": null,
+        "total_assets": 1169558336.37,
+        "total_liabilities": 185650478.13,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 319761152.14,
+        "net_profit": 22573646.9,
+        "operating_cash_flow": 107192250.37,
+        "accounts_receivable": 119776409.14,
+        "inventory": 155629716.7,
+        "goodwill": null,
+        "total_assets": 1078822798.36,
+        "total_liabilities": 84060804.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

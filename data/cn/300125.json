@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300125",
+  "company_id": "CN:300125",
+  "name": "*ST聆达",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 61151347.41,
+        "net_profit": -949512491.72,
+        "operating_cash_flow": -9955486.63,
+        "accounts_receivable": 165577192.26,
+        "inventory": 6745655.5,
+        "goodwill": null,
+        "total_assets": 1001408452.08,
+        "total_liabilities": 1539819083.4,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 838900167.67,
+        "net_profit": -261992536.94,
+        "operating_cash_flow": 85217837.83,
+        "accounts_receivable": 177921179.82,
+        "inventory": 32964520.49,
+        "goodwill": null,
+        "total_assets": 1949551318.93,
+        "total_liabilities": 1537514306.88,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1597551813.25,
+        "net_profit": -16927967.46,
+        "operating_cash_flow": 335565386.7,
+        "accounts_receivable": 188654316.11,
+        "inventory": 53334632.86,
+        "goodwill": null,
+        "total_assets": 2135437464.92,
+        "total_liabilities": 1475894890.48,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

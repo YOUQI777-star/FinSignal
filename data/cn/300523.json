@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300523",
+  "company_id": "CN:300523",
+  "name": "辰安科技",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1401059378.93,
+        "net_profit": -322127246.64,
+        "operating_cash_flow": -179719362.25,
+        "accounts_receivable": 1883381059.64,
+        "inventory": 386441969.73,
+        "goodwill": null,
+        "total_assets": 4234563619.73,
+        "total_liabilities": 2770189268.56,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 2256824745.15,
+        "net_profit": 79641695.79,
+        "operating_cash_flow": -609315181.66,
+        "accounts_receivable": 2132060012.23,
+        "inventory": 314875438.9,
+        "goodwill": null,
+        "total_assets": 4267611776.13,
+        "total_liabilities": 2460210568.19,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 2398875103.46,
+        "net_profit": 6886167.88,
+        "operating_cash_flow": 740699099.85,
+        "accounts_receivable": 1682987013.23,
+        "inventory": 556171866.87,
+        "goodwill": null,
+        "total_assets": 4455092800.33,
+        "total_liabilities": 2724408349.6,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "market": "CN",
+  "code": "300839",
+  "company_id": "CN:300839",
+  "name": "博汇股份",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 2279495752.87,
+        "net_profit": -306815956.84,
+        "operating_cash_flow": -111777235.66,
+        "accounts_receivable": null,
+        "inventory": 324527026.02,
+        "goodwill": null,
+        "total_assets": 2135129980.8,
+        "total_liabilities": 1661048392.53,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 2777755980.97,
+        "net_profit": -202949623.99,
+        "operating_cash_flow": 429264220.35,
+        "accounts_receivable": 1003376.7,
+        "inventory": 344738004.55,
+        "goodwill": null,
+        "total_assets": 2111199206.57,
+        "total_liabilities": 1382345868.03,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 2965214884.79,
+        "net_profit": 151769151.37,
+        "operating_cash_flow": 122732527.79,
+        "accounts_receivable": 1140224.19,
+        "inventory": 392560502.94,
+        "goodwill": null,
+        "total_assets": 2270480194.19,
+        "total_liabilities": 1268578848.57,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance",
+      "accounts_receivable"
+    ]
+  }
+}

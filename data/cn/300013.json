@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300013",
+  "company_id": "CN:300013",
+  "name": "新宁物流",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 480748502.43,
+        "net_profit": -72756088.06,
+        "operating_cash_flow": -84162505.32,
+        "accounts_receivable": 125453522.36,
+        "inventory": 3642204.09,
+        "goodwill": null,
+        "total_assets": 567443270.23,
+        "total_liabilities": 346807161.38,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 412860394.77,
+        "net_profit": -156261026.92,
+        "operating_cash_flow": 82798890.63,
+        "accounts_receivable": 138219836.94,
+        "inventory": 2314197.33,
+        "goodwill": null,
+        "total_assets": 559767348.69,
+        "total_liabilities": 673783766.15,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 666305640.1,
+        "net_profit": -1597859.91,
+        "operating_cash_flow": 64257764.19,
+        "accounts_receivable": 193051234.2,
+        "inventory": 2877512.34,
+        "goodwill": null,
+        "total_assets": 759414278.52,
+        "total_liabilities": 714770591.57,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

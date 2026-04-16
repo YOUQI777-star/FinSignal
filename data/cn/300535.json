@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300535",
+  "company_id": "CN:300535",
+  "name": "达威股份",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 753140888.59,
+        "net_profit": -11448490.55,
+        "operating_cash_flow": 55645556.85,
+        "accounts_receivable": 239046413.09,
+        "inventory": 174216202.09,
+        "goodwill": null,
+        "total_assets": 1411113115.67,
+        "total_liabilities": 458879060.86,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 724599336.03,
+        "net_profit": 28428425.43,
+        "operating_cash_flow": 59771078.46,
+        "accounts_receivable": 227231946.18,
+        "inventory": 193572543.54,
+        "goodwill": null,
+        "total_assets": 1416194871.2,
+        "total_liabilities": 431429692.9,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 510385026.17,
+        "net_profit": -1827945.44,
+        "operating_cash_flow": 45812927.38,
+        "accounts_receivable": 194992438.73,
+        "inventory": 209639848.68,
+        "goodwill": null,
+        "total_assets": 1291646297.86,
+        "total_liabilities": 362005769.26,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

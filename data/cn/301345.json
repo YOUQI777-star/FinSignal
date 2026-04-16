@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301345",
+  "company_id": "CN:301345",
+  "name": "涛涛车业",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 2976628778.17,
+        "net_profit": 431263318.48,
+        "operating_cash_flow": 212498805.92,
+        "accounts_receivable": 698196181.69,
+        "inventory": 1206096970.56,
+        "goodwill": null,
+        "total_assets": 4538588836.36,
+        "total_liabilities": 1357762503.18,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 2144246144.3,
+        "net_profit": 280478422.3,
+        "operating_cash_flow": 176694757.71,
+        "accounts_receivable": 588103440.61,
+        "inventory": 714804667.8,
+        "goodwill": null,
+        "total_assets": 3787483622.84,
+        "total_liabilities": 845651208.25,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 1765673651.9,
+        "net_profit": 206099150.67,
+        "operating_cash_flow": 38974189.97,
+        "accounts_receivable": 287993112.47,
+        "inventory": 722791223.23,
+        "goodwill": null,
+        "total_assets": 1690618243.4,
+        "total_liabilities": 736946928.16,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

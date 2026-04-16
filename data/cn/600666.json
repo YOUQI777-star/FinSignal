@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600666",
+  "company_id": "CN:600666",
+  "name": "奥瑞德",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 365966196.31,
+        "net_profit": -171418216.23,
+        "operating_cash_flow": -71554884.58,
+        "accounts_receivable": 164876543.53,
+        "inventory": 67470657.47,
+        "goodwill": null,
+        "total_assets": 1821394514.16,
+        "total_liabilities": 971383236.75,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 327908511.84,
+        "net_profit": -675277796.22,
+        "operating_cash_flow": -343313227.83,
+        "accounts_receivable": 130776771.7,
+        "inventory": 70619395.7,
+        "goodwill": null,
+        "total_assets": 2173922897.17,
+        "total_liabilities": 1099805454.27,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 531252923.2,
+        "net_profit": 60510037.06,
+        "operating_cash_flow": 16531913.53,
+        "accounts_receivable": 144160519.12,
+        "inventory": 380630678.55,
+        "goodwill": null,
+        "total_assets": 3462099724.08,
+        "total_liabilities": 1705493399.72,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

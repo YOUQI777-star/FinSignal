@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301518",
+  "company_id": "CN:301518",
+  "name": "长华化学",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 3049887686.76,
+        "net_profit": 58155149.65,
+        "operating_cash_flow": 66859990.9,
+        "accounts_receivable": 178108207.84,
+        "inventory": 118707382.51,
+        "goodwill": null,
+        "total_assets": 1752995649.72,
+        "total_liabilities": 332949682.78,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 2711764247.22,
+        "net_profit": 116077686.46,
+        "operating_cash_flow": 131750661.71,
+        "accounts_receivable": 149292179.33,
+        "inventory": 151270703.1,
+        "goodwill": null,
+        "total_assets": 1728733312.73,
+        "total_liabilities": 282705726.48,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 2312350321.1,
+        "net_profit": 89380519.22,
+        "operating_cash_flow": 167964018.45,
+        "accounts_receivable": 115861375.54,
+        "inventory": 99442832.39,
+        "goodwill": null,
+        "total_assets": 698508154.03,
+        "total_liabilities": 194331620.24,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

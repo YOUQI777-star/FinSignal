@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300943",
+  "company_id": "CN:300943",
+  "name": "春晖智控",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 509892579.87,
+        "net_profit": 53944361.57,
+        "operating_cash_flow": 88109947.09,
+        "accounts_receivable": 125836122.96,
+        "inventory": 105353500.37,
+        "goodwill": null,
+        "total_assets": 1258959311.05,
+        "total_liabilities": 272571734.39,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 466733160.66,
+        "net_profit": 76455260.34,
+        "operating_cash_flow": 53315637.5,
+        "accounts_receivable": 134132024.37,
+        "inventory": 100495050.58,
+        "goodwill": null,
+        "total_assets": 1235034358.76,
+        "total_liabilities": 268688573.28,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 492634145.72,
+        "net_profit": 75335221.17,
+        "operating_cash_flow": 49495285.77,
+        "accounts_receivable": 130658224.99,
+        "inventory": 107256075.31,
+        "goodwill": null,
+        "total_assets": 1202161785.32,
+        "total_liabilities": 276055540.18,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

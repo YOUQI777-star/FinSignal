@@ -1,0 +1,133 @@
+{
+  "market": "CN",
+  "code": "001356",
+  "company_id": "CN:001356",
+  "name": "富岭股份",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 2268864675.87,
+        "net_profit": 220100959.17,
+        "operating_cash_flow": 245001082.84,
+        "accounts_receivable": 274024007.31,
+        "inventory": 449528898.7,
+        "goodwill": null,
+        "total_assets": 2024020454.32,
+        "total_liabilities": 701224807.31,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 1888899488.76,
+        "net_profit": 215675144.7,
+        "operating_cash_flow": 361447741.97,
+        "accounts_receivable": 232864111.46,
+        "inventory": 403336198.34,
+        "goodwill": null,
+        "total_assets": 1761754893.97,
+        "total_liabilities": 661125107.2,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 2154389158.35,
+        "net_profit": 255380683.44,
+        "operating_cash_flow": 309564948.82,
+        "accounts_receivable": 225482644.0,
+        "inventory": 325958965.4,
+        "goodwill": null,
+        "total_assets": 1548879717.55,
+        "total_liabilities": 665786259.17,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      },
+      {
+        "period": "2021",
+        "revenue": 1457693946.08,
+        "net_profit": 116338626.53,
+        "operating_cash_flow": 200096483.31,
+        "accounts_receivable": 163436039.5,
+        "inventory": 301565616.32,
+        "goodwill": null,
+        "total_assets": 1342180410.02,
+        "total_liabilities": 719706970.09,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2021-12-31"
+      },
+      {
+        "period": "2020",
+        "revenue": 1067674333.57,
+        "net_profit": 77068101.62,
+        "operating_cash_flow": 135281989.8,
+        "accounts_receivable": 164035203.03,
+        "inventory": 219059763.08,
+        "goodwill": null,
+        "total_assets": 1050961621.6,
+        "total_liabilities": 487343404.68,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2020-12-31"
+      },
+      {
+        "period": "2019",
+        "revenue": 1071539284.49,
+        "net_profit": 95180000.48,
+        "operating_cash_flow": 130991011.31,
+        "accounts_receivable": 161266698.21,
+        "inventory": 166904703.42,
+        "goodwill": null,
+        "total_assets": 916157796.93,
+        "total_liabilities": 411623560.45,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2019-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

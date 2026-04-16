@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300284",
+  "company_id": "CN:300284",
+  "name": "苏交科",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 4728843403.67,
+        "net_profit": 227346236.73,
+        "operating_cash_flow": 261328831.43,
+        "accounts_receivable": 4768008955.65,
+        "inventory": 54168852.14,
+        "goodwill": null,
+        "total_assets": 16063105727.68,
+        "total_liabilities": 7267341515.64,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 5211939751.6,
+        "net_profit": 302393776.22,
+        "operating_cash_flow": 307135283.88,
+        "accounts_receivable": 4774556969.24,
+        "inventory": 116247768.5,
+        "goodwill": null,
+        "total_assets": 15881516673.78,
+        "total_liabilities": 7182722959.42,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 5226528618.69,
+        "net_profit": 593489119.46,
+        "operating_cash_flow": 262122585.35,
+        "accounts_receivable": 4338709585.1,
+        "inventory": 57547653.09,
+        "goodwill": null,
+        "total_assets": 15509265228.61,
+        "total_liabilities": 6920931087.99,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

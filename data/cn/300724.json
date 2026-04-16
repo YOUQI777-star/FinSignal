@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300724",
+  "company_id": "CN:300724",
+  "name": "捷佳伟创",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 18887205249.05,
+        "net_profit": 2763592212.05,
+        "operating_cash_flow": 2950830628.05,
+        "accounts_receivable": 3580600430.46,
+        "inventory": 14006876358.84,
+        "goodwill": null,
+        "total_assets": 33630089485.68,
+        "total_liabilities": 22541295680.41,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 8733427188.69,
+        "net_profit": 1633562727.98,
+        "operating_cash_flow": 3517362141.16,
+        "accounts_receivable": 2918121514.47,
+        "inventory": 21282119984.13,
+        "goodwill": null,
+        "total_assets": 39133644853.94,
+        "total_liabilities": 30382154758.57,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 6005042272.39,
+        "net_profit": 1046870508.33,
+        "operating_cash_flow": 1451283530.92,
+        "accounts_receivable": 1857539987.01,
+        "inventory": 7067692380.72,
+        "goodwill": null,
+        "total_assets": 19135820565.08,
+        "total_liabilities": 11932474696.78,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

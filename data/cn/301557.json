@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301557",
+  "company_id": "CN:301557",
+  "name": "常友科技",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1050175741.35,
+        "net_profit": 105231388.57,
+        "operating_cash_flow": 36868791.89,
+        "accounts_receivable": 477697456.19,
+        "inventory": 191190530.45,
+        "goodwill": null,
+        "total_assets": 1521872819.13,
+        "total_liabilities": 786945762.25,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 871310438.38,
+        "net_profit": 82603444.16,
+        "operating_cash_flow": 49424621.08,
+        "accounts_receivable": 416833517.73,
+        "inventory": 176928435.09,
+        "goodwill": null,
+        "total_assets": 1253672009.4,
+        "total_liabilities": 631193741.09,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 739801942.09,
+        "net_profit": 87539173.96,
+        "operating_cash_flow": 68170127.72,
+        "accounts_receivable": 277439965.6,
+        "inventory": 112183281.1,
+        "goodwill": null,
+        "total_assets": 990789552.13,
+        "total_liabilities": 458132127.98,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

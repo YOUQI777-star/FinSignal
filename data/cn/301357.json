@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301357",
+  "company_id": "CN:301357",
+  "name": "北方长龙",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 107739130.23,
+        "net_profit": -10890017.27,
+        "operating_cash_flow": -134358203.78,
+        "accounts_receivable": 355383871.5,
+        "inventory": 45080124.21,
+        "goodwill": null,
+        "total_assets": 1238125160.01,
+        "total_liabilities": 111786002.21,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 134890910.72,
+        "net_profit": 11540688.25,
+        "operating_cash_flow": -5846457.17,
+        "accounts_receivable": 309286226.6,
+        "inventory": 42336414.09,
+        "goodwill": null,
+        "total_assets": 1321738554.67,
+        "total_liabilities": 181109379.6,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 250222638.95,
+        "net_profit": 80195895.08,
+        "operating_cash_flow": 51234296.97,
+        "accounts_receivable": 236222893.4,
+        "inventory": 17416443.28,
+        "goodwill": null,
+        "total_assets": 714004969.32,
+        "total_liabilities": 320803127.74,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

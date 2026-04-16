@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300244",
+  "company_id": "CN:300244",
+  "name": "迪安诊断",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 12196223734.01,
+        "net_profit": -357277652.58,
+        "operating_cash_flow": 1207395648.34,
+        "accounts_receivable": 7258897680.33,
+        "inventory": 1634845995.91,
+        "goodwill": null,
+        "total_assets": 15785983734.55,
+        "total_liabilities": 7018794162.32,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 13408319799.56,
+        "net_profit": 307461061.38,
+        "operating_cash_flow": 1921354006.32,
+        "accounts_receivable": 8054200551.87,
+        "inventory": 1508948754.81,
+        "goodwill": null,
+        "total_assets": 17939311256.63,
+        "total_liabilities": 8034531783.6,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 20282469258.28,
+        "net_profit": 1434191144.16,
+        "operating_cash_flow": 1639364992.07,
+        "accounts_receivable": 9955600758.99,
+        "inventory": 1434279229.11,
+        "goodwill": null,
+        "total_assets": 21055969393.06,
+        "total_liabilities": 11553970724.28,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

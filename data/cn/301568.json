@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301568",
+  "company_id": "CN:301568",
+  "name": "思泰克",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 348675989.91,
+        "net_profit": 77312089.21,
+        "operating_cash_flow": 38835472.48,
+        "accounts_receivable": 51981979.49,
+        "inventory": 179415458.12,
+        "goodwill": null,
+        "total_assets": 1128099571.69,
+        "total_liabilities": 127871367.04,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 367837125.35,
+        "net_profit": 99385040.1,
+        "operating_cash_flow": 85847753.12,
+        "accounts_receivable": 61622680.97,
+        "inventory": 121862296.83,
+        "goodwill": null,
+        "total_assets": 1093150858.48,
+        "total_liabilities": 90416430.38,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 387353300.81,
+        "net_profit": 116308135.53,
+        "operating_cash_flow": 138964265.09,
+        "accounts_receivable": 31772557.9,
+        "inventory": 143029312.38,
+        "goodwill": null,
+        "total_assets": 512296512.05,
+        "total_liabilities": 136668366.89,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

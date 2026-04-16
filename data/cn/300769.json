@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300769",
+  "company_id": "CN:300769",
+  "name": "德方纳米",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 7612941216.46,
+        "net_profit": -1337652839.74,
+        "operating_cash_flow": 143079360.69,
+        "accounts_receivable": 1594110155.45,
+        "inventory": 981330560.31,
+        "goodwill": null,
+        "total_assets": 17808896717.39,
+        "total_liabilities": 10925390850.87,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 16972508924.23,
+        "net_profit": -1636237639.76,
+        "operating_cash_flow": 5993449336.77,
+        "accounts_receivable": 2282846247.42,
+        "inventory": 845588989.74,
+        "goodwill": null,
+        "total_assets": 20734958524.59,
+        "total_liabilities": 12018332973.96,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 22557078113.42,
+        "net_profit": 2380198555.42,
+        "operating_cash_flow": -6135947711.77,
+        "accounts_receivable": 4366709990.97,
+        "inventory": 5133045965.29,
+        "goodwill": null,
+        "total_assets": 29094244309.19,
+        "total_liabilities": 18434905235.7,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

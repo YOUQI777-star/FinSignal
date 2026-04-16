@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300485",
+  "company_id": "CN:300485",
+  "name": "赛升药业",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 416481789.63,
+        "net_profit": -68853096.03,
+        "operating_cash_flow": 135973946.2,
+        "accounts_receivable": 47320922.37,
+        "inventory": 81369540.32,
+        "goodwill": null,
+        "total_assets": 3551848565.47,
+        "total_liabilities": 166481010.01,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 476569581.71,
+        "net_profit": 102917838.16,
+        "operating_cash_flow": 21210975.01,
+        "accounts_receivable": 46951058.86,
+        "inventory": 107062283.11,
+        "goodwill": null,
+        "total_assets": 3622201677.7,
+        "total_liabilities": 154610347.67,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 734546852.59,
+        "net_profit": 204734954.33,
+        "operating_cash_flow": 110434543.55,
+        "accounts_receivable": 75980079.68,
+        "inventory": 89092152.5,
+        "goodwill": null,
+        "total_assets": 3569082790.89,
+        "total_liabilities": 157095362.89,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

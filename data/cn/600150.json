@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600150",
+  "company_id": "CN:600150",
+  "name": "中国船舶",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 78584406491.58,
+        "net_profit": 3614135616.3,
+        "operating_cash_flow": 5235268842.32,
+        "accounts_receivable": 10763099821.51,
+        "inventory": 66201035615.1,
+        "goodwill": null,
+        "total_assets": 403639151728.16,
+        "total_liabilities": 264104400109.53,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 74838504400.63,
+        "net_profit": 2957396962.72,
+        "operating_cash_flow": 18212879253.0,
+        "accounts_receivable": 3127498170.37,
+        "inventory": 36290920968.66,
+        "goodwill": null,
+        "total_assets": 177832168643.44,
+        "total_liabilities": 125359639601.21,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 59485232361.36,
+        "net_profit": 172470350.07,
+        "operating_cash_flow": -37020988.59,
+        "accounts_receivable": 3709681478.29,
+        "inventory": 32390581639.21,
+        "goodwill": null,
+        "total_assets": 162622107836.71,
+        "total_liabilities": 112334385215.2,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

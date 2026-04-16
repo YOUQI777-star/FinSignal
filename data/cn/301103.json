@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301103",
+  "company_id": "CN:301103",
+  "name": "何氏眼科",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1095633818.01,
+        "net_profit": -27398159.61,
+        "operating_cash_flow": 155646834.76,
+        "accounts_receivable": 36868111.68,
+        "inventory": 74991587.59,
+        "goodwill": null,
+        "total_assets": 2225440397.53,
+        "total_liabilities": 345714195.13,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 1185231535.43,
+        "net_profit": 63551557.35,
+        "operating_cash_flow": 176771992.88,
+        "accounts_receivable": 51420979.7,
+        "inventory": 85399132.51,
+        "goodwill": null,
+        "total_assets": 2483695372.45,
+        "total_liabilities": 411355038.3,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 955313555.17,
+        "net_profit": 32592583.26,
+        "operating_cash_flow": 147979292.7,
+        "accounts_receivable": 31480161.65,
+        "inventory": 84096238.46,
+        "goodwill": null,
+        "total_assets": 2606446017.45,
+        "total_liabilities": 430235633.08,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

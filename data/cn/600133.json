@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600133",
+  "company_id": "CN:600133",
+  "name": "东湖高新",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 3367149008.65,
+        "net_profit": 528105324.28,
+        "operating_cash_flow": -236182464.24,
+        "accounts_receivable": 1455981671.29,
+        "inventory": 4143426706.72,
+        "goodwill": null,
+        "total_assets": 18805522995.86,
+        "total_liabilities": 9213815448.78,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 14673437912.28,
+        "net_profit": 1079272291.7,
+        "operating_cash_flow": -2290319847.74,
+        "accounts_receivable": 1517675312.46,
+        "inventory": 4007805525.02,
+        "goodwill": null,
+        "total_assets": 19096762499.81,
+        "total_liabilities": 9257604941.8,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 13986106197.46,
+        "net_profit": 578634046.48,
+        "operating_cash_flow": 1422552224.26,
+        "accounts_receivable": 8045897528.84,
+        "inventory": 3006837867.29,
+        "goodwill": null,
+        "total_assets": 34970157438.28,
+        "total_liabilities": 25009271945.86,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

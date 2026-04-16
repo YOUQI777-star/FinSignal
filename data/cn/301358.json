@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301358",
+  "company_id": "CN:301358",
+  "name": "湖南裕能",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 22598527203.79,
+        "net_profit": 593552116.99,
+        "operating_cash_flow": -1042215051.46,
+        "accounts_receivable": 5359208134.37,
+        "inventory": 2798355462.8,
+        "goodwill": null,
+        "total_assets": 30342069784.05,
+        "total_liabilities": 18681527370.53,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 41357670979.28,
+        "net_profit": 1580629275.19,
+        "operating_cash_flow": 501243814.33,
+        "accounts_receivable": 4578106462.05,
+        "inventory": 1324852597.06,
+        "goodwill": null,
+        "total_assets": 26794644913.16,
+        "total_liabilities": 15478861790.09,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 42790361250.0,
+        "net_profit": 3007205835.14,
+        "operating_cash_flow": -2783170588.67,
+        "accounts_receivable": 6392912581.87,
+        "inventory": 4971413489.99,
+        "goodwill": null,
+        "total_assets": 26434432058.15,
+        "total_liabilities": 20719967585.89,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

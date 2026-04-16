@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300720",
+  "company_id": "CN:300720",
+  "name": "海川智能",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 236429560.62,
+        "net_profit": 47828615.18,
+        "operating_cash_flow": 45827520.72,
+        "accounts_receivable": 41318778.26,
+        "inventory": 91883522.69,
+        "goodwill": null,
+        "total_assets": 647256665.56,
+        "total_liabilities": 57572344.62,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 225499535.0,
+        "net_profit": 36185787.2,
+        "operating_cash_flow": 26911850.97,
+        "accounts_receivable": 37413057.69,
+        "inventory": 84313813.8,
+        "goodwill": null,
+        "total_assets": 653908264.15,
+        "total_liabilities": 60932323.64,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 200226951.72,
+        "net_profit": 40932339.43,
+        "operating_cash_flow": 39873348.76,
+        "accounts_receivable": 29297000.25,
+        "inventory": 78660200.69,
+        "goodwill": null,
+        "total_assets": 635609524.58,
+        "total_liabilities": 48894677.77,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

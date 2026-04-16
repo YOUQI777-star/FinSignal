@@ -1,0 +1,97 @@
+{
+  "market": "CN",
+  "code": "920069",
+  "company_id": "CN:920069",
+  "name": "普昂医疗",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 382193622.56,
+        "net_profit": 89775785.62,
+        "operating_cash_flow": 115271516.3,
+        "accounts_receivable": 61738564.7,
+        "inventory": 71395022.12,
+        "goodwill": null,
+        "total_assets": 746396395.46,
+        "total_liabilities": 144645799.6,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      },
+      {
+        "period": "2024",
+        "revenue": 318302855.81,
+        "net_profit": 64878963.31,
+        "operating_cash_flow": 76849097.84,
+        "accounts_receivable": 55050546.31,
+        "inventory": 59067892.96,
+        "goodwill": null,
+        "total_assets": 735591605.24,
+        "total_liabilities": 225071668.88,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 236465439.8,
+        "net_profit": 45904102.82,
+        "operating_cash_flow": 106330579.83,
+        "accounts_receivable": 44087330.42,
+        "inventory": 47247409.47,
+        "goodwill": null,
+        "total_assets": 694201258.41,
+        "total_liabilities": 253501800.52,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 241765893.72,
+        "net_profit": 57149994.31,
+        "operating_cash_flow": 97316894.88,
+        "accounts_receivable": 38192342.64,
+        "inventory": 44830821.11,
+        "goodwill": null,
+        "total_assets": 557754607.66,
+        "total_liabilities": 164350998.57,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

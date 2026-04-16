@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301230",
+  "company_id": "CN:301230",
+  "name": "泓博医药",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 544471262.04,
+        "net_profit": 17083154.83,
+        "operating_cash_flow": 80863529.75,
+        "accounts_receivable": 98645259.36,
+        "inventory": 69043072.78,
+        "goodwill": null,
+        "total_assets": 1316426388.19,
+        "total_liabilities": 283728930.39,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 489717074.89,
+        "net_profit": 37619249.09,
+        "operating_cash_flow": 20858397.98,
+        "accounts_receivable": 85533061.81,
+        "inventory": 61418006.89,
+        "goodwill": null,
+        "total_assets": 1487163922.77,
+        "total_liabilities": 369619256.24,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 478883784.02,
+        "net_profit": 67175882.45,
+        "operating_cash_flow": 99294136.99,
+        "accounts_receivable": 82039737.33,
+        "inventory": 51085662.72,
+        "goodwill": null,
+        "total_assets": 1301260787.3,
+        "total_liabilities": 188376403.68,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

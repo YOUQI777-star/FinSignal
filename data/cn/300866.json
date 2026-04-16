@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300866",
+  "company_id": "CN:300866",
+  "name": "安克创新",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 24710080329.34,
+        "net_profit": 2114429526.95,
+        "operating_cash_flow": 2745458716.91,
+        "accounts_receivable": 1654200095.42,
+        "inventory": 3233554201.13,
+        "goodwill": null,
+        "total_assets": 16603707262.71,
+        "total_liabilities": 7459188022.22,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 17507203144.25,
+        "net_profit": 1614871961.81,
+        "operating_cash_flow": 1429913364.18,
+        "accounts_receivable": 1527817539.84,
+        "inventory": 2411311030.09,
+        "goodwill": null,
+        "total_assets": 12776701177.48,
+        "total_liabilities": 4615401746.01,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 14250519798.29,
+        "net_profit": 1143486217.19,
+        "operating_cash_flow": 1423925484.01,
+        "accounts_receivable": 1222432555.06,
+        "inventory": 1479790685.48,
+        "goodwill": null,
+        "total_assets": 10132611269.27,
+        "total_liabilities": 3188018198.74,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

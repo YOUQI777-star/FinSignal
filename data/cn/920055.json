@@ -1,0 +1,97 @@
+{
+  "market": "CN",
+  "code": "920055",
+  "company_id": "CN:920055",
+  "name": "隆源股份",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 1025711886.5,
+        "net_profit": 143048986.14,
+        "operating_cash_flow": 234656114.31,
+        "accounts_receivable": 325240856.74,
+        "inventory": 159707176.71,
+        "goodwill": null,
+        "total_assets": 1595686217.56,
+        "total_liabilities": 779626526.95,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      },
+      {
+        "period": "2024",
+        "revenue": 868892976.07,
+        "net_profit": 128487109.75,
+        "operating_cash_flow": 180192912.18,
+        "accounts_receivable": 290079941.03,
+        "inventory": 163446732.7,
+        "goodwill": null,
+        "total_assets": 1340874325.93,
+        "total_liabilities": 674594073.76,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 699399446.27,
+        "net_profit": 125965134.45,
+        "operating_cash_flow": 143533927.52,
+        "accounts_receivable": 212343683.07,
+        "inventory": 151983167.98,
+        "goodwill": null,
+        "total_assets": 1101413149.45,
+        "total_liabilities": 542371820.39,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 519327595.86,
+        "net_profit": 101061997.8,
+        "operating_cash_flow": 93123355.0,
+        "accounts_receivable": 151213548.17,
+        "inventory": 111964757.69,
+        "goodwill": null,
+        "total_assets": 732654385.31,
+        "total_liabilities": 303722328.43,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_sina",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

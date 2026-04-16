@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600699",
+  "company_id": "CN:600699",
+  "name": "均胜电子",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 55863577384.67,
+        "net_profit": 960469595.44,
+        "operating_cash_flow": 4601804346.73,
+        "accounts_receivable": 8678239875.31,
+        "inventory": 10538159090.5,
+        "goodwill": null,
+        "total_assets": 64165868100.72,
+        "total_liabilities": 44320325057.17,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 55728475741.55,
+        "net_profit": 1083190849.19,
+        "operating_cash_flow": 3929015824.86,
+        "accounts_receivable": 8032060897.42,
+        "inventory": 9246184266.21,
+        "goodwill": null,
+        "total_assets": 56886848139.45,
+        "total_liabilities": 37760475654.04,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 49793351660.58,
+        "net_profit": 394184331.03,
+        "operating_cash_flow": 2169819571.27,
+        "accounts_receivable": 7600885200.26,
+        "inventory": 8511657540.51,
+        "goodwill": null,
+        "total_assets": 54112093352.25,
+        "total_liabilities": 36408415676.87,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

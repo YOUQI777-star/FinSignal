@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600056",
+  "company_id": "CN:600056",
+  "name": "中国医药",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 34148359638.99,
+        "net_profit": 535467687.81,
+        "operating_cash_flow": 1005430549.62,
+        "accounts_receivable": 13019683667.08,
+        "inventory": 6285067620.81,
+        "goodwill": null,
+        "total_assets": 36325326012.27,
+        "total_liabilities": 21995758732.37,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 38824430504.85,
+        "net_profit": 1048039144.39,
+        "operating_cash_flow": 859075452.42,
+        "accounts_receivable": 13838236879.95,
+        "inventory": 6232263429.32,
+        "goodwill": null,
+        "total_assets": 37409912222.28,
+        "total_liabilities": 23522286777.98,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 37592649532.91,
+        "net_profit": 735601157.25,
+        "operating_cash_flow": 1645872491.19,
+        "accounts_receivable": 13153673106.09,
+        "inventory": 6083411981.21,
+        "goodwill": null,
+        "total_assets": 35899361928.59,
+        "total_liabilities": 22728708196.72,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

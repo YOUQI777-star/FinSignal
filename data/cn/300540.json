@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300540",
+  "company_id": "CN:300540",
+  "name": "蜀道装备",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 861508189.96,
+        "net_profit": 72366839.38,
+        "operating_cash_flow": 290204804.98,
+        "accounts_receivable": 217592108.74,
+        "inventory": 280094980.49,
+        "goodwill": null,
+        "total_assets": 2100830514.65,
+        "total_liabilities": 981063300.3,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 668353736.19,
+        "net_profit": 32645780.37,
+        "operating_cash_flow": -177603375.04,
+        "accounts_receivable": 307063027.36,
+        "inventory": 222001537.97,
+        "goodwill": null,
+        "total_assets": 1740615463.69,
+        "total_liabilities": 720815745.75,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 238998211.93,
+        "net_profit": -25085863.12,
+        "operating_cash_flow": 60844286.32,
+        "accounts_receivable": 143966730.04,
+        "inventory": 152159347.52,
+        "goodwill": null,
+        "total_assets": 1470987615.88,
+        "total_liabilities": 495303694.42,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

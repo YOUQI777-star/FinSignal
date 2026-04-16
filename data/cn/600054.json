@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600054",
+  "company_id": "CN:600054",
+  "name": "黄山旅游",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 1931131905.5,
+        "net_profit": 315009002.14,
+        "operating_cash_flow": 521663003.98,
+        "accounts_receivable": 34437014.58,
+        "inventory": 47968514.31,
+        "goodwill": null,
+        "total_assets": 5732301996.17,
+        "total_liabilities": 873235828.7,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 1929441918.97,
+        "net_profit": 422906942.83,
+        "operating_cash_flow": 722893531.77,
+        "accounts_receivable": 28452331.51,
+        "inventory": 453445068.11,
+        "goodwill": null,
+        "total_assets": 5654288820.01,
+        "total_liabilities": 962572023.91,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 799904722.9,
+        "net_profit": -130409445.53,
+        "operating_cash_flow": 21335960.39,
+        "accounts_receivable": 17515984.0,
+        "inventory": 381972687.22,
+        "goodwill": null,
+        "total_assets": 5210520110.0,
+        "total_liabilities": 918588726.4,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

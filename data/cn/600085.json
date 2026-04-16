@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600085",
+  "company_id": "CN:600085",
+  "name": "同仁堂",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 18597281604.93,
+        "net_profit": 1526274925.98,
+        "operating_cash_flow": 760985272.75,
+        "accounts_receivable": 1321473797.33,
+        "inventory": 10729860618.04,
+        "goodwill": null,
+        "total_assets": 31197524019.77,
+        "total_liabilities": 10296523087.94,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 17860891456.13,
+        "net_profit": 1668834509.63,
+        "operating_cash_flow": 1869491851.11,
+        "accounts_receivable": 1055560325.33,
+        "inventory": 9340164542.46,
+        "goodwill": null,
+        "total_assets": 30089450163.66,
+        "total_liabilities": 9832343990.7,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 15372423363.17,
+        "net_profit": 1427334893.13,
+        "operating_cash_flow": 3094296284.27,
+        "accounts_receivable": 1301148434.72,
+        "inventory": 6694368428.37,
+        "goodwill": null,
+        "total_assets": 27054123244.38,
+        "total_liabilities": 8590423576.47,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

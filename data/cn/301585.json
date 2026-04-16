@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "301585",
+  "company_id": "CN:301585",
+  "name": "蓝宇股份",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 478460736.42,
+        "net_profit": 100508544.16,
+        "operating_cash_flow": 82563824.61,
+        "accounts_receivable": 142378554.64,
+        "inventory": 118352511.64,
+        "goodwill": null,
+        "total_assets": 1077931945.42,
+        "total_liabilities": 128161367.06,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 383623710.08,
+        "net_profit": 92688356.32,
+        "operating_cash_flow": 76206674.35,
+        "accounts_receivable": 101200797.43,
+        "inventory": 83327319.44,
+        "goodwill": null,
+        "total_assets": 519666722.51,
+        "total_liabilities": 86619008.22,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 313272412.87,
+        "net_profit": 72100174.7,
+        "operating_cash_flow": 65730500.21,
+        "accounts_receivable": 78847209.66,
+        "inventory": 73584433.25,
+        "goodwill": null,
+        "total_assets": 424355121.03,
+        "total_liabilities": 83995763.06,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "600305",
+  "company_id": "CN:600305",
+  "name": "恒顺醋业",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 2195870508.45,
+        "net_profit": 127342058.81,
+        "operating_cash_flow": 494279933.34,
+        "accounts_receivable": 37985012.68,
+        "inventory": 276141036.29,
+        "goodwill": null,
+        "total_assets": 4364251278.58,
+        "total_liabilities": 1035283776.93,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 2106410685.37,
+        "net_profit": 86899447.19,
+        "operating_cash_flow": 248452397.72,
+        "accounts_receivable": 47580486.64,
+        "inventory": 278378817.97,
+        "goodwill": null,
+        "total_assets": 4053131840.29,
+        "total_liabilities": 715820746.48,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 2139020033.23,
+        "net_profit": 137994123.97,
+        "operating_cash_flow": 191722121.18,
+        "accounts_receivable": 69018692.71,
+        "inventory": 297528417.32,
+        "goodwill": null,
+        "total_assets": 2967704800.83,
+        "total_liabilities": 741743086.83,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

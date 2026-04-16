@@ -1,0 +1,79 @@
+{
+  "market": "CN",
+  "code": "300141",
+  "company_id": "CN:300141",
+  "name": "和顺电气",
+  "name_en": null,
+  "industry": null,
+  "currency": "CNY",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 428125850.78,
+        "net_profit": -26768767.03,
+        "operating_cash_flow": 99945317.77,
+        "accounts_receivable": 310295404.52,
+        "inventory": 24285661.71,
+        "goodwill": null,
+        "total_assets": 1069673254.79,
+        "total_liabilities": 411451855.08,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2024-12-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 338383058.55,
+        "net_profit": 6896675.81,
+        "operating_cash_flow": 61573328.63,
+        "accounts_receivable": 313613661.32,
+        "inventory": 50075005.9,
+        "goodwill": null,
+        "total_assets": 1020780707.85,
+        "total_liabilities": 341760256.6,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2023-12-31"
+      },
+      {
+        "period": "2022",
+        "revenue": 310601211.63,
+        "net_profit": -10178759.42,
+        "operating_cash_flow": 127962402.58,
+        "accounts_receivable": 280242519.91,
+        "inventory": 50048868.62,
+        "goodwill": null,
+        "total_assets": 994155578.89,
+        "total_liabilities": 321113580.4,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "akshare_em_bulk",
+        "unit": "base_currency",
+        "as_of": "2022-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}
