@@ -1374,3 +1374,65 @@ mark.srch-hl {
   .topbar-center { display: none; }
   .filter-select:not(#limitSelect) { display: none; }
 }
+
+/* ============================================================
+   CANDIDATES PAGE
+   ============================================================ */
+.candidates-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s3) var(--s4);
+  padding: var(--s4) 0 var(--s2);
+}
+
+.filter-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.filter-label {
+  font-size: var(--f-sm);
+  color: var(--text-secondary, #6b7280);
+}
+
+.filter-input {
+  width: 64px;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 6px;
+  font-size: var(--f-sm);
+  background: var(--surface, #fff);
+  color: var(--text-primary, #111827);
+  text-align: right;
+}
+
+.filter-input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 2px rgba(30,64,175,0.12);
+}
+
+.filter-unit {
+  font-size: var(--f-xs);
+  color: var(--text-secondary, #6b7280);
+}
+
+.filter-field--check {
+  gap: 6px;
+  cursor: pointer;
+}
+
+.filter-field--check input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--brand);
+  cursor: pointer;
+}
+
+/* pct up/down colors in table */
+td.pct-up { color: #16a34a; font-weight: 500; }
+td.pct-dn { color: #dc2626; font-weight: 500; }

@@ -68,6 +68,15 @@ const API = {
   getGraph(market, code) {
     return apiFetch(`/api/graph/${market}/${code}`);
   },
+
+  getCandidates(params = {}) {
+    const qs = new URLSearchParams(params).toString();
+    return apiFetch(`/api/candidates${qs ? '?' + qs : ''}`);
+  },
+
+  getCandidateDetail(code) {
+    return apiFetch(`/api/candidates/CN/${code}`);
+  },
 };
 
 /* ============================================================

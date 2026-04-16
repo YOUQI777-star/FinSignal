@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Signal Ranking — FinSignal</title>
+  <title>Candidates — FinSignal</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -28,7 +28,7 @@
         </svg>
         <span>Dashboard</span>
       </a>
-      <a href="ranking.html" class="nav-item nav-item--active">
+      <a href="ranking.html" class="nav-item">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line>
           <circle cx="3" cy="6" r="1" fill="currentColor"></circle><circle cx="3" cy="12" r="1" fill="currentColor"></circle><circle cx="3" cy="18" r="1" fill="currentColor"></circle>
@@ -55,13 +55,13 @@
         </svg>
         <span>Reports</span>
       </a>
-      <a href="candidates.html" class="nav-item">
+      <a href="candidates.html" class="nav-item nav-item--active">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
         </svg>
         <span>Candidates</span>
       </a>
-            <div class="nav-group-label">System</div>
+      <div class="nav-group-label">System</div>
       <a href="settings.html" class="nav-item">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"></circle>
@@ -83,53 +83,13 @@
 
     <header class="topbar">
       <div class="topbar-left">
-        <h1 class="page-title">Signal Ranking</h1>
-        <span class="page-crumb">Full List</span>
+        <h1 class="page-title">持续换手候选池</h1>
+        <span class="page-crumb">Candidates · A-Share</span>
       </div>
-
-      <div class="topbar-center" style="max-width:240px">
-        <div class="search-wrap" id="searchWrap">
-          <div class="search-field">
-            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input id="searchInput" type="text" placeholder="Filter by name or code…" autocomplete="off" spellcheck="false" />
-          </div>
-        </div>
-      </div>
-
       <div class="topbar-right">
-        <select id="marketFilter" class="filter-select">
-          <option value="">All Markets</option>
-          <option value="CN">A-Share (CN)</option>
-          <option value="TW">Taiwan (TW)</option>
-        </select>
-        <select id="signalFilter" class="filter-select">
-          <option value="">All Rules</option>
-          <option value="F1">F1 — AR Growth</option>
-          <option value="F2">F2 — Cash Flow</option>
-          <option value="F3">F3 — Leverage</option>
-          <option value="F4">F4 — Margin</option>
-          <option value="G1">G1 — Pledge</option>
-          <option value="G3">G3 — Board</option>
-        </select>
-        <select id="limitSelect" class="filter-select">
-          <option value="20">20 rows</option>
-          <option value="50" selected>50 rows</option>
-          <option value="100">100 rows</option>
-          <option value="200">200 rows</option>
-        </select>
         <span class="loading-tag" id="loadingTag" style="display:none">
           <span class="spinner"></span>Loading
         </span>
-        <button id="exportBtn" class="btn btn--outline" style="height:34px">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
-          </svg>
-          Export CSV
-        </button>
         <button id="refreshBtn" class="btn-refresh">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="23 4 23 10 17 10"></polyline>
@@ -141,15 +101,61 @@
     </header>
 
     <main class="content">
+
+      <!-- Filter bar -->
+      <div class="panel" style="margin-bottom: var(--s4)">
+        <div class="panel-header" style="padding-bottom: 0">
+          <div class="panel-header-left">
+            <h2 class="panel-title">筛选条件</h2>
+          </div>
+          <button id="resetBtn" class="btn btn--outline" style="height:30px;font-size:12px">重置</button>
+        </div>
+        <div class="candidates-filters" id="filterBar">
+          <label class="filter-field">
+            <span class="filter-label">日均换手率 &gt;</span>
+            <input id="fTurnoverMin" type="number" class="filter-input" value="1" min="0" max="100" step="0.5" />
+            <span class="filter-unit">%</span>
+          </label>
+          <label class="filter-field">
+            <span class="filter-label">单日换手 &lt;</span>
+            <input id="fTurnoverMax" type="number" class="filter-input" value="10" min="0" max="100" step="1" />
+            <span class="filter-unit">%</span>
+          </label>
+          <label class="filter-field">
+            <span class="filter-label">现价 &lt;</span>
+            <input id="fPriceMax" type="number" class="filter-input" value="5" min="0" step="0.5" />
+            <span class="filter-unit">元</span>
+          </label>
+          <label class="filter-field">
+            <span class="filter-label">总股本 &lt;</span>
+            <input id="fShareMax" type="number" class="filter-input" value="30" min="0" step="5" />
+            <span class="filter-unit">亿</span>
+          </label>
+          <label class="filter-field">
+            <span class="filter-label">10日涨幅 &lt;</span>
+            <input id="fPctMax" type="number" class="filter-input" value="15" min="0" max="200" step="1" />
+            <span class="filter-unit">%</span>
+          </label>
+          <label class="filter-field filter-field--check">
+            <input id="fExcludeSt" type="checkbox" checked />
+            <span class="filter-label">排除 ST</span>
+          </label>
+          <button id="applyBtn" class="btn btn--primary" style="height:34px">应用</button>
+        </div>
+      </div>
+
+      <!-- Results table -->
       <div class="panel">
         <div class="panel-header">
           <div class="panel-header-left">
-            <h2 class="panel-title">Companies by Signal Triggers</h2>
+            <h2 class="panel-title">候选股票</h2>
             <span class="panel-meta" id="tableInfo"></span>
           </div>
+          <span class="panel-meta" id="cacheDate" style="font-size:11px;color:var(--text-tertiary,#9ca3af)"></span>
         </div>
         <div id="tableContainer" class="table-container"></div>
       </div>
+
     </main>
 
     <footer class="sys-footer">
@@ -163,8 +169,7 @@
   </div>
 </div>
 
-<div id="toastContainer" class="toast-container"></div>
 <script src="api.js"></script>
-<script src="ranking.js"></script>
+<script src="candidates.js"></script>
 </body>
 </html>
