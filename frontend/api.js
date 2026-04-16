@@ -51,6 +51,10 @@ const API = {
   generateReport(market, code) {
     return apiFetch(`/api/report/${market}/${code}`, { method: 'POST' });
   },
+
+  getGraph(market, code) {
+    return apiFetch(`/api/graph/${market}/${code}`);
+  },
 };
 
 /* ============================================================

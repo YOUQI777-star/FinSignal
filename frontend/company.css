@@ -567,3 +567,56 @@
   .co-info-card { flex-direction: column; align-items: flex-start; gap: var(--s4); }
   .co-info-aside { align-items: flex-start; }
 }
+
+/* ============================================================
+   SUPPLY CHAIN GRAPH
+   ============================================================ */
+.graph-panel {
+  margin-top: var(--s5);
+}
+
+.graph-panel .panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--s3);
+}
+
+.graph-legend {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.graph-legend span { display: flex; align-items: center; gap: 5px; }
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.legend-company  { background: #3b82f6; }
+.legend-industry { background: #10b981; }
+.legend-product  { background: #f59e0b; }
+
+.chain-graph-container {
+  width: 100%;
+  height: 420px;
+  border-radius: 8px;
+  background: var(--surface-secondary, #f9fafb);
+  border: 1px solid var(--border-color, #e5e7eb);
+  margin-top: var(--s4);
+  position: relative;
+}
+
+.graph-note {
+  margin-top: var(--s3);
+  font-size: 12px;
+  color: var(--text-tertiary, #9ca3af);
+  text-align: center;
+}

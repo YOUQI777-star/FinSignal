@@ -222,6 +222,23 @@
 
       </div><!-- /co-grid -->
 
+      <!-- Supply Chain Graph (full-width) -->
+      <section class="panel graph-panel" id="graphSection" style="display:none">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <h2 class="panel-title">Supply Chain Graph</h2>
+            <span class="panel-meta" id="graphMeta"></span>
+          </div>
+          <div class="graph-legend">
+            <span class="legend-dot legend-company"></span><span>Company</span>
+            <span class="legend-dot legend-industry"></span><span>Industry</span>
+            <span class="legend-dot legend-product"></span><span>Product</span>
+          </div>
+        </div>
+        <div id="chainGraph" class="chain-graph-container"></div>
+        <p class="graph-note" id="graphNote"></p>
+      </section>
+
     </main>
 
     <footer class="sys-footer">
@@ -238,6 +255,7 @@
 <!-- Toast container -->
 <div id="toastContainer" class="toast-container"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.29.2/cytoscape.min.js"></script>
 <script src="api.js"></script>
 <script src="company.js"></script>
 </body>

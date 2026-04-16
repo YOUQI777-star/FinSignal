@@ -242,6 +242,129 @@ function renderPage(data) {
   renderSummaryCards(data);
   renderSignalSection('financialSignals',  'finMeta',  data.financial_signals  || []);
   renderSignalSection('governanceSignals', 'govMeta',  data.governance_signals || []);
+  loadGraph(data.market, data.code);
+}
+
+/* ============================================================
+   SUPPLY CHAIN GRAPH
+   ============================================================ */
+async function loadGraph(market, code) {
+  if (!market || !code) return;
+  try {
+    const data = await API.getGraph(market, code);
+    renderGraph(data);
+  } catch (err) {
+    // Graph is non-critical — silently skip on error
+    console.warn('[graph] failed to load:', err.message);
+  }
+}
+
+function renderGraph(data) {
+  const section = document.getElementById('graphSection');
+  const meta    = document.getElementById('graphMeta');
+  const note    = document.getElementById('graphNote');
+  const nodes   = data.nodes || [];
+  const edges   = data.edges || [];
+
+  if (!nodes.length) {
+    // No graph data — keep section hidden
+    return;
+  }
+
+  section.style.display = '';
+  meta.textContent = `${nodes.length} nodes · ${edges.length} edges`;
+
+  if (typeof cytoscape === 'undefined') {
+    note.textContent = 'Graph library not loaded.';
+    return;
+  }
+
+  const cy = cytoscape({
+    container: document.getElementById('chainGraph'),
+    elements: { nodes, edges },
+    style: [
+      {
+        selector: 'node',
+        style: {
+          label: 'data(name)',
+          'font-size': 11,
+          'text-valign': 'bottom',
+          'text-margin-y': 4,
+          'text-wrap': 'wrap',
+          'text-max-width': 90,
+          color: '#374151',
+        },
+      },
+      {
+        selector: 'node[type="Company"]',
+        style: {
+          'background-color': '#3b82f6',
+          width: 46,
+          height: 46,
+          'font-size': 13,
+          'font-weight': 600,
+          color: '#1d4ed8',
+          'z-index': 10,
+        },
+      },
+      {
+        selector: 'node[type="Industry"]',
+        style: {
+          'background-color': '#10b981',
+          shape: 'round-rectangle',
+          width: 36,
+          height: 36,
+          color: '#065f46',
+        },
+      },
+      {
+        selector: 'node[type="Product"]',
+        style: {
+          'background-color': '#f59e0b',
+          shape: 'ellipse',
+          width: 28,
+          height: 28,
+          color: '#92400e',
+        },
+      },
+      {
+        selector: 'node[direction="upstream"]',
+        style: { 'background-color': '#6366f1' },
+      },
+      {
+        selector: 'node[direction="downstream"]',
+        style: { 'background-color': '#ec4899' },
+      },
+      {
+        selector: 'edge',
+        style: {
+          width: 1.5,
+          'line-color': '#d1d5db',
+          'target-arrow-color': '#d1d5db',
+          'target-arrow-shape': 'triangle',
+          'curve-style': 'bezier',
+          label: 'data(relation)',
+          'font-size': 9,
+          'text-rotation': 'autorotate',
+          color: '#9ca3af',
+        },
+      },
+    ],
+    layout: {
+      name: 'cose',
+      animate: false,
+      randomize: false,
+      nodeRepulsion: 4500,
+      idealEdgeLength: 80,
+      gravity: 0.25,
+      padding: 24,
+    },
+  });
+
+  const totalNodes = nodes.length;
+  note.textContent = totalNodes > 30
+    ? `Showing ${totalNodes} nodes. Scroll / pinch to zoom, drag to pan.`
+    : 'Scroll / pinch to zoom, drag to pan.';
 }
 
 /* ---------- Topbar ID strip ---------- */
