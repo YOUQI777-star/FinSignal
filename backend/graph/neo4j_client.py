@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from backend.config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
+from backend.config import NEO4J_DATABASE, NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
 
 # Optional import — neo4j driver may not be installed in all envs
 try:
@@ -75,7 +75,7 @@ class Neo4jClient:
                collect(DISTINCT dn)  AS downstreams
         """
         try:
-            with self._driver.session() as session:
+            with self._driver.session(database=NEO4J_DATABASE) as session:
                 rec = session.run(cypher, cid=company_id).single()
             if rec is None:
                 return self._empty(market, code, found=False)
@@ -108,7 +108,7 @@ class Neo4jClient:
           collect(DISTINCT {company_id: customer.company_id,  name: customer.name,  code: customer.code}) AS downstream
         """
         try:
-            with self._driver.session() as session:
+            with self._driver.session(database=NEO4J_DATABASE) as session:
                 rec = session.run(cypher, cid=company_id).single()
             if rec is None:
                 return {"upstream": [], "downstream": []}
@@ -135,7 +135,7 @@ class Neo4jClient:
         LIMIT $limit
         """
         try:
-            with self._driver.session() as session:
+            with self._driver.session(database=NEO4J_DATABASE) as session:
                 rows = session.run(cypher, cid=company_id, limit=limit).data()
             return rows
         except Exception:
