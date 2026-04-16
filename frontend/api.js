@@ -6,10 +6,8 @@
    automatically when the backend is unreachable.
    ============================================================ */
 
-// Port 5001: macOS AirPlay Receiver occupies 5000 on recent macOS versions.
-// Disable it in System Settings > General > AirDrop & Handoff > AirPlay Receiver,
-// then change this back to 5000.
-const API_BASE = localStorage.getItem('fsm_api_base') || 'http://localhost:5001';
+// Production backend on Railway. Override via Settings page (localStorage 'fsm_api_base').
+const API_BASE = localStorage.getItem('fsm_api_base') || 'https://tender-fascination-production.up.railway.app';
 
 async function apiFetch(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
