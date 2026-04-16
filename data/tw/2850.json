@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "2850",
+  "company_id": "TW:2850",
+  "name": "新光產物保險股份有限公司",
+  "name_en": "SK Insurance",
+  "industry": "17",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 21561953000.0,
+        "net_profit": 3878668000.0,
+        "operating_cash_flow": null,
+        "accounts_receivable": 3237752000.0,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 62427350000.0,
+        "total_liabilities": 41684061000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

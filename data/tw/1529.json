@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "1529",
+  "company_id": "TW:1529",
+  "name": "樂事綠能科技股份有限公司",
+  "name_en": "LUXE",
+  "industry": "05",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 925483000.0,
+        "net_profit": 156972000.0,
+        "operating_cash_flow": 288714000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 3174775000.0,
+        "total_liabilities": 1293991000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

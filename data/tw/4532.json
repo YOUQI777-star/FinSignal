@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "4532",
+  "company_id": "TW:4532",
+  "name": "瑞智精密股份有限公司",
+  "name_en": "RECHI",
+  "industry": "05",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 20278770000.0,
+        "net_profit": 1015991000.0,
+        "operating_cash_flow": null,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 28319539000.0,
+        "total_liabilities": 16950723000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

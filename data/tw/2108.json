@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "2108",
+  "company_id": "TW:2108",
+  "name": "南帝化學工業股份有限公司",
+  "name_en": "NANTEX",
+  "industry": "11",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 9546429000.0,
+        "net_profit": 410485000.0,
+        "operating_cash_flow": 1466411000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 18357583000.0,
+        "total_liabilities": 1877415000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

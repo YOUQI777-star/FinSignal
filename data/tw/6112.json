@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "6112",
+  "company_id": "TW:6112",
+  "name": "邁達特數位股份有限公司",
+  "name_en": "Metaage",
+  "industry": "30",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 21838980000.0,
+        "net_profit": 342682000.0,
+        "operating_cash_flow": null,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 14270665000.0,
+        "total_liabilities": 8877018000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

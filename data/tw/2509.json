@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "2509",
+  "company_id": "TW:2509",
+  "name": "全坤建設開發股份有限公司",
+  "name_en": "CHAINQUI",
+  "industry": "14",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 264407000.0,
+        "net_profit": -180048000.0,
+        "operating_cash_flow": null,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 13631981000.0,
+        "total_liabilities": 9426615000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

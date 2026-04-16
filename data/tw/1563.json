@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "1563",
+  "company_id": "TW:1563",
+  "name": "巧新科技工業股份有限公司",
+  "name_en": "SAI",
+  "industry": "12",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 6977352000.0,
+        "net_profit": 318191000.0,
+        "operating_cash_flow": 1092886000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 18222616000.0,
+        "total_liabilities": 9443435000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

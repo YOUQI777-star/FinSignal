@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "1906",
+  "company_id": "TW:1906",
+  "name": "寶隆國際股份有限公司",
+  "name_en": "Baolong Intl.",
+  "industry": "09",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 3111558000.0,
+        "net_profit": 1274000.0,
+        "operating_cash_flow": 516409000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 5545101000.0,
+        "total_liabilities": 2752521000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -16,9 +16,11 @@ build/
 
 # Data files (too large / local only)
 data/cn/*.json
-data/tw/*.json
 data/chain_kg/
 data/sync_reports/
+
+# TW snapshots included in git (5.3MB, needed for Railway)
+# data/tw/*.json  ← included in git
 
 # Keep signals cache + master DB (needed for Railway deployment)
 # backend/master/company_master.db  ← included in git

@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "6869",
+  "company_id": "TW:6869",
+  "name": "雲豹能源科技股份有限公司",
+  "name_en": "J&V Energy",
+  "industry": "35",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 7469018000.0,
+        "net_profit": -570450000.0,
+        "operating_cash_flow": null,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 15824415000.0,
+        "total_liabilities": 10338922000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

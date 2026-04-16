@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "6924",
+  "company_id": "TW:6924",
+  "name": "榮惠集團(開曼)股份有限公司",
+  "name_en": "EIKEI-KY",
+  "industry": "28",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 1693719000.0,
+        "net_profit": 118421000.0,
+        "operating_cash_flow": null,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 1072304000.0,
+        "total_liabilities": 496434000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "1808",
+  "company_id": "TW:1808",
+  "name": "潤隆建設股份有限公司",
+  "name_en": "RUN LONG",
+  "industry": "14",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 6495857000.0,
+        "net_profit": 1301352000.0,
+        "operating_cash_flow": -1057194000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 56339006000.0,
+        "total_liabilities": 43494400000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "1760",
+  "company_id": "TW:1760",
+  "name": "寶齡富錦生技股份有限公司",
+  "name_en": "PBF",
+  "industry": "22",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 2063392000.0,
+        "net_profit": 190169000.0,
+        "operating_cash_flow": 309571000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 3226687000.0,
+        "total_liabilities": 1272025000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

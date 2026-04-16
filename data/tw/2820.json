@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "2820",
+  "company_id": "TW:2820",
+  "name": "中華票券金融股份有限公司",
+  "name_en": "CBF",
+  "industry": "17",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 924012000.0,
+        "net_profit": 1796079000.0,
+        "operating_cash_flow": null,
+        "accounts_receivable": 1347172000.0,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 265121855000.0,
+        "total_liabilities": 237291407000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "market": "TW",
+  "code": "2330",
+  "company_id": "TW:2330",
+  "name": "台積電",
+  "name_en": "TSMC",
+  "industry": "半導體",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2024",
+        "revenue": 2894300000000,
+        "net_profit": 1173200000000,
+        "operating_cash_flow": 1450000000000,
+        "accounts_receivable": 320000000000,
+        "inventory": 265000000000,
+        "goodwill": 12000000000,
+        "total_assets": 6280000000000,
+        "total_liabilities": 2410000000000,
+        "non_recurring_items": 0,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": "standard",
+        "source": "demo",
+        "unit": "base_currency",
+        "as_of": "2025-03-31"
+      },
+      {
+        "period": "2023",
+        "revenue": 2161700000000,
+        "net_profit": 838500000000,
+        "operating_cash_flow": 1060000000000,
+        "accounts_receivable": 170000000000,
+        "inventory": 221000000000,
+        "goodwill": 12000000000,
+        "total_assets": 5570000000000,
+        "total_liabilities": 2130000000000,
+        "non_recurring_items": 0,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": "standard",
+        "source": "demo",
+        "unit": "base_currency",
+        "as_of": "2024-03-31"
+      }
+    ]
+  },
+  "governance": {
+    "controlling_shareholder_pct": 0.0,
+    "pledge_ratio": null,
+    "equity_layers": 2,
+    "chairman_is_ceo": false,
+    "independent_director_ratio": 0.4,
+    "auditor_changes_3y": 0,
+    "insider_selling_6m": 0.0,
+    "independent_director_overboarding": 0,
+    "shareholder_meeting_attendance": null,
+    "disclosure_rating": null,
+    "esg_score": 87.0
+  },
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "G3"
+    ],
+    "missing_fields": [
+      "pledge_ratio",
+      "shareholder_meeting_attendance",
+      "disclosure_rating"
+    ]
+  }
+}

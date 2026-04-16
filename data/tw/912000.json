@@ -1,0 +1,21 @@
+{
+  "market": "TW",
+  "code": "912000",
+  "company_id": "TW:912000",
+  "name": "晨訊科技集團有限公司",
+  "name_en": "SIM TECH",
+  "industry": "91",
+  "currency": "TWD",
+  "financials": {
+    "annual": []
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [],
+    "missing_fields": [
+      "financials.annual",
+      "governance"
+    ]
+  }
+}

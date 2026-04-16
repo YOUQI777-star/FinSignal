@@ -1,0 +1,21 @@
+{
+  "market": "TW",
+  "code": "911868",
+  "company_id": "TW:911868",
+  "name": "同方友友控股有限公司",
+  "name_en": "Neo-Neon",
+  "industry": "91",
+  "currency": "TWD",
+  "financials": {
+    "annual": []
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [],
+    "missing_fields": [
+      "financials.annual",
+      "governance"
+    ]
+  }
+}

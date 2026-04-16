@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "2884",
+  "company_id": "TW:2884",
+  "name": "玉山金融控股股份有限公司",
+  "name_en": "E.S.F.H",
+  "industry": "17",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 40939262000.0,
+        "net_profit": 34342232000.0,
+        "operating_cash_flow": null,
+        "accounts_receivable": 172188894000.0,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 4516533203000.0,
+        "total_liabilities": 4243389213000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

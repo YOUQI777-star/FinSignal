@@ -1,0 +1,21 @@
+{
+  "market": "TW",
+  "code": "911608",
+  "company_id": "TW:911608",
+  "name": "明輝環球企業有限公司",
+  "name_en": "BH Global",
+  "industry": "91",
+  "currency": "TWD",
+  "financials": {
+    "annual": []
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [],
+    "missing_fields": [
+      "financials.annual",
+      "governance"
+    ]
+  }
+}

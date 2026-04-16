@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "1903",
+  "company_id": "TW:1903",
+  "name": "士林紙業股份有限公司",
+  "name_en": "Shihlin Paper",
+  "industry": "09",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 153294000.0,
+        "net_profit": 335741000.0,
+        "operating_cash_flow": 161830000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 10560058000.0,
+        "total_liabilities": 5034181000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

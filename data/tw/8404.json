@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "8404",
+  "company_id": "TW:8404",
+  "name": "百和興業股份有限公司(開曼)",
+  "name_en": "PAIHO  SHIH",
+  "industry": "20",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 7576734000.0,
+        "net_profit": 601631000.0,
+        "operating_cash_flow": null,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 20048024000.0,
+        "total_liabilities": 12845605000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

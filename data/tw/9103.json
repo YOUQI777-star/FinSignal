@@ -1,0 +1,21 @@
+{
+  "market": "TW",
+  "code": "9103",
+  "company_id": "TW:9103",
+  "name": "美德向邦醫療國際股份有限公司",
+  "name_en": "MEDTECS",
+  "industry": "91",
+  "currency": "TWD",
+  "financials": {
+    "annual": []
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [],
+    "missing_fields": [
+      "financials.annual",
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "2059",
+  "company_id": "TW:2059",
+  "name": "川湖科技股份有限公司",
+  "name_en": "king slide　",
+  "industry": "28",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 17500695000.0,
+        "net_profit": 9837067000.0,
+        "operating_cash_flow": 11333685000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 35083436000.0,
+        "total_liabilities": 7057477000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "2897",
+  "company_id": "TW:2897",
+  "name": "王道商業銀行股份有限公司",
+  "name_en": "O-Bank",
+  "industry": "17",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 2495726000.0,
+        "net_profit": 3149271000.0,
+        "operating_cash_flow": null,
+        "accounts_receivable": 4053276000.0,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 701299097000.0,
+        "total_liabilities": 636487261000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

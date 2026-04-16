@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "2881",
+  "company_id": "TW:2881",
+  "name": "富邦金融控股股份有限公司",
+  "name_en": "Fubon Financial",
+  "industry": "17",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 190389088000.0,
+        "net_profit": 120943979000.0,
+        "operating_cash_flow": null,
+        "accounts_receivable": 417301468000.0,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 12875478154000.0,
+        "total_liabilities": 11877670227000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

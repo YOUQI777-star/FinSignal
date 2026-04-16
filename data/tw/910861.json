@@ -1,0 +1,21 @@
+{
+  "market": "TW",
+  "code": "910861",
+  "company_id": "TW:910861",
+  "name": "神州數碼控股有限公司",
+  "name_en": "DCH",
+  "industry": "91",
+  "currency": "TWD",
+  "financials": {
+    "annual": []
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [],
+    "missing_fields": [
+      "financials.annual",
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "2013",
+  "company_id": "TW:2013",
+  "name": "中國鋼鐵結構股份有限公司",
+  "name_en": "CSSC",
+  "industry": "10",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 20948280000.0,
+        "net_profit": 638401000.0,
+        "operating_cash_flow": 3060312000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 14959765000.0,
+        "total_liabilities": 9282988000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "2207",
+  "company_id": "TW:2207",
+  "name": "和泰汽車股份有限公司",
+  "name_en": "HOTAI MOTOR",
+  "industry": "12",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 282608974000.0,
+        "net_profit": 18900453000.0,
+        "operating_cash_flow": 49241938000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 521024955000.0,
+        "total_liabilities": 397269077000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

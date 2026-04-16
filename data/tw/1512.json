@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "1512",
+  "company_id": "TW:1512",
+  "name": "瑞利企業股份有限公司",
+  "name_en": "JL",
+  "industry": "12",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 1149526000.0,
+        "net_profit": 18577000.0,
+        "operating_cash_flow": -183668000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 2836003000.0,
+        "total_liabilities": 2181796000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

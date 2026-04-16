@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "2008",
+  "company_id": "TW:2008",
+  "name": "高興昌鋼鐵股份有限公司",
+  "name_en": "KHC",
+  "industry": "10",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 1818497000.0,
+        "net_profit": 130022000.0,
+        "operating_cash_flow": 169550000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 8234382000.0,
+        "total_liabilities": 4494272000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

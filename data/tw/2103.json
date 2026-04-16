@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "2103",
+  "company_id": "TW:2103",
+  "name": "台橡股份有限公司",
+  "name_en": "TSRC",
+  "industry": "11",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 36472948000.0,
+        "net_profit": 448455000.0,
+        "operating_cash_flow": 1767053000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 43258931000.0,
+        "total_liabilities": 21747069000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

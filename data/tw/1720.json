@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "1720",
+  "company_id": "TW:1720",
+  "name": "生達化學製藥股份有限公司",
+  "name_en": "S.C.P.C",
+  "industry": "22",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 7023025000.0,
+        "net_profit": 927659000.0,
+        "operating_cash_flow": 1766827000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 11795903000.0,
+        "total_liabilities": 2509094000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

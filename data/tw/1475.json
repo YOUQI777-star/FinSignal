@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "1475",
+  "company_id": "TW:1475",
+  "name": "台灣業旺股份有限公司",
+  "name_en": "BIG SUNSHINE",
+  "industry": "04",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 1470396000.0,
+        "net_profit": 179783000.0,
+        "operating_cash_flow": 132597000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 2303013000.0,
+        "total_liabilities": 749997000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

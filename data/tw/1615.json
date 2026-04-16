@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "1615",
+  "company_id": "TW:1615",
+  "name": "大山電線電纜股份有限公司",
+  "name_en": "Dah  San",
+  "industry": "06",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 5719049000.0,
+        "net_profit": 945324000.0,
+        "operating_cash_flow": 383546000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 6228468000.0,
+        "total_liabilities": 1814884000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

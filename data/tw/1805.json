@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "1805",
+  "company_id": "TW:1805",
+  "name": "寶徠建設股份有限公司",
+  "name_en": "BLG",
+  "industry": "14",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 285015000.0,
+        "net_profit": 26117000.0,
+        "operating_cash_flow": -312034000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 2002298000.0,
+        "total_liabilities": 375578000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "2613",
+  "company_id": "TW:2613",
+  "name": "中國貨櫃運輸股份有限公司",
+  "name_en": "CCTC",
+  "industry": "15",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 3367572000.0,
+        "net_profit": 157092000.0,
+        "operating_cash_flow": null,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 10217004000.0,
+        "total_liabilities": 6902785000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

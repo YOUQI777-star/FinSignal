@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "2355",
+  "company_id": "TW:2355",
+  "name": "敬鵬工業股份有限公司",
+  "name_en": "CHIN-POON",
+  "industry": "28",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 15780872000.0,
+        "net_profit": 634315000.0,
+        "operating_cash_flow": 1669457000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 24166523000.0,
+        "total_liabilities": 6895993000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}

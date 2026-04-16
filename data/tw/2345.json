@@ -1,0 +1,43 @@
+{
+  "market": "TW",
+  "code": "2345",
+  "company_id": "TW:2345",
+  "name": "智邦科技股份有限公司",
+  "name_en": "ACCTON",
+  "industry": "27",
+  "currency": "TWD",
+  "financials": {
+    "annual": [
+      {
+        "period": "2025",
+        "revenue": 248319703000.0,
+        "net_profit": 26341712000.0,
+        "operating_cash_flow": 34852264000.0,
+        "accounts_receivable": null,
+        "inventory": null,
+        "goodwill": null,
+        "total_assets": 143231079000.0,
+        "total_liabilities": 85595896000.0,
+        "non_recurring_items": null,
+        "related_party_revenue": null,
+        "rd_capitalization_rate": null,
+        "audit_opinion": null,
+        "source": "twse_openapi",
+        "unit": "base_currency",
+        "as_of": "2025-12-31"
+      }
+    ]
+  },
+  "governance": {},
+  "equity_structure": [],
+  "coverage": {
+    "available_rules": [
+      "F1",
+      "F2",
+      "F3"
+    ],
+    "missing_fields": [
+      "governance"
+    ]
+  }
+}
