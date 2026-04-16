@@ -17,6 +17,7 @@ DEFAULT_CORS_ORIGINS = os.getenv("CORS_ORIGINS", "*")
 NEO4J_URI = os.getenv("NEO4J_URI", "")
 NEO4J_USERNAME = os.getenv("NEO4J_USERNAME", "")
 NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "")
+NEO4J_DATABASE = os.getenv("NEO4J_DATABASE", "neo4j")
 
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "deepseek")
 LLM_API_KEY = os.getenv("LLM_API_KEY", "")
