@@ -14,9 +14,9 @@
 3. 将结果缓存为 JSON，通过 Flask REST API 暴露
 4. 前端纯静态 HTML+CSS+JS，部署在 Cloudflare Pages
 
-**线上地址：** https://finsignal-b8n.pages.dev  
-**GitHub：** https://github.com/YOUQI777-star/FinSignal  
-**后端运行方式：** 本地 Flask（未部署云端）
+**前端地址：** https://finsignal-b8n.pages.dev (Cloudflare Pages)  
+**后端地址：** https://tender-fascination-production.up.railway.app (Railway)  
+**GitHub：** https://github.com/YOUQI777-star/FinSignal
 
 ---
 
@@ -31,7 +31,7 @@
 | 数据源（TW） | TWSE OpenAPI + FinMind（OCF 字段） |
 | 前端 | 原生 HTML + CSS + JavaScript（无框架，无构建工具） |
 | 部署（前端） | Cloudflare Pages（直接 wrangler deploy） |
-| 部署（后端） | 未部署，仅本地运行 |
+| 部署（后端） | Railway（Hobby 计划，$5/月，Nixpacks 自动构建） |
 
 ---
 
@@ -73,11 +73,11 @@ C_G/
 │       ├── run_signals.py          # 跑规则引擎，生成信号缓存 JSON
 │       └── analyze_coverage.py     # 分析覆盖率
 ├── data/
-│   ├── cn/                         # 5502 个 A 股公司 JSON snapshot（.gitignore 排除）
-│   ├── tw/                         # 1081 个台股公司 JSON snapshot（.gitignore 排除）
+│   ├── cn/                         # 5502 个 A 股公司 JSON snapshot（.gitignore 排除，本地）
+│   ├── tw/                         # 1081 个台股公司 JSON snapshot（.gitignore 排除，本地）
 │   └── signals/
-│       ├── cn_signals.json         # A 股信号缓存（.gitignore 排除）
-│       ├── tw_signals.json         # 台股信号缓存（.gitignore 排除）
+│       ├── cn_signals.json         # A 股信号缓存（已入 Git，21MB，Railway 可读）
+│       ├── tw_signals.json         # 台股信号缓存（已入 Git，3.3MB，Railway 可读）
 │       └── summary.json            # 汇总统计
 ├── frontend/
 │   ├── styles.css                  # 全局设计系统（design tokens + 所有公共组件）
@@ -174,9 +174,11 @@ C_G/
 
 ---
 
-## 六、API 端点（Flask，本地 127.0.0.1:5001）
+## 六、API 端点
 
-> **端口说明：** macOS 系统服务占用了 5000 端口（AirPlay Receiver），改用 5001。前端 `api.js` 默认读取 `localStorage.getItem('fsm_api_base')` 或回退到 `http://localhost:5001`。
+**生产地址：** `https://tender-fascination-production.up.railway.app`  
+**本地地址：** `http://localhost:5001`（macOS AirPlay 占用 5000，改用 5001）  
+前端 `api.js` 读取 `localStorage.getItem('fsm_api_base')`，默认指向 Railway 生产地址，可在 Settings 页覆盖。
 
 ```
 GET  /api/health
@@ -238,7 +240,7 @@ GET  /api/graph/{market}/{code}
 | 设置 | `settings.html` + `settings.js` | API Base URL、默认筛选参数、清除历史 |
 
 ### api.js 关键设计
-- `API_BASE` 读 localStorage `fsm_api_base`，默认 `http://localhost:5001`
+- `API_BASE` 读 localStorage `fsm_api_base`，默认 `https://tender-fascination-production.up.railway.app`
 - 所有页面在后端不可达时自动 fallback 到 `MOCK_DATA`，toast 提示 "showing demo data"
 - `localStorage key: fsm_recent`，存最近查看的 8 家公司（跨页面共享）
 
@@ -321,24 +323,53 @@ cd "/Users/wangyouqi/Documents/DesktopOrganizer/Web Development/C_G"
 ## 十一、部署
 
 ### 前端（Cloudflare Pages）
-已部署：https://finsignal-b8n.pages.dev
+**线上地址：** https://finsignal-b8n.pages.dev  
+**账号：** wangyifei0611@gmail.com
 
 **更新前端：**
 ```bash
 cd "/Users/wangyouqi/Documents/DesktopOrganizer/Web Development/C_G"
-# 先推 GitHub
 git add frontend/ && git commit -m "update frontend" && git push
-
-# 再部署到 Cloudflare Pages
 npx wrangler pages deploy frontend --project-name finsignal --commit-dirty=true
 ```
 
-**Cloudflare 账号：** wangyifei0611@gmail.com
+### 后端（Railway）
+**线上地址：** https://tender-fascination-production.up.railway.app  
+**账号：** wangyifei0611@gmail.com  
+**项目名：** tender-fascination  
+**计划：** Hobby（$5/月）  
+**构建：** Nixpacks 自动检测 Python，读 `requirements.txt`，启动命令见 `railway.toml`
 
-### 后端（未部署，仅本地）
-后端目前只在本地运行。线上前端访问时走 mock 数据（MOCK_DATA fallback），不影响页面展示。
+**更新后端：**
+```bash
+cd "/Users/wangyouqi/Documents/DesktopOrganizer/Web Development/C_G"
+git add . && git commit -m "update backend" && git push
+railway up --detach   # 手动触发；或 Railway 控制台开启 GitHub 自动部署
+```
 
-**推荐后端部署方案（未来）：** Railway 或 Render，免费额度够用。部署后在 `settings.html` 或直接改 `localStorage['fsm_api_base']` 指向新的 API 地址。
+**重新登录 Railway CLI（无 TTY 环境）：**
+```bash
+expect -c '
+  set timeout 300
+  spawn railway login --browserless
+  expect "code is:"
+  # 记下显示的 XXXX-XXXX 代码
+  interact
+'
+# 然后访问 https://railway.com/activate 输入代码
+```
+
+**Railway 已包含的数据文件（在 Git 中）：**
+- `data/signals/cn_signals.json`（21MB，A 股信号缓存）
+- `data/signals/tw_signals.json`（3.3MB，台股信号缓存）
+- `backend/master/company_master.db`（712KB，公司搜索）
+
+**Railway 上缺失的数据（.gitignore 排除，仅本地）：**
+- `data/cn/*.json`（48MB，A 股个股快照）→ `/api/company/CN/{code}` 详情端点在云端不可用
+- `data/tw/*.json`（5.3MB，台股个股快照）→ `/api/company/TW/{code}` 详情端点在云端不可用
+- `/api/report` 也依赖个股快照，云端会返回 404
+
+**已正常工作的云端端点：** health、signals/top（排行）、signals/{market}/{code}（从缓存读）、search、compare
 
 ---
 
@@ -350,11 +381,11 @@ npx wrangler pages deploy frontend --project-name finsignal --commit-dirty=true
 
 3. **报告是占位版**：`report_generator.py` 当前只输出规则摘要文本，没有接 LLM。`prompt_template.py` 已有模板，接入 DeepSeek 或 OpenAI API 后可激活。环境变量：`LLM_PROVIDER=deepseek`，`LLM_API_KEY=...`。
 
-4. **公司快照不在 Git 仓库**：`data/cn/*.json` 和 `data/tw/*.json` 在 `.gitignore` 中排除（太大，约 500MB）。新环境需重新抓取。
+4. **公司快照不在 Git 仓库**：`data/cn/*.json`（48MB）和 `data/tw/*.json`（5.3MB）在 `.gitignore` 中排除。Railway 云端没有这些文件，导致 `/api/company/{market}/{code}` 和 `/api/report` 返回 404。新环境需重新抓取，或把 `data/tw/` 加入 Git（5.3MB 可接受）。
 
 5. **Neo4j 图谱未接入**：`/api/graph/{market}/{code}` 返回空节点，`Neo4jClient` 是占位实现。
 
-6. **company_master.db 不在 Git 仓库**：需要运行 `backend/master/build_master.py` 重新生成。
+6. **company_master.db 已在 Git 仓库**：712KB，已提交。Railway 上搜索功能正常。
 
 ---
 
@@ -362,10 +393,10 @@ npx wrangler pages deploy frontend --project-name finsignal --commit-dirty=true
 
 | 优先级 | 任务 |
 |--------|------|
-| P0 | 每天跑 `./refresh.sh` 补台股 OCF，约 8 天清零 |
+| P0 | 每天跑 `./refresh.sh` 补台股 OCF，约 8 天清零（当前还剩 790 家）|
 | P1 | 接入 LLM 替换 report_generator.py 占位版（接 DeepSeek API，key 在 .env） |
-| P1 | 把后端部署到 Railway/Render，前端 settings 页改 API Base URL |
+| P1 | 把 `data/tw/` 加入 Git（5.3MB），让 Railway 云端支持台股个股详情和报告 |
 | P2 | 补充 governance 数据（pledge_ratio 可从 AKShare 获取，CN 市场） |
-| P2 | 公司快照定期更新机制（目前是手动跑脚本，可加 cron） |
+| P2 | 公司快照定期更新机制（目前是手动跑脚本，可加 cron 或 Railway Cron Service） |
 | P3 | 接入 Neo4j 图谱（股权穿透、关联方分析） |
 | P3 | 信号趋势历史（目前只看当前一次评估结果，没有时序对比） |
