@@ -15,12 +15,14 @@ build/
 **/.DS_Store
 
 # Data files (too large / local only)
-backend/master/company_master.db
 data/cn/*.json
 data/tw/*.json
-data/signals/*.json
 data/chain_kg/
 data/sync_reports/
+
+# Keep signals cache + master DB (needed for Railway deployment)
+# backend/master/company_master.db  ← included in git
+# data/signals/*.json               ← included in git
 
 # Frontend build artifacts
 frontend/node_modules/

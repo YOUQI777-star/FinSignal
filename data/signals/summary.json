@@ -1,0 +1,16 @@
+{
+  "markets": {
+    "TW": {
+      "evaluated": 1071,
+      "with_triggered_signals": 28
+    }
+  },
+  "total_evaluated": 1071,
+  "total_with_triggered": 28,
+  "signal_trigger_counts": {
+    "F4": 16,
+    "F1": 12,
+    "F3": 5,
+    "F2": 3
+  }
+}
