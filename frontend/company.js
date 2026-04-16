@@ -250,11 +250,16 @@ function renderPage(data) {
    ============================================================ */
 async function loadGraph(market, code) {
   if (!market || !code) return;
+  const section = document.getElementById('graphSection');
+  const note    = document.getElementById('graphNote');
+  section.style.display = '';
+  note.textContent = 'Loading graph…';
   try {
     const data = await API.getGraph(market, code);
     renderGraph(data);
   } catch (err) {
-    // Graph is non-critical — silently skip on error
+    note.textContent = `Graph unavailable: ${err.message}`;
+    document.getElementById('graphMeta').textContent = '';
     console.warn('[graph] failed to load:', err.message);
   }
 }
@@ -267,11 +272,10 @@ function renderGraph(data) {
   const edges   = data.edges || [];
 
   if (!nodes.length) {
-    // No graph data — keep section hidden
+    note.textContent = data.message || 'No supply chain data for this company.';
     return;
   }
 
-  section.style.display = '';
   meta.textContent = `${nodes.length} nodes · ${edges.length} edges`;
 
   if (typeof cytoscape === 'undefined') {

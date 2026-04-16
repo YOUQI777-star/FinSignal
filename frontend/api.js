@@ -14,6 +14,14 @@ const API_BASE = (_stored && !_stored.includes('localhost') && !_stored.includes
   ? _stored
   : _RAILWAY;
 
+// Fill all footer API base indicators once DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  const host = new URL(API_BASE).host;
+  document.querySelectorAll('.footer-api-base, #footerApiBase').forEach(el => {
+    el.textContent = host;
+  });
+});
+
 async function apiFetch(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
     headers: { 'Content-Type': 'application/json' },
