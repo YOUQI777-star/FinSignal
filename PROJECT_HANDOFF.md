@@ -364,12 +364,14 @@ expect -c '
 - `data/signals/tw_signals.json`（3.3MB，台股信号缓存）
 - `backend/master/company_master.db`（712KB，公司搜索）
 
-**Railway 上缺失的数据（.gitignore 排除，仅本地）：**
-- `data/cn/*.json`（48MB，A 股个股快照）→ `/api/company/CN/{code}` 详情端点在云端不可用
-- `data/tw/*.json`（5.3MB，台股个股快照）→ `/api/company/TW/{code}` 详情端点在云端不可用
-- `/api/report` 也依赖个股快照，云端会返回 404
+**Railway 已包含的数据文件（在 Git 中）：**
+- `data/signals/cn_signals.json`（21MB，A 股信号缓存）
+- `data/signals/tw_signals.json`（3.3MB，台股信号缓存）
+- `backend/master/company_master.db`（712KB，公司搜索）
+- `data/cn/*.json`（48MB，A 股 5502 家个股快照）✅ 已加入 Git
+- `data/tw/*.json`（5.3MB，台股 1081 家个股快照）✅ 已加入 Git
 
-**已正常工作的云端端点：** health、signals/top（排行）、signals/{market}/{code}（从缓存读）、search、compare
+**已正常工作的云端端点：** 全部端点均可用，包括 `/api/company/{market}/{code}` 详情和 `/api/report/{market}/{code}` 报告生成。
 
 ---
 
@@ -379,9 +381,9 @@ expect -c '
 
 2. **Governance 数据几乎全缺**：G1 和 G3 规则对绝大多数公司返回 `not_available`。pledge_ratio 数据源没有接入，board composition 数据未采集。
 
-3. **报告是占位版**：`report_generator.py` 当前只输出规则摘要文本，没有接 LLM。`prompt_template.py` 已有模板，接入 DeepSeek 或 OpenAI API 后可激活。环境变量：`LLM_PROVIDER=deepseek`，`LLM_API_KEY=...`。
+3. ~~**报告是占位版**~~ ✅ **已完成**：`report_generator.py` 已接入 DeepSeek，使用 `deepseek-chat` 模型，中文 prompt，输出三段式 Markdown 报告（公司概况 / 风险信号解读 / 综合评估），API 失败时自动降级为规则摘要。Railway 环境变量 `LLM_PROVIDER=deepseek`、`LLM_API_KEY` 已配置。
 
-4. **公司快照不在 Git 仓库**：`data/cn/*.json`（48MB）和 `data/tw/*.json`（5.3MB）在 `.gitignore` 中排除。Railway 云端没有这些文件，导致 `/api/company/{market}/{code}` 和 `/api/report` 返回 404。新环境需重新抓取，或把 `data/tw/` 加入 Git（5.3MB 可接受）。
+4. ~~**公司快照不在 Git 仓库**~~ ✅ **已完成**：`data/cn/*.json`（48MB，5502 家）和 `data/tw/*.json`（5.3MB，1081 家）已加入 Git 并部署至 Railway。`/api/company/{market}/{code}` 和 `/api/report` 在云端完全可用。
 
 5. **Neo4j 图谱未接入**：`/api/graph/{market}/{code}` 返回空节点，`Neo4jClient` 是占位实现。
 
@@ -394,8 +396,8 @@ expect -c '
 | 优先级 | 任务 |
 |--------|------|
 | P0 | 每天跑 `./refresh.sh` 补台股 OCF，约 8 天清零（当前还剩 790 家）|
-| P1 | 接入 LLM 替换 report_generator.py 占位版（接 DeepSeek API，key 在 .env） |
-| P1 | 把 `data/tw/` 加入 Git（5.3MB），让 Railway 云端支持台股个股详情和报告 |
+| ✅ 已完成 | 接入 DeepSeek LLM，report_generator.py 生成真实中文风险报告，含降级fallback |
+| ✅ 已完成 | `data/cn/`（48MB）和 `data/tw/`（5.3MB）加入 Git，Railway 全端点可用 |
 | P2 | 补充 governance 数据（pledge_ratio 可从 AKShare 获取，CN 市场） |
 | P2 | 公司快照定期更新机制（目前是手动跑脚本，可加 cron 或 Railway Cron Service） |
 | P3 | 接入 Neo4j 图谱（股权穿透、关联方分析） |
