@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import re
 import sqlite3
 from pathlib import Path
 from typing import Iterator
@@ -51,6 +52,36 @@ UNMATCHED_LOG = DATA_DIR / "chain_kg" / "unmatched.log"
 def _strip_suffix(code: str) -> str:
     """'600373.SH' → '600373',  '301079' → '301079'"""
     return code.split(".")[0].strip()
+
+
+# Field-name tokens that are unambiguously document metadata, not products.
+_FIELD_BLOCKLIST = frozenset([
+    "有效期限", "借款期限", "期限", "日期", "年份",
+    "合计", "小计", "总计", "合 计",
+    "名称", "代码", "编号", "指标", "比例",
+])
+_PURE_NUM_RE = re.compile(r'^[\d\.\,\，\％\%\-\s（）()、/]+$')
+
+
+_ROMAN_SUFFIX_RE = re.compile(r'[ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅠⅡⅢⅣ]+$')
+
+
+def _normalize_industry(name: str) -> str:
+    """Collapse sub-level suffixes: 'IT服务Ⅱ' / 'IT服务Ⅲ' → 'IT服务'."""
+    return _ROMAN_SUFFIX_RE.sub('', name).strip()
+
+
+def _is_valid_product(name: str) -> bool:
+    """Return False for obvious noise: single chars, pure numbers, field names."""
+    if len(name) < 2:
+        return False
+    if len(name) > 40:
+        return False
+    if _PURE_NUM_RE.fullmatch(name):
+        return False
+    if name in _FIELD_BLOCKLIST:
+        return False
+    return True
 
 
 def _read_jsonl(path: Path) -> Iterator[dict]:
@@ -87,7 +118,7 @@ def _import_industries(session, dry_run: bool) -> dict[str, str]:
         session.run("CREATE CONSTRAINT industry_name IF NOT EXISTS "
                     "FOR (i:Industry) REQUIRE i.name IS UNIQUE")
         for row in rows:
-            name = row.get("name", "").strip()
+            name = _normalize_industry(row.get("name", "").strip())
             if not name:
                 continue
             session.run(
@@ -95,8 +126,8 @@ def _import_industries(session, dry_run: bool) -> dict[str, str]:
                 "SET i.code = $code",
                 name=name, code=row.get("code", ""),
             )
-    log.info("  %d industry rows processed", len(rows))
-    return {r["name"]: r.get("code", "") for r in rows if r.get("name")}
+    log.info("  %d industry rows processed (deduped by suffix collapse)", len(rows))
+    return {_normalize_industry(r["name"]): r.get("code", "") for r in rows if r.get("name")}
 
 
 def _import_products(session, dry_run: bool) -> None:
@@ -109,7 +140,7 @@ def _import_products(session, dry_run: bool) -> None:
         batch: list[str] = []
         for row in rows:
             name = row.get("name", "").strip()
-            if name:
+            if name and _is_valid_product(name):
                 batch.append(name)
             if len(batch) >= 500:
                 session.run(
@@ -177,7 +208,7 @@ def _import_company_industry(
         cid = mapped.get(raw_code) or mapped.get(code)
         if cid is None:
             continue
-        industry = row.get("industry_name", "").strip()
+        industry = _normalize_industry(row.get("industry_name", "").strip())
         if not industry:
             continue
         if not dry_run:
@@ -208,7 +239,7 @@ def _import_company_product(
         if cid is None:
             continue
         product = row.get("product_name", "").strip()
-        if not product:
+        if not product or not _is_valid_product(product):
             continue
         batch.append({"cid": cid, "product": product,
                       "weight": row.get("rel_weight", 0.0)})
@@ -251,6 +282,8 @@ def _import_product_product(session, dry_run: bool) -> None:
         to  = row.get("to_entity",   "").strip()
         rel = row.get("rel", "").strip()
         if not frm or not to or not rel:
+            continue
+        if not _is_valid_product(frm) or not _is_valid_product(to):
             continue
         # 上游材料 → UPSTREAM_OF;  下游产品 → DOWNSTREAM_OF
         if "上游" in rel:
