@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-import os
 from typing import Any
 
-from backend.config import NEO4J_DATABASE, NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
+from backend.config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
 
 # Optional import — neo4j driver may not be installed in all envs
 try:
@@ -11,6 +10,18 @@ try:
     _NEO4J_AVAILABLE = True
 except ImportError:
     _NEO4J_AVAILABLE = False
+
+
+def _bolt_uri(uri: str) -> str:
+    """
+    Convert neo4j+s:// to bolt+s:// for direct connection.
+
+    AuraDB's routing protocol (neo4j+s://) returns internal cluster
+    hostnames in its routing table that are not resolvable from hosted
+    environments like Railway.  bolt+s:// connects directly to the
+    public AuraDB endpoint without routing table lookup.
+    """
+    return uri.replace("neo4j+s://", "bolt+s://", 1)
 
 
 class Neo4jClient:
@@ -28,7 +39,7 @@ class Neo4jClient:
         if _NEO4J_AVAILABLE and NEO4J_URI:
             try:
                 self._driver = GraphDatabase.driver(
-                    NEO4J_URI,
+                    _bolt_uri(NEO4J_URI),
                     auth=(NEO4J_USERNAME, NEO4J_PASSWORD),
                 )
                 self._driver.verify_connectivity()
@@ -64,7 +75,7 @@ class Neo4jClient:
                collect(DISTINCT dn)  AS downstreams
         """
         try:
-            with self._driver.session(database=NEO4J_DATABASE) as session:
+            with self._driver.session() as session:
                 rec = session.run(cypher, cid=company_id).single()
             if rec is None:
                 return self._empty(market, code, found=False)
@@ -97,7 +108,7 @@ class Neo4jClient:
           collect(DISTINCT {company_id: customer.company_id,  name: customer.name,  code: customer.code}) AS downstream
         """
         try:
-            with self._driver.session(database=NEO4J_DATABASE) as session:
+            with self._driver.session() as session:
                 rec = session.run(cypher, cid=company_id).single()
             if rec is None:
                 return {"upstream": [], "downstream": []}
@@ -124,7 +135,7 @@ class Neo4jClient:
         LIMIT $limit
         """
         try:
-            with self._driver.session(database=NEO4J_DATABASE) as session:
+            with self._driver.session() as session:
                 rows = session.run(cypher, cid=company_id, limit=limit).data()
             return rows
         except Exception:
