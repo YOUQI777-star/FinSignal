@@ -120,16 +120,19 @@ function renderTable(rows) {
       ? `+${r.pct_change_10d.toFixed(2)}%`
       : `${r.pct_change_10d.toFixed(2)}%`;
 
+    const fmt = (v, digits = 2, suffix = '') =>
+      v != null && isFinite(v) ? v.toFixed(digits) + suffix : '—';
+
     const cells = [
       `<td style="text-align:right;color:var(--text-secondary)">${i + 1}</td>`,
       `<td><span class="badge badge-market badge-market-cn">CN</span> <code style="font-size:12px">${esc(r.code)}</code></td>`,
       `<td style="font-weight:500">${esc(r.name)}</td>`,
-      `<td style="text-align:right;font-variant-numeric:tabular-nums">${r.current_price.toFixed(3)}</td>`,
-      `<td style="text-align:right;font-variant-numeric:tabular-nums;color:var(--brand)">${r.avg_turnover_10d.toFixed(2)}%</td>`,
-      `<td style="text-align:right;font-variant-numeric:tabular-nums">${r.max_turnover_10d.toFixed(2)}%</td>`,
-      `<td style="text-align:right" class="${pctCls}">${pctStr}</td>`,
-      `<td style="text-align:right;font-variant-numeric:tabular-nums">${r.total_shares.toFixed(1)}</td>`,
-      ...(hasCM ? [`<td style="text-align:right;font-variant-numeric:tabular-nums">${r.circ_mv != null ? r.circ_mv.toFixed(1) : '—'}</td>`] : []),
+      `<td style="text-align:right;font-variant-numeric:tabular-nums">${fmt(r.current_price, 3)}</td>`,
+      `<td style="text-align:right;font-variant-numeric:tabular-nums;color:var(--brand)">${fmt(r.avg_turnover_10d, 2, '%')}</td>`,
+      `<td style="text-align:right;font-variant-numeric:tabular-nums">${fmt(r.max_turnover_10d, 2, '%')}</td>`,
+      `<td style="text-align:right" class="${pctCls}">${r.pct_change_10d != null && isFinite(r.pct_change_10d) ? pctStr : '—'}</td>`,
+      `<td style="text-align:right;font-variant-numeric:tabular-nums">${fmt(r.total_shares, 1)}</td>`,
+      ...(hasCM ? [`<td style="text-align:right;font-variant-numeric:tabular-nums">${r.circ_mv != null ? fmt(r.circ_mv, 1) : '—'}</td>`] : []),
       `<td style="color:var(--text-secondary);font-size:12px">${esc(r.candidate_reason || '—')}</td>`,
     ];
 

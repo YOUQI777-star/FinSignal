@@ -68,7 +68,8 @@ def build_candidates(
             price = float(s.get("price") or 0)
         except (TypeError, ValueError):
             continue
-        if price <= 0 or price >= price_max:
+        import math
+        if math.isnan(price) or price <= 0 or price >= price_max:
             continue
         name = str(s.get("name") or "")
         if exclude_st and is_st(name):
@@ -172,6 +173,19 @@ def build_candidates(
     }
 
     CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    # Use allow_nan=False to catch issues, but first sanitize NaN → None
+    import math
+
+    def _sanitize(obj):
+        if isinstance(obj, float) and math.isnan(obj):
+            return None
+        if isinstance(obj, dict):
+            return {k: _sanitize(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [_sanitize(v) for v in obj]
+        return obj
+
+    cache = _sanitize(cache)
     CACHE_PATH.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")
     log.info("Cache written: %s  (%d candidates)", CACHE_PATH, len(candidates))
     return {"total": len(candidates), "generated_at": cache["generated_at"]}
