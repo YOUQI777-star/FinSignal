@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 import json
+import logging
+import threading
 from pathlib import Path
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+
+log = logging.getLogger(__name__)
 
 from backend.ai.report_generator import generate_report_payload
 from backend.config import APP_DEBUG, APP_HOST, APP_PORT, DATA_DIR, DEFAULT_CORS_ORIGINS
@@ -220,6 +224,21 @@ def get_candidate_detail(code: str):
         }
 
     return jsonify(entry), 200
+
+
+def _prewarm_candidates() -> None:
+    """Background thread: warm the AKShare candidates cache at startup.
+    This way the first user request returns from cache instead of waiting 60-150s."""
+    try:
+        log.info("[prewarm] Starting AKShare candidates pre-fetch …")
+        get_candidates()
+        log.info("[prewarm] Candidates cache ready.")
+    except Exception as exc:
+        log.warning("[prewarm] Pre-fetch failed (non-fatal): %s", exc)
+
+
+# Pre-warm on startup — runs in background so gunicorn can accept requests immediately
+threading.Thread(target=_prewarm_candidates, daemon=True, name="prewarm").start()
 
 
 if __name__ == "__main__":
