@@ -1,108 +1,82 @@
 """
 candidate_rules.py
 ------------------
-Stateless filter logic for the candidates screening feature.
+Stateless filter logic — realtime single-day version.
 
-All six v1 conditions are AND-connected:
-  C1  avg_turnover_10d > turnover_min  (default 1%)
-  C2  max_turnover_10d < turnover_max  (default 10%)
-  C3  current_price    < price_max     (default 5 yuan)
-  C4  total_shares_yi  < share_max     (default 30 亿)
-  C5  pct_change_10d   < pct_max       (default 15%)
+Conditions (all AND):
+  C1  turnover       > turnover_min   today's turnover % > 2%
+  C2  price          < price_max      < 20 yuan
+  C3  circ_mv_yi     < circ_mv_max    流通市值 < 80 亿
+  C4  pct_change     < pct_max        today < +9%   (排除接近涨停)
+  C5  pct_change     > pct_min        today > -9%   (排除接近跌停)
   C6  not ST / *ST
-
-A candidate passes only when ALL conditions are met.
-`matched_rules` reports which C1/C3/C4 stand out as "interesting" signals
-(not redundant info — just the distinguishing positives).
 """
 from __future__ import annotations
 
 import re
 
-# Default thresholds (can be overridden per call)
-DEFAULT_TURNOVER_MIN  = 1.0    # avg daily turnover > 1%
-DEFAULT_TURNOVER_MAX  = 10.0   # max single-day turnover < 10%
-DEFAULT_PRICE_MAX     = 5.0    # current price < 5 yuan
-DEFAULT_SHARE_MAX     = 30.0   # total shares < 30 亿
-DEFAULT_PCT_MAX       = 15.0   # 10-day gain < 15%
+# Defaults
+DEFAULT_TURNOVER_MIN  = 2.0    # today turnover > 2%
+DEFAULT_PRICE_MAX     = 20.0   # price < 20 yuan
+DEFAULT_CIRC_MV_MAX   = 80.0   # 流通市值 < 80 亿
+DEFAULT_PCT_MAX       = 9.0    # today gain < 9%
+DEFAULT_PCT_MIN       = -9.0   # today drop > -9%
 DEFAULT_EXCLUDE_ST    = True
 
-
-_ST_PATTERN = re.compile(r"(^|\*)ST", re.IGNORECASE)
+_ST_RE = re.compile(r"(^|\s|\*)[Ss][Tt]")
 
 
 def is_st(name: str) -> bool:
-    """Return True if the stock name indicates ST or *ST status."""
-    return bool(_ST_PATTERN.search(name or ""))
+    return bool(_ST_RE.search(name or ""))
 
 
 def apply_rules(
     row: dict,
     *,
     turnover_min: float = DEFAULT_TURNOVER_MIN,
-    turnover_max: float = DEFAULT_TURNOVER_MAX,
     price_max:    float = DEFAULT_PRICE_MAX,
-    share_max:    float = DEFAULT_SHARE_MAX,
+    circ_mv_max:  float = DEFAULT_CIRC_MV_MAX,
     pct_max:      float = DEFAULT_PCT_MAX,
+    pct_min:      float = DEFAULT_PCT_MIN,
     exclude_st:   bool  = DEFAULT_EXCLUDE_ST,
 ) -> tuple[bool, list[str], str]:
     """
-    Apply all candidate rules to one stock row.
-
-    row must contain:
-        name, current_price, avg_turnover_10d, max_turnover_10d,
-        pct_change_10d, total_shares_yi, is_st
-
-    Returns:
-        (passed: bool, matched_rules: list[str], candidate_reason: str)
+    Returns (passed, matched_rules, candidate_reason).
+    row fields: name, price, turnover, circ_mv_yi, pct_change, is_st
     """
-    name             = row.get("name", "")
-    price            = row.get("current_price")
-    avg_to           = row.get("avg_turnover_10d")
-    max_to           = row.get("max_turnover_10d")
-    pct              = row.get("pct_change_10d")
-    shares           = row.get("total_shares_yi")
-    stock_is_st      = row.get("is_st", False)
+    price      = row.get("price")
+    turnover   = row.get("turnover")
+    circ_mv    = row.get("circ_mv_yi")
+    pct        = row.get("pct_change")
+    stock_is_st = row.get("is_st", False)
 
-    # Guard: skip rows with missing critical fields
-    if any(v is None for v in [price, avg_to, max_to, pct, shares]):
+    # Skip if any critical field missing
+    if any(v is None for v in [price, turnover, circ_mv, pct]):
         return False, [], "数据缺失"
 
-    failures: list[str] = []
-
     if exclude_st and stock_is_st:
-        failures.append("ST")
-    if avg_to <= turnover_min:
-        failures.append(f"日均换手{avg_to:.2f}%≤{turnover_min}%")
-    if max_to >= turnover_max:
-        failures.append(f"单日换手{max_to:.2f}%≥{turnover_max}%")
+        return False, [], "ST"
+    if turnover <= turnover_min:
+        return False, [], f"换手{turnover:.2f}%≤{turnover_min}%"
     if price >= price_max:
-        failures.append(f"价格{price:.2f}≥{price_max}元")
-    if shares >= share_max:
-        failures.append(f"股本{shares:.1f}亿≥{share_max}亿")
+        return False, [], f"价格{price:.2f}≥{price_max}元"
+    if circ_mv >= circ_mv_max:
+        return False, [], f"流通市值{circ_mv:.1f}亿≥{circ_mv_max}亿"
     if pct >= pct_max:
-        failures.append(f"10日涨幅{pct:.1f}%≥{pct_max}%")
+        return False, [], f"涨幅{pct:.1f}%≥{pct_max}%"
+    if pct <= pct_min:
+        return False, [], f"跌幅{pct:.1f}%≤{pct_min}%"
 
-    if failures:
-        return False, [], ""
-
-    # Build matched_rules (the interesting positives)
-    matched: list[str] = []
-    if avg_to > turnover_min:
-        matched.append("active_turnover")
-    if price < price_max:
+    matched = ["active_turnover"]
+    if price < 10:
         matched.append("low_price")
-    if shares < share_max:
-        matched.append("small_cap")
+    if circ_mv < 30:
+        matched.append("micro_cap")
 
-    reason_parts = [
-        f"日均换手{avg_to:.2f}%",
-        f"现价{price:.2f}元",
-        f"总股本{shares:.1f}亿",
-    ]
-    if pct >= 0:
-        reason_parts.append(f"10日+{pct:.1f}%")
-    else:
-        reason_parts.append(f"10日{pct:.1f}%")
-
-    return True, matched, " · ".join(reason_parts)
+    reason = (
+        f"换手{turnover:.2f}% · "
+        f"现价{price:.2f}元 · "
+        f"流通市值{circ_mv:.1f}亿 · "
+        f"今日{pct:+.1f}%"
+    )
+    return True, matched, reason

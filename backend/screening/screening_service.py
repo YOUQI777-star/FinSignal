@@ -1,238 +1,210 @@
 """
 screening_service.py
 --------------------
-Orchestrates the candidate screening pipeline and manages the cache file.
+Realtime candidates screening — single AKShare call, in-memory cache.
 
-Cache location: data/screening/candidates_cn.json
+Cache TTL: 30 minutes. First request of the day takes ~30-60s;
+subsequent requests within the TTL window return instantly.
 
 Public API:
-    build_candidates(...)      -> writes cache, returns summary dict
-    load_from_cache()          -> reads cache, returns dict or None
-    apply_query_filters(...)   -> client-side filtering on cached data
+    get_candidates(filters)  -> dict   always returns fresh-ish data
+    apply_query_filters(...)  -> list  narrow results in memory
 """
 from __future__ import annotations
 
-import json
 import logging
+import threading
 import time
 from datetime import datetime, timezone
 from typing import Any
 
-from backend.config import DATA_DIR
 from backend.screening.candidate_rules import (
+    DEFAULT_CIRC_MV_MAX,
+    DEFAULT_EXCLUDE_ST,
     DEFAULT_PCT_MAX,
+    DEFAULT_PCT_MIN,
     DEFAULT_PRICE_MAX,
-    DEFAULT_SHARE_MAX,
-    DEFAULT_TURNOVER_MAX,
     DEFAULT_TURNOVER_MIN,
     apply_rules,
     is_st,
 )
-from backend.screening.market_loader import fetch_all_spot, fetch_hist_10d
+from backend.screening.market_loader import fetch_realtime_spots
 
 log = logging.getLogger(__name__)
 
-CACHE_PATH = DATA_DIR / "screening" / "candidates_cn.json"
+# ── In-memory cache ───────────────────────────────────────────────────────────
+_CACHE_TTL_SECONDS = 30 * 60   # 30 minutes
+
+_cache_lock       = threading.Lock()
+_cached_result:   dict | None = None
+_cache_fetched_at: float      = 0.0   # time.monotonic()
 
 
-# ---------------------------------------------------------------------------
-# Build (called by batch script only — never at request time)
-# ---------------------------------------------------------------------------
+def _cache_fresh() -> bool:
+    return (
+        _cached_result is not None
+        and (time.monotonic() - _cache_fetched_at) < _CACHE_TTL_SECONDS
+    )
 
-def build_candidates(
-    *,
-    turnover_min: float = DEFAULT_TURNOVER_MIN,
-    turnover_max: float = DEFAULT_TURNOVER_MAX,
-    price_max:    float = DEFAULT_PRICE_MAX,
-    share_max:    float = DEFAULT_SHARE_MAX,
-    pct_max:      float = DEFAULT_PCT_MAX,
-    exclude_st:   bool  = True,
-    hist_delay:   float = 0.25,   # seconds between per-stock history calls
+
+# ── Core screening ────────────────────────────────────────────────────────────
+
+def _run_screening(
+    turnover_min: float,
+    price_max:    float,
+    circ_mv_max:  float,
+    pct_max:      float,
+    pct_min:      float,
+    exclude_st:   bool,
 ) -> dict[str, Any]:
-    """
-    Full screening pipeline:
-      1. Fetch all A-share spot data (single AKShare call)
-      2. Pre-filter by price + name (fast, no extra API calls)
-      3. For pre-filtered stocks, fetch 10-day history
-      4. Apply all 6 rules
-      5. Write cache file
-    Returns a summary dict.
-    """
-    spots = fetch_all_spot()
-    log.info("Total A-share stocks: %d", len(spots))
+    """Fetch spots + apply rules. Returns full result dict."""
+    spots = fetch_realtime_spots()
+    log.info("Screening %d stocks …", len(spots))
 
-    # --- Pre-filter: price < price_max, not ST (cheap checks) ---
-    pre_filtered: list[dict] = []
+    candidates = []
+    skipped_data = 0
+
     for s in spots:
-        try:
-            price = float(s.get("price") or 0)
-        except (TypeError, ValueError):
-            continue
-        import math
-        if math.isnan(price) or price <= 0 or price >= price_max:
-            continue
-        name = str(s.get("name") or "")
-        if exclude_st and is_st(name):
-            continue
-        # Approximate total shares from total market cap / price
-        try:
-            total_mv = float(s.get("total_mv") or 0)
-            total_shares_yi = total_mv / price / 1e8  # 亿 shares
-        except (TypeError, ValueError, ZeroDivisionError):
-            continue
-        if total_shares_yi >= share_max:
-            continue
-        try:
-            circ_mv = float(s.get("circ_mv") or 0)
-            circ_mv_yi = circ_mv / 1e8           # 亿 yuan
-            float_shares_yi = circ_mv / price / 1e8
-        except (TypeError, ValueError, ZeroDivisionError):
-            circ_mv_yi = None
-            float_shares_yi = None
+        price    = s["price"]
+        turnover = s["turnover"]
+        circ_mv  = s["circ_mv"]
+        pct      = s["pct_change"]
+        name     = s["name"]
 
-        pre_filtered.append({
-            "code":            str(s["code"]).zfill(6),
-            "name":            name,
-            "market":          "CN",
-            "current_price":   round(price, 4),
-            "total_shares_yi": round(total_shares_yi, 2),
-            "float_shares_yi": round(float_shares_yi, 2) if float_shares_yi is not None else None,
-            "circ_mv_yi":      round(circ_mv_yi, 2) if circ_mv_yi is not None else None,
-            "is_st":           is_st(name),
-            "turnover_today":  s.get("turnover_today"),
-            "pct_change_today": s.get("pct_change_today"),
-        })
+        # Derive circ_mv in 亿
+        circ_mv_yi: float | None = None
+        if circ_mv is not None and price and price > 0:
+            circ_mv_yi = round(circ_mv / 1e8, 2)
 
-    log.info("Pre-filtered (price + size): %d stocks", len(pre_filtered))
+        # Derive total_shares in 亿 from total_mv
+        total_mv   = s["total_mv"]
+        total_sh_yi: float | None = None
+        if total_mv is not None and price and price > 0:
+            total_sh_yi = round(total_mv / price / 1e8, 2)
 
-    # --- Fetch history and apply all rules ---
-    candidates: list[dict] = []
-    total = len(pre_filtered)
-    for i, row in enumerate(pre_filtered, 1):
-        if i % 50 == 0:
-            log.info("  Progress: %d / %d …", i, total)
-
-        hist = fetch_hist_10d(row["code"])
-        if hist is None:
-            continue
-
-        full_row = {
-            **row,
-            "avg_turnover_10d": hist["avg_turnover_10d"],
-            "max_turnover_10d": hist["max_turnover_10d"],
-            "pct_change_10d":   hist["pct_change_10d"],
+        row = {
+            "name":      name,
+            "price":     price,
+            "turnover":  turnover,
+            "circ_mv_yi": circ_mv_yi,
+            "pct_change": pct,
+            "is_st":     is_st(name),
         }
 
         passed, matched, reason = apply_rules(
-            full_row,
+            row,
             turnover_min=turnover_min,
-            turnover_max=turnover_max,
             price_max=price_max,
-            share_max=share_max,
+            circ_mv_max=circ_mv_max,
             pct_max=pct_max,
+            pct_min=pct_min,
             exclude_st=exclude_st,
         )
+
+        if reason == "数据缺失":
+            skipped_data += 1
+
         if not passed:
             continue
 
         candidates.append({
-            "code":             full_row["code"],
-            "name":             full_row["name"],
+            "code":             s["code"],
+            "name":             name,
             "market":           "CN",
-            "current_price":    full_row["current_price"],
-            "avg_turnover_10d": full_row["avg_turnover_10d"],
-            "max_turnover_10d": full_row["max_turnover_10d"],
-            "pct_change_10d":   full_row["pct_change_10d"],
-            "total_shares":     full_row["total_shares_yi"],   # 亿
-            "float_shares":     full_row["float_shares_yi"],   # 亿, may be None
-            "circ_mv":          full_row["circ_mv_yi"],        # 亿 yuan, may be None
-            "is_st":            full_row["is_st"],
+            "current_price":    price,
+            "turnover":         turnover,       # today's %
+            "pct_change":       pct,            # today's %
+            "circ_mv":          circ_mv_yi,     # 亿
+            "total_shares":     total_sh_yi,    # 亿 (approx)
+            "is_st":            is_st(name),
             "matched_rules":    matched,
             "candidate_reason": reason,
-            # candidate_score: v1 uses avg_turnover as sort key
-            # future: composite score (volume profile, price structure, etc.)
         })
 
-        time.sleep(hist_delay)
+    # Sort by turnover descending
+    candidates.sort(key=lambda c: c["turnover"] or 0, reverse=True)
 
-    # Sort by avg turnover descending
-    candidates.sort(key=lambda c: c["avg_turnover_10d"], reverse=True)
-
-    cache = {
+    log.info(
+        "Screening done: %d candidates (skipped %d for missing data)",
+        len(candidates), skipped_data,
+    )
+    return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
+        "source":       "realtime",
         "total":        len(candidates),
         "thresholds": {
             "turnover_min": turnover_min,
-            "turnover_max": turnover_max,
             "price_max":    price_max,
-            "share_max":    share_max,
+            "circ_mv_max":  circ_mv_max,
             "pct_max":      pct_max,
+            "pct_min":      pct_min,
             "exclude_st":   exclude_st,
         },
         "candidates": candidates,
     }
 
-    CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
-    # Use allow_nan=False to catch issues, but first sanitize NaN → None
-    import math
 
-    def _sanitize(obj):
-        if isinstance(obj, float) and math.isnan(obj):
-            return None
-        if isinstance(obj, dict):
-            return {k: _sanitize(v) for k, v in obj.items()}
-        if isinstance(obj, list):
-            return [_sanitize(v) for v in obj]
-        return obj
+# ── Public API ────────────────────────────────────────────────────────────────
 
-    cache = _sanitize(cache)
-    CACHE_PATH.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")
-    log.info("Cache written: %s  (%d candidates)", CACHE_PATH, len(candidates))
-    return {"total": len(candidates), "generated_at": cache["generated_at"]}
+def get_candidates(
+    *,
+    turnover_min: float = DEFAULT_TURNOVER_MIN,
+    price_max:    float = DEFAULT_PRICE_MAX,
+    circ_mv_max:  float = DEFAULT_CIRC_MV_MAX,
+    pct_max:      float = DEFAULT_PCT_MAX,
+    pct_min:      float = DEFAULT_PCT_MIN,
+    exclude_st:   bool  = DEFAULT_EXCLUDE_ST,
+    force_refresh: bool = False,
+) -> dict[str, Any]:
+    """
+    Return candidate pool. Uses in-memory cache (TTL 30 min).
+    Thread-safe: concurrent requests wait for the first fetch to complete.
+    """
+    global _cached_result, _cache_fetched_at
 
+    with _cache_lock:
+        if not force_refresh and _cache_fresh():
+            log.debug("Returning cached candidates")
+            return _cached_result  # type: ignore[return-value]
 
-# ---------------------------------------------------------------------------
-# Read (called by Flask API — fast, no AKShare)
-# ---------------------------------------------------------------------------
-
-def load_from_cache() -> dict[str, Any] | None:
-    """Read candidates cache. Returns None if file does not exist."""
-    if not CACHE_PATH.exists():
-        return None
-    try:
-        return json.loads(CACHE_PATH.read_text(encoding="utf-8"))
-    except Exception as exc:
-        log.warning("Failed to read candidates cache: %s", exc)
-        return None
+        log.info("Cache miss — fetching realtime data …")
+        result = _run_screening(
+            turnover_min=turnover_min,
+            price_max=price_max,
+            circ_mv_max=circ_mv_max,
+            pct_max=pct_max,
+            pct_min=pct_min,
+            exclude_st=exclude_st,
+        )
+        _cached_result    = result
+        _cache_fetched_at = time.monotonic()
+        return result
 
 
 def apply_query_filters(
     candidates: list[dict],
     *,
     turnover_min: float | None = None,
-    turnover_max: float | None = None,
     price_max:    float | None = None,
-    share_max:    float | None = None,
+    circ_mv_max:  float | None = None,
     pct_max:      float | None = None,
+    pct_min:      float | None = None,
     exclude_st:   bool         = True,
 ) -> list[dict]:
-    """
-    Apply optional additional filters on the cached candidates list.
-    All params are optional — None means "no additional constraint".
-    """
-    out: list[dict] = []
+    """Narrow the cached list with optional tighter per-request constraints."""
+    out = []
     for c in candidates:
         if exclude_st and c.get("is_st"):
             continue
-        if turnover_min is not None and c["avg_turnover_10d"] < turnover_min:
+        if turnover_min is not None and (c["turnover"] or 0) < turnover_min:
             continue
-        if turnover_max is not None and c["max_turnover_10d"] >= turnover_max:
+        if price_max is not None and (c["current_price"] or 0) >= price_max:
             continue
-        if price_max is not None and c["current_price"] >= price_max:
+        if circ_mv_max is not None and c["circ_mv"] is not None and c["circ_mv"] >= circ_mv_max:
             continue
-        if share_max is not None and c["total_shares"] >= share_max:
+        if pct_max is not None and (c["pct_change"] or 0) >= pct_max:
             continue
-        if pct_max is not None and c["pct_change_10d"] >= pct_max:
+        if pct_min is not None and (c["pct_change"] or 0) <= pct_min:
             continue
         out.append(c)
     return out

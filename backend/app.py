@@ -12,7 +12,7 @@ from backend.data_access.company_repository import CompanyRepository
 from backend.data_access.local_store import LocalDataStore
 from backend.graph.neo4j_client import Neo4jClient
 from backend.rules.engine import RuleEngine
-from backend.screening.screening_service import apply_query_filters, load_from_cache
+from backend.screening.screening_service import apply_query_filters, get_candidates
 
 _SIGNALS_DIR = DATA_DIR / "signals"
 
@@ -136,44 +136,57 @@ def _float_param(name: str, default: float | None = None) -> float | None:
 
 
 @app.route("/api/candidates")
-def get_candidates():
+def api_get_candidates():
     """
     GET /api/candidates
-    Returns cached candidate pool.  Query params allow narrowing the results:
-        turnover_min  float   min avg 10d turnover % (default: cache threshold)
-        turnover_max  float   max single-day turnover %
-        price_max     float   max current price (yuan)
-        share_max     float   max total shares (亿)
-        pct_max       float   max 10d price change %
-        exclude_st    0|1     exclude ST stocks (default 1)
-        limit         int     max rows to return (default 200)
+    Realtime screening — fetches AKShare spot data, cached in memory 30 min.
+    First request of the day takes ~30-60s; subsequent requests are instant.
+
+    Query params (all optional — narrow the default thresholds):
+        turnover_min  float  today's turnover > N%  (default 2)
+        price_max     float  price < N yuan          (default 20)
+        circ_mv_max   float  流通市值 < N 亿         (default 80)
+        pct_max       float  today gain < N%         (default 9)
+        pct_min       float  today drop > N%         (default -9)
+        exclude_st    0|1    exclude ST              (default 1)
+        limit         int    max rows                (default 300)
+        refresh       0|1    force cache refresh     (default 0)
     """
-    cache = load_from_cache()
-    if cache is None:
-        return jsonify({
-            "error": "Candidates cache not found. Run: python -m backend.scripts.run_candidates",
-            "hint":  "Cache is built by a batch script, not at request time.",
-        }), 404
+    exclude_st    = request.args.get("exclude_st", "1") not in ("0", "false")
+    force_refresh = request.args.get("refresh", "0") in ("1", "true")
 
-    candidates = cache.get("candidates", [])
+    try:
+        data = get_candidates(
+            turnover_min  = _float_param("turnover_min", 2.0),
+            price_max     = _float_param("price_max",   20.0),
+            circ_mv_max   = _float_param("circ_mv_max", 80.0),
+            pct_max       = _float_param("pct_max",      9.0),
+            pct_min       = _float_param("pct_min",     -9.0),
+            exclude_st    = exclude_st,
+            force_refresh = force_refresh,
+        )
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 503
 
-    # Apply optional extra filters from query params
-    exclude_st = request.args.get("exclude_st", "1") not in ("0", "false")
+    candidates = data.get("candidates", [])
+
+    # Apply any tighter per-request filters
     candidates = apply_query_filters(
         candidates,
         turnover_min = _float_param("turnover_min"),
-        turnover_max = _float_param("turnover_max"),
         price_max    = _float_param("price_max"),
-        share_max    = _float_param("share_max"),
+        circ_mv_max  = _float_param("circ_mv_max"),
         pct_max      = _float_param("pct_max"),
+        pct_min      = _float_param("pct_min"),
         exclude_st   = exclude_st,
     )
 
-    limit = min(int(request.args.get("limit", 200)), 500)
+    limit = min(int(request.args.get("limit", 300)), 1000)
 
     return jsonify({
-        "generated_at": cache.get("generated_at"),
-        "thresholds":   cache.get("thresholds", {}),
+        "generated_at": data.get("generated_at"),
+        "source":       data.get("source", "realtime"),
+        "thresholds":   data.get("thresholds", {}),
         "total":        len(candidates),
         "results":      candidates[:limit],
     }), 200
@@ -183,14 +196,14 @@ def get_candidates():
 def get_candidate_detail(code: str):
     """
     GET /api/candidates/CN/<code>
-    Returns the cached candidate entry for one stock, plus a lightweight
-    signal summary if signals cache is available.
+    Returns the realtime candidate entry for one stock.
     """
-    cache = load_from_cache()
-    if cache is None:
-        return jsonify({"error": "Candidates cache not found"}), 404
+    try:
+        data = get_candidates()
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 503
 
-    entry = next((c for c in cache.get("candidates", []) if c["code"] == code), None)
+    entry = next((c for c in data.get("candidates", []) if c["code"] == code), None)
     if entry is None:
         return jsonify({"error": f"{code} is not in the current candidates pool"}), 404
 
