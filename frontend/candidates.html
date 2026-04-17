@@ -146,7 +146,14 @@
             <h2 class="panel-title">候选股票</h2>
             <span class="panel-meta" id="tableInfo"></span>
           </div>
-          <span class="panel-meta" id="cacheDate" style="font-size:11px;color:var(--text-tertiary,#9ca3af)"></span>
+          <div style="text-align:right;line-height:1.6">
+            <div style="font-size:11px;color:var(--text-tertiary,#9ca3af)">
+              AKShare 抓取：<code id="serverFetchTime" style="font-size:11px;letter-spacing:.3px">—</code>
+            </div>
+            <div style="font-size:11px;color:var(--text-tertiary,#9ca3af)">
+              本次请求：<code id="clientFetchTime" style="font-size:11px;letter-spacing:.3px">—</code>
+            </div>
+          </div>
         </div>
         <div id="tableContainer" class="table-container"></div>
       </div>

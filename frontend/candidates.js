@@ -67,14 +67,27 @@ function buildParams() {
 }
 
 // ── Render helpers ────────────────────────────────────────────────────────────
+const _timeFmt = new Intl.DateTimeFormat('zh-CN', {
+  timeZone: 'Asia/Shanghai',
+  year: 'numeric', month: '2-digit', day: '2-digit',
+  hour: '2-digit', minute: '2-digit', second: '2-digit',
+  hour12: false,
+});
+
 function renderMeta(data) {
   document.getElementById('tableInfo').textContent =
     `${data.total} 只候选股`;
 
-  if (data.generated_at) {
-    const d = new Date(data.generated_at);
-    document.getElementById('cacheDate').textContent =
-      '数据时间: ' + d.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
+  // Server-side AKShare fetch time (stays the same while cache is live)
+  const serverEl = document.getElementById('serverFetchTime');
+  if (data.generated_at && serverEl) {
+    serverEl.textContent = _timeFmt.format(new Date(data.generated_at));
+  }
+
+  // Client-side request time (always "now")
+  const clientEl = document.getElementById('clientFetchTime');
+  if (clientEl) {
+    clientEl.textContent = _timeFmt.format(new Date());
   }
 }
 
