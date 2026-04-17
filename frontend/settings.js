@@ -49,12 +49,12 @@ async function checkHealth() {
     dot.className     = 'health-dot online';
     lbl.textContent   = 'Connected — API is reachable';
     sideDot.className = 'health-dot online';
-    sideLbl.textContent = 'API Connected';
+    sideLbl.textContent = (window._currentLang === 'zh') ? 'API 已连接' : 'API Connected';
   } catch (err) {
     dot.className     = 'health-dot offline';
     lbl.textContent   = `Offline — ${err.message}`;
     sideDot.className = 'health-dot offline';
-    sideLbl.textContent = 'API Offline';
+    sideLbl.textContent = (window._currentLang === 'zh') ? 'API 离线' : 'API Offline';
   }
 }
 

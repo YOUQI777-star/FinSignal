@@ -80,10 +80,10 @@ async function checkHealth() {
   try {
     await API.health();
     dot.className = 'health-dot online';
-    lbl.textContent = 'API Connected';
+    lbl.textContent = (window._currentLang === 'zh') ? 'API 已连接' : 'API Connected';
   } catch {
     dot.className = 'health-dot offline';
-    lbl.textContent = 'API Offline';
+    lbl.textContent = (window._currentLang === 'zh') ? 'API 离线' : 'API Offline';
   }
 }
 
@@ -134,13 +134,14 @@ function renderTable() {
   const container = document.getElementById('tableContainer');
 
   if (!results.length) {
+    const zh = window._currentLang === 'zh';
     container.innerHTML = `
       <div class="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
           <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
-        <p>No results found</p>
-        <span>${q ? 'No companies match your search filter' : 'Try adjusting your market or rule filter'}</span>
+        <p>${zh ? '暂无信号' : 'No results found'}</p>
+        <span>${q ? (zh ? '没有匹配的公司' : 'No companies match your search filter') : (zh ? '调整市场或规则筛选' : 'Try adjusting your market or rule filter')}</span>
       </div>`;
     return;
   }
@@ -182,17 +183,18 @@ function renderTable() {
     </tr>`;
   }).join('');
 
+  const zh = window._currentLang === 'zh';
   container.innerHTML = `
     <table class="signal-table">
       <thead>
         <tr>
           <th class="col-idx">#</th>
-          <th class="col-company">Company</th>
-          <th class="col-market">Market</th>
-          <th class="col-count">Triggered</th>
-          <th class="col-rules">Triggered Rules</th>
-          <th class="col-tier">Data Tier</th>
-          <th class="col-action">Action</th>
+          <th class="col-company">${zh ? '公司' : 'Company'}</th>
+          <th class="col-market">${zh ? '市场' : 'Market'}</th>
+          <th class="col-count">${zh ? '触发' : 'Triggered'}</th>
+          <th class="col-rules">${zh ? '触发规则' : 'Triggered Rules'}</th>
+          <th class="col-tier">${zh ? '数据级别' : 'Data Tier'}</th>
+          <th class="col-action">${zh ? '操作' : 'Action'}</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>

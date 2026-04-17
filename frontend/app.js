@@ -30,10 +30,10 @@ async function checkHealth() {
   try {
     await API.health();
     dot.className   = 'health-dot online';
-    label.textContent = 'API Connected';
+    label.textContent = (window._currentLang === 'zh') ? 'API 已连接' : 'API Connected';
   } catch {
     dot.className   = 'health-dot offline';
-    label.textContent = 'API Offline';
+    label.textContent = (window._currentLang === 'zh') ? 'API 离线' : 'API Offline';
   }
 }
 
@@ -129,17 +129,18 @@ function renderTable(results) {
     </tr>`;
   }).join('');
 
+  const zh = window._currentLang === 'zh';
   container.innerHTML = `
     <table class="signal-table">
       <thead>
         <tr>
           <th class="col-idx">#</th>
-          <th class="col-company">Company</th>
-          <th class="col-market">Market</th>
-          <th class="col-count">Triggered</th>
-          <th class="col-rules">Triggered Rules</th>
-          <th class="col-tier">Data Tier</th>
-          <th class="col-action">Action</th>
+          <th class="col-company">${zh ? '公司' : 'Company'}</th>
+          <th class="col-market">${zh ? '市场' : 'Market'}</th>
+          <th class="col-count">${zh ? '触发' : 'Triggered'}</th>
+          <th class="col-rules">${zh ? '触发规则' : 'Triggered Rules'}</th>
+          <th class="col-tier">${zh ? '数据级别' : 'Data Tier'}</th>
+          <th class="col-action">${zh ? '操作' : 'Action'}</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>

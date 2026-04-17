@@ -31,10 +31,10 @@ async function checkHealth() {
   try {
     await API.health();
     dot.className = 'health-dot online';
-    lbl.textContent = 'API Connected';
+    lbl.textContent = (window._currentLang === 'zh') ? 'API 已连接' : 'API Connected';
   } catch {
     dot.className = 'health-dot offline';
-    lbl.textContent = 'API Offline';
+    lbl.textContent = (window._currentLang === 'zh') ? 'API 离线' : 'API Offline';
   }
 }
 

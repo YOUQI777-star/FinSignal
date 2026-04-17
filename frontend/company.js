@@ -196,10 +196,10 @@ async function checkHealth() {
   try {
     await API.health();
     dot.className   = 'health-dot online';
-    label.textContent = 'API Connected';
+    label.textContent = (window._currentLang === 'zh') ? 'API 已连接' : 'API Connected';
   } catch {
     dot.className   = 'health-dot offline';
-    label.textContent = 'API Offline';
+    label.textContent = (window._currentLang === 'zh') ? 'API 离线' : 'API Offline';
   }
 }
 
