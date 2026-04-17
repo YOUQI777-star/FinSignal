@@ -1,4 +1,5 @@
 'use strict';
+const t = (zh, en) => window._currentLang === 'zh' ? zh : en;
 
 const STORAGE_KEYS = {
   apiBase:      'fsm_api_base',
@@ -42,19 +43,19 @@ async function checkHealth() {
   const sideLbl = document.getElementById('healthLabel');
 
   dot.className = 'health-dot';
-  lbl.textContent = 'Checking…';
+  lbl.textContent = t('检测中…', 'Checking…');
 
   try {
     await API.health();
     dot.className     = 'health-dot online';
-    lbl.textContent   = 'Connected — API is reachable';
+    lbl.textContent   = t('已连接 — API 正常', 'Connected — API is reachable');
     sideDot.className = 'health-dot online';
-    sideLbl.textContent = (window._currentLang === 'zh') ? 'API 已连接' : 'API Connected';
+    sideLbl.textContent = t('API 已连接', 'API Connected');
   } catch (err) {
     dot.className     = 'health-dot offline';
-    lbl.textContent   = `Offline — ${err.message}`;
+    lbl.textContent   = t(`离线 — ${err.message}`, `Offline — ${err.message}`);
     sideDot.className = 'health-dot offline';
-    sideLbl.textContent = (window._currentLang === 'zh') ? 'API 离线' : 'API Offline';
+    sideLbl.textContent = t('API 离线', 'API Offline');
   }
 }
 
@@ -64,14 +65,14 @@ async function checkHealth() {
 function saveApiBase() {
   const val = document.getElementById('apiBaseInput').value.trim();
   if (!val) {
-    showToast('API Base URL cannot be empty', 'error');
+    showToast(t('API 基础地址不能为空', 'API Base URL cannot be empty'), 'error');
     return;
   }
   // Strip trailing slash
   const clean = val.replace(/\/+$/, '');
   localStorage.setItem(STORAGE_KEYS.apiBase, clean);
   document.getElementById('apiBaseInput').value = clean;
-  showToast('API base URL saved — reload pages to apply', 'success');
+  showToast(t('API 地址已保存 — 刷新页面生效', 'API base URL saved — reload pages to apply'), 'success');
   checkHealth();
 }
 
@@ -80,13 +81,13 @@ function saveDisplay() {
   const market = document.getElementById('defaultMarket').value;
   localStorage.setItem(STORAGE_KEYS.defaultLimit,  limit);
   localStorage.setItem(STORAGE_KEYS.defaultMarket, market);
-  showToast('Display settings saved', 'success');
+  showToast(t('显示设置已保存', 'Display settings saved'), 'success');
 }
 
 function clearRecent() {
   localStorage.removeItem(STORAGE_KEYS.recent);
   updateRecentCount();
-  showToast('Recently viewed history cleared', 'success');
+  showToast(t('浏览记录已清除', 'Recently viewed history cleared'), 'success');
 }
 
 function updateRecentCount() {
@@ -94,10 +95,10 @@ function updateRecentCount() {
     const recent = JSON.parse(localStorage.getItem(STORAGE_KEYS.recent) || '[]');
     const el = document.getElementById('recentCount');
     el.textContent = recent.length
-      ? `${recent.length} entr${recent.length > 1 ? 'ies' : 'y'} stored in localStorage`
-      : 'No history stored';
+      ? t(`已存储 ${recent.length} 条浏览记录`, `${recent.length} entr${recent.length > 1 ? 'ies' : 'y'} stored in localStorage`)
+      : t('暂无浏览记录', 'No history stored');
   } catch {
-    document.getElementById('recentCount').textContent = 'Stored in localStorage';
+    document.getElementById('recentCount').textContent = t('已存储在 localStorage', 'Stored in localStorage');
   }
 }
 
@@ -120,10 +121,10 @@ function bindEvents() {
    ============================================================ */
 function showToast(msg, type = 'info') {
   const c = document.getElementById('toastContainer');
-  const t = document.createElement('div');
-  t.className = `toast toast--${type}`;
-  t.textContent = msg;
-  c.appendChild(t);
-  requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('show')));
-  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 260); }, 4000);
+  const el = document.createElement('div');
+  el.className = `toast toast--${type}`;
+  el.textContent = msg;
+  c.appendChild(el);
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 260); }, 4000);
 }

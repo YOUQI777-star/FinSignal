@@ -1,4 +1,5 @@
 'use strict';
+const t = (zh, en) => window._currentLang === 'zh' ? zh : en;
 
 const state = {
   filters:   { market: '', signal_id: '', limit: 50 },
@@ -104,14 +105,14 @@ async function loadRanking() {
       console.warn('[ranking] API unreachable, using mock:', err.message);
       data = MOCK_TOP;
       state.usedMock = true;
-      showToast('Backend not running — showing demo data', 'warning');
+      showToast(t('后端未运行 — 显示演示数据', 'Backend not running — showing demo data'), 'warning');
     }
 
     state.allResults = data.results || [];
     renderTable();
     updateTableInfo(data.total, state.allResults.length);
     document.getElementById('lastUpdated').textContent =
-      `Updated: ${new Date().toLocaleTimeString()}`;
+      t(`更新于 ${new Date().toLocaleTimeString()}`, `Updated: ${new Date().toLocaleTimeString()}`);
   } catch (err) {
     renderError(err.message);
   } finally {
@@ -134,14 +135,13 @@ function renderTable() {
   const container = document.getElementById('tableContainer');
 
   if (!results.length) {
-    const zh = window._currentLang === 'zh';
     container.innerHTML = `
       <div class="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
           <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
-        <p>${zh ? '暂无信号' : 'No results found'}</p>
-        <span>${q ? (zh ? '没有匹配的公司' : 'No companies match your search filter') : (zh ? '调整市场或规则筛选' : 'Try adjusting your market or rule filter')}</span>
+        <p>${t('暂无信号', 'No results found')}</p>
+        <span>${q ? t('没有匹配的公司', 'No companies match your search filter') : t('尝试调整筛选条件', 'Try adjusting your market or rule filter')}</span>
       </div>`;
     return;
   }
@@ -178,7 +178,7 @@ function renderTable() {
         <span class="tier-badge ${tierClass(tier)}">${tierLabel(tier)}</span>
       </td>
       <td class="col-action">
-        <a href="company.html?market=${item.market}&code=${esc(item.code)}" class="btn-view">View →</a>
+        <a href="company.html?market=${item.market}&code=${esc(item.code)}" class="btn-view">${t('查看 →', 'View →')}</a>
       </td>
     </tr>`;
   }).join('');
@@ -209,9 +209,9 @@ function renderError(msg) {
         <line x1="12" y1="8" x2="12" y2="12"></line>
         <line x1="12" y1="16" x2="12.01" y2="16"></line>
       </svg>
-      <p>Failed to load data</p>
+      <p>${t('数据加载失败', 'Failed to load data')}</p>
       <span>${esc(msg)}</span>
-      <button class="btn btn--primary" style="margin-top:8px" onclick="loadRanking()">Retry</button>
+      <button class="btn btn--primary" style="margin-top:8px" onclick="loadRanking()">${t('重试', 'Retry')}</button>
     </div>`;
 }
 
@@ -219,7 +219,7 @@ function updateTableInfo(total, shown) {
   const el = document.getElementById('tableInfo');
   const suffix = state.usedMock ? ' (demo)' : '';
   if (total != null) {
-    el.textContent = `Showing ${shown} of ${(total || 0).toLocaleString()} companies${suffix}`;
+    el.textContent = t(`显示 ${shown} / ${(total || 0).toLocaleString()} 家公司${suffix}`, `Showing ${shown} of ${(total || 0).toLocaleString()} companies${suffix}`);
   }
 }
 
@@ -264,7 +264,7 @@ function exportCSV() {
     : state.allResults;
 
   if (!results.length) {
-    showToast('No data to export', 'error');
+    showToast(t('无数据可导出', 'No data to export'), 'error');
     return;
   }
 
@@ -294,7 +294,7 @@ function exportCSV() {
   a.download = `fsm_ranking_${mkt}_${sig}_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
   URL.revokeObjectURL(url);
-  showToast(`Exported ${results.length} rows`, 'success');
+  showToast(t(`已导出 ${results.length} 行`, `Exported ${results.length} rows`), 'success');
 }
 
 /* ============================================================
@@ -307,7 +307,7 @@ function setLoadingUI(on) {
     document.getElementById('tableContainer').innerHTML = `
       <div class="loading-state">
         <div class="loading-dots"><span></span><span></span><span></span></div>
-        <p>Fetching signal data…</p>
+        <p>${t('获取信号数据中…', 'Fetching signal data…')}</p>
       </div>`;
   }
 }
@@ -319,12 +319,12 @@ function getTriggeredRuleIds(item) {
 
 function showToast(msg, type = 'info') {
   const c = document.getElementById('toastContainer');
-  const t = document.createElement('div');
-  t.className = `toast toast--${type}`;
-  t.textContent = msg;
-  c.appendChild(t);
-  requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('show')));
-  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 260); }, 4000);
+  const el = document.createElement('div');
+  el.className = `toast toast--${type}`;
+  el.textContent = msg;
+  c.appendChild(el);
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 260); }, 4000);
 }
 
 function countClass(n) {
@@ -333,15 +333,15 @@ function countClass(n) {
   if (n === 1) return 'cnt-low';
   return 'cnt-zero';
 }
-function tierClass(t) {
-  if (t === 'real_financial_available')    return 'tier-full';
-  if (t === 'partial_financial_available') return 'tier-partial';
+function tierClass(tier) {
+  if (tier === 'real_financial_available')    return 'tier-full';
+  if (tier === 'partial_financial_available') return 'tier-partial';
   return 'tier-shell';
 }
-function tierLabel(t) {
-  if (t === 'real_financial_available')    return 'Full Data';
-  if (t === 'partial_financial_available') return 'Partial';
-  return 'Shell Only';
+function tierLabel(tier) {
+  if (tier === 'real_financial_available')    return t('完整数据', 'Full Data');
+  if (tier === 'partial_financial_available') return t('部分数据', 'Partial');
+  return t('仅基础', 'Shell Only');
 }
 function esc(str) {
   return String(str ?? '')

@@ -1,4 +1,5 @@
 'use strict';
+const t = (zh, en) => window._currentLang === 'zh' ? zh : en;
 
 /* ============================================================
    STATE
@@ -55,7 +56,7 @@ async function loadTopSignals() {
       console.warn('[FSM] API unreachable, using mock data:', err.message);
       data = MOCK_DATA.top;
       state.usedMock = true;
-      showToast('Backend not running — showing demo data', 'warning');
+      showToast(t('后端未运行 — 显示演示数据', 'Backend not running — showing demo data'), 'warning');
     }
 
     renderTable(data.results || []);
@@ -83,8 +84,8 @@ function renderTable(results) {
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
-        <p>No results found</p>
-        <span>Try adjusting your market or rule filter</span>
+        <p>${t('暂无结果', 'No results found')}</p>
+        <span>${t('尝试调整市场或规则筛选', 'Try adjusting your market or rule filter')}</span>
       </div>`;
     return;
   }
@@ -124,7 +125,7 @@ function renderTable(results) {
         <button class="btn-view"
           data-market="${item.market}"
           data-code="${esc(item.code)}"
-          data-name="${nameSafe}">View →</button>
+          data-name="${nameSafe}">${t('查看 →', 'View →')}</button>
       </td>
     </tr>`;
   }).join('');
@@ -163,9 +164,9 @@ function renderError(msg) {
         <line x1="12" y1="8" x2="12" y2="12"></line>
         <line x1="12" y1="16" x2="12.01" y2="16"></line>
       </svg>
-      <p>Failed to load data</p>
+      <p>${t('数据加载失败', 'Failed to load data')}</p>
       <span>${esc(msg)}</span>
-      <button class="btn btn--primary" style="margin-top:8px" onclick="loadTopSignals()">Retry</button>
+      <button class="btn btn--primary" style="margin-top:8px" onclick="loadTopSignals()">${t('重试', 'Retry')}</button>
     </div>`;
 }
 
@@ -189,12 +190,12 @@ function renderRuleDistribution(results) {
   }
 
   const desc = {
-    F1: 'AR Abnormal Growth',
-    F2: 'Cash Flow Divergence',
-    F3: 'High Leverage',
-    F4: 'Margin Decline',
-    G1: 'Pledge Ratio',
-    G3: 'Board Independence',
+    F1: t('应收账款异常增长', 'AR Abnormal Growth'),
+    F2: t('现金流背离', 'Cash Flow Divergence'),
+    F3: t('高杠杆风险', 'High Leverage'),
+    F4: t('毛利率骤降', 'Margin Decline'),
+    G1: t('大股东质押', 'Pledge Ratio'),
+    G3: t('独立董事不足', 'Board Independence'),
   };
 
   const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
@@ -237,7 +238,7 @@ function renderRecentlyViewed() {
   const clear = document.getElementById('clearRecent');
 
   if (!state.recentlyViewed.length) {
-    list.innerHTML = '<p class="empty-hint">No recent history</p>';
+    list.innerHTML = `<p class="empty-hint">${t('暂无浏览记录', 'No recent history')}</p>`;
     clear.style.display = 'none';
     return;
   }
@@ -282,12 +283,12 @@ function renderDropdown(results, error = false) {
   const dd = document.getElementById('searchDropdown');
 
   if (error) {
-    dd.innerHTML = `<div class="search-empty">Search unavailable — check API connection</div>`;
+    dd.innerHTML = `<div class="search-empty">${t('搜索不可用 — 请检查 API 连接', 'Search unavailable — check API connection')}</div>`;
     dd.classList.add('open');
     return;
   }
   if (!results || !results.length) {
-    dd.innerHTML = `<div class="search-empty">No companies found</div>`;
+    dd.innerHTML = `<div class="search-empty">${t('未找到公司', 'No companies found')}</div>`;
     dd.classList.add('open');
     return;
   }
@@ -331,7 +332,7 @@ function setLoadingUI(on) {
     document.getElementById('tableContainer').innerHTML = `
       <div class="loading-state">
         <div class="loading-dots"><span></span><span></span><span></span></div>
-        <p>Fetching signal data…</p>
+        <p>${t('获取信号数据中…', 'Fetching signal data…')}</p>
       </div>`;
   }
 }
@@ -340,13 +341,13 @@ function updateTableInfo(total, shown) {
   const el = document.getElementById('tableInfo');
   if (total != null) {
     const suffix = state.usedMock ? ' (demo)' : '';
-    el.textContent = `Showing ${shown} of ${(total || 0).toLocaleString()} companies${suffix}`;
+    el.textContent = t(`显示 ${shown} / ${(total || 0).toLocaleString()} 家公司${suffix}`, `Showing ${shown} of ${(total || 0).toLocaleString()} companies${suffix}`);
   }
 }
 
 function updateLastUpdated() {
   document.getElementById('lastUpdated').textContent =
-    `Updated: ${new Date().toLocaleTimeString()}`;
+    t(`更新于 ${new Date().toLocaleTimeString()}`, `Updated: ${new Date().toLocaleTimeString()}`);
 }
 
 function showToast(msg, type = 'info') {
@@ -425,16 +426,16 @@ function countClass(n) {
   return 'cnt-zero';
 }
 
-function tierClass(t) {
-  if (t === 'real_financial_available')    return 'tier-full';
-  if (t === 'partial_financial_available') return 'tier-partial';
+function tierClass(tier) {
+  if (tier === 'real_financial_available')    return 'tier-full';
+  if (tier === 'partial_financial_available') return 'tier-partial';
   return 'tier-shell';
 }
 
-function tierLabel(t) {
-  if (t === 'real_financial_available')    return 'Full Data';
-  if (t === 'partial_financial_available') return 'Partial';
-  return 'Shell Only';
+function tierLabel(tier) {
+  if (tier === 'real_financial_available')    return t('完整数据', 'Full Data');
+  if (tier === 'partial_financial_available') return t('部分数据', 'Partial');
+  return t('仅基础', 'Shell Only');
 }
 
 function esc(str) {

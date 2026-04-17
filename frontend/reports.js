@@ -1,4 +1,5 @@
 'use strict';
+const t = (zh, en) => window._currentLang === 'zh' ? zh : en;
 
 const state = {
   market:        '',
@@ -48,11 +49,11 @@ async function generateReport() {
 
   // Validation
   if (!market) {
-    showFormError('Please select a market.');
+    showFormError(t('请选择市场。', 'Please select a market.'));
     return;
   }
   if (!code) {
-    showFormError('Please enter a company code.');
+    showFormError(t('请输入公司代码。', 'Please enter a company code.'));
     return;
   }
   errEl.style.display = 'none';
@@ -71,10 +72,10 @@ async function generateReport() {
 
     state.lastReportText = text;
     renderReport(text, market, code, result);
-    showToast('Report generated', 'success');
+    showToast(t('报告已生成', 'Report generated'), 'success');
   } catch (err) {
     renderReportError(err.message);
-    showToast('Failed to generate report', 'error');
+    showToast(t('报告生成失败', 'Failed to generate report'), 'error');
   } finally {
     state.generating = false;
     setLoading(false);
@@ -88,8 +89,8 @@ function showGenerating() {
   document.getElementById('reportOutput').innerHTML = `
     <div class="loading-state" style="padding:var(--s8) var(--s6)">
       <div class="loading-dots"><span></span><span></span><span></span></div>
-      <p>Generating AI risk analysis…</p>
-      <span>This may take a few seconds</span>
+      <p>${t('AI 风险分析生成中…', 'Generating AI risk analysis…')}</p>
+      <span>${t('可能需要几秒钟', 'This may take a few seconds')}</span>
     </div>`;
   document.getElementById('copyBtn').style.display = 'none';
   document.getElementById('reportMeta').textContent = '';
@@ -116,9 +117,9 @@ function renderReport(text, market, code, raw) {
     </div>
     <div style="display:flex;align-items:center;gap:var(--s3);margin-top:var(--s3);flex-wrap:wrap">
       ${tier ? `<span class="tier-badge ${tierClass(tier)}">${tierLabel(tier)}</span>` : ''}
-      ${triggered !== null ? `<span class="trigger-count ${countClass(triggered)}" style="width:auto;padding:0 8px">${triggered} triggered</span>` : ''}
+      ${triggered !== null ? `<span class="trigger-count ${countClass(triggered)}" style="width:auto;padding:0 8px">${t(`${triggered} 条触发`, `${triggered} triggered`)}</span>` : ''}
       <a href="company.html?market=${market}&code=${esc(code)}" class="btn btn--outline" style="height:28px;font-size:var(--f-xs)">
-        View Detail →
+        ${t('查看详情 →', 'View Detail →')}
       </a>
     </div>`;
   metaCard.style.display = 'block';
@@ -129,9 +130,9 @@ function renderReport(text, market, code, raw) {
 
   document.getElementById('copyBtn').style.display = 'block';
   document.getElementById('reportMeta').textContent =
-    `Generated ${new Date().toLocaleTimeString()}`;
+    t(`生成于 ${new Date().toLocaleTimeString()}`, `Generated ${new Date().toLocaleTimeString()}`);
   document.getElementById('lastUpdated').textContent =
-    `Updated: ${new Date().toLocaleTimeString()}`;
+    t(`更新于 ${new Date().toLocaleTimeString()}`, `Updated: ${new Date().toLocaleTimeString()}`);
 }
 
 function renderReportError(msg) {
@@ -142,9 +143,9 @@ function renderReportError(msg) {
         <line x1="12" y1="8" x2="12" y2="12"></line>
         <line x1="12" y1="16" x2="12.01" y2="16"></line>
       </svg>
-      <p>Report generation failed</p>
+      <p>${t('报告生成失败', 'Report generation failed')}</p>
       <span>${esc(msg)}</span>
-      <button class="btn btn--primary" style="margin-top:8px" onclick="generateReport()">Retry</button>
+      <button class="btn btn--primary" style="margin-top:8px" onclick="generateReport()">${t('重试', 'Retry')}</button>
     </div>`;
   document.getElementById('copyBtn').style.display = 'none';
 }
@@ -163,9 +164,9 @@ function bindEvents() {
     const el = document.querySelector('.rpt-report-text');
     if (!el) return;
     navigator.clipboard.writeText(el.textContent || '').then(() => {
-      showToast('Copied to clipboard', 'success');
+      showToast(t('已复制到剪贴板', 'Copied to clipboard'), 'success');
     }).catch(() => {
-      showToast('Copy failed — please select and copy manually', 'error');
+      showToast(t('复制失败 — 请手动选择并复制', 'Copy failed — please select and copy manually'), 'error');
     });
   });
 }
@@ -192,12 +193,12 @@ function showFormError(msg) {
 
 function showToast(msg, type = 'info') {
   const c = document.getElementById('toastContainer');
-  const t = document.createElement('div');
-  t.className = `toast toast--${type}`;
-  t.textContent = msg;
-  c.appendChild(t);
-  requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('show')));
-  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 260); }, 4000);
+  const el = document.createElement('div');
+  el.className = `toast toast--${type}`;
+  el.textContent = msg;
+  c.appendChild(el);
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 260); }, 4000);
 }
 
 function countClass(n) {
@@ -206,15 +207,15 @@ function countClass(n) {
   if (n === 1) return 'cnt-low';
   return 'cnt-zero';
 }
-function tierClass(t) {
-  if (t === 'real_financial_available')    return 'tier-full';
-  if (t === 'partial_financial_available') return 'tier-partial';
+function tierClass(tier) {
+  if (tier === 'real_financial_available')    return 'tier-full';
+  if (tier === 'partial_financial_available') return 'tier-partial';
   return 'tier-shell';
 }
-function tierLabel(t) {
-  if (t === 'real_financial_available')    return 'Full Data';
-  if (t === 'partial_financial_available') return 'Partial';
-  return 'Shell Only';
+function tierLabel(tier) {
+  if (tier === 'real_financial_available')    return t('完整数据', 'Full Data');
+  if (tier === 'partial_financial_available') return t('部分数据', 'Partial');
+  return t('仅基础', 'Shell Only');
 }
 function esc(str) {
   return String(str ?? '')

@@ -1,4 +1,5 @@
 'use strict';
+const t = (zh, en) => window._currentLang === 'zh' ? zh : en;
 
 const state = {
   timer:    null,
@@ -125,7 +126,7 @@ async function doSearch(q) {
           r.code.toLowerCase().includes(lq)
         ),
       };
-      showToast('Backend not running — showing demo data', 'warning');
+      showToast(t('后端未运行 — 显示演示数据', 'Backend not running — showing demo data'), 'warning');
     }
 
     // Apply market tab filter client-side
@@ -148,10 +149,10 @@ function renderResults(results, q) {
   document.getElementById('resultsSection').style.display  = 'block';
 
   const meta = document.getElementById('resultsMeta');
-  const mktSuffix = state.market ? ` in ${state.market}` : '';
+  const mktSuffix = state.market ? t(` (${state.market})`, ` in ${state.market}`) : '';
   meta.textContent = results.length
-    ? `${results.length} result${results.length > 1 ? 's' : ''} for "${q}"${mktSuffix}`
-    : `No results for "${q}"${mktSuffix}`;
+    ? t(`找到 ${results.length} 个结果 "${q}"${mktSuffix}`, `${results.length} result${results.length > 1 ? 's' : ''} for "${q}"${mktSuffix}`)
+    : t(`"${q}" 无结果${mktSuffix}`, `No results for "${q}"${mktSuffix}`);
 
   const container = document.getElementById('resultsContainer');
 
@@ -161,8 +162,8 @@ function renderResults(results, q) {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
           <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
-        <p>No companies found</p>
-        <span>Try a different name, code, or switch markets</span>
+        <p>${t('未找到公司', 'No companies found')}</p>
+        <span>${t('换个名称、代码或切换市场试试', 'Try a different name, code, or switch markets')}</span>
       </div>`;
     return;
   }
@@ -183,11 +184,11 @@ function renderResults(results, q) {
         <a href="company.html?market=${r.market}&code=${esc(r.code)}"
            class="btn-view"
            onclick="addToRecent({market:'${r.market}',code:'${esc(r.code)}',name:'${esc(r.name||'')}'})">
-          View →
+          ${t('查看 →', 'View →')}
         </a>
         <a href="reports.html?market=${r.market}&code=${esc(r.code)}"
            class="btn btn--outline" style="height:30px;font-size:var(--f-xs);padding:0 10px">
-          Report
+          ${t('报告', 'Report')}
         </a>
       </td>
     </tr>`;
@@ -197,9 +198,9 @@ function renderResults(results, q) {
     <table class="signal-table">
       <thead>
         <tr>
-          <th class="col-company">Company</th>
-          <th class="col-market">Market</th>
-          <th style="text-align:right">Actions</th>
+          <th class="col-company">${t('公司', 'Company')}</th>
+          <th class="col-market">${t('市场', 'Market')}</th>
+          <th style="text-align:right">${t('操作', 'Actions')}</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
@@ -216,7 +217,7 @@ function renderError(msg) {
         <line x1="12" y1="8" x2="12" y2="12"></line>
         <line x1="12" y1="16" x2="12.01" y2="16"></line>
       </svg>
-      <p>Search failed</p>
+      <p>${t('搜索失败', 'Search failed')}</p>
       <span>${esc(msg)}</span>
     </div>`;
 }
@@ -281,12 +282,12 @@ function setLoading(on) {
 
 function showToast(msg, type = 'info') {
   const c = document.getElementById('toastContainer');
-  const t = document.createElement('div');
-  t.className = `toast toast--${type}`;
-  t.textContent = msg;
-  c.appendChild(t);
-  requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('show')));
-  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 260); }, 4000);
+  const el = document.createElement('div');
+  el.className = `toast toast--${type}`;
+  el.textContent = msg;
+  c.appendChild(el);
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 260); }, 4000);
 }
 
 function esc(str) {
