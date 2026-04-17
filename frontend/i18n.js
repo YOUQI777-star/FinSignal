@@ -110,11 +110,17 @@ const I18N = {
     footer_base_url:    'Base URL:',
 
     // Company page
-    company_back:     '← Back',
-    company_signals:  'Signals',
-    company_overview: 'Overview',
-    company_graph:    'Supply Chain Graph',
-    company_no_graph: 'No graph data available',
+    company_back:               '← Back',
+    company_signals:            'Signals',
+    company_overview:           'Overview',
+    company_graph:              'Supply Chain Graph',
+    company_no_graph:           'No graph data available',
+    company_financial_signals:  'Financial Signals',
+    company_governance_signals: 'Governance Signals',
+    company_ai_report:          'AI Risk Report',
+    btn_copy:                   'Copy',
+    company_report_empty:       'No report generated yet',
+    company_report_hint:        'Click "Generate Report" to create an AI risk analysis for this company.',
   },
 
   zh: {
@@ -220,11 +226,17 @@ const I18N = {
     footer_base_url:    '基础地址：',
 
     // Company page
-    company_back:     '← 返回',
-    company_signals:  '信号',
-    company_overview: '概览',
-    company_graph:    '供应链图谱',
-    company_no_graph: '暂无图谱数据',
+    company_back:               '← 返回',
+    company_signals:            '信号',
+    company_overview:           '概览',
+    company_graph:              '供应链图谱',
+    company_no_graph:           '暂无图谱数据',
+    company_financial_signals:  '财务信号',
+    company_governance_signals: '治理信号',
+    company_ai_report:          'AI 风险报告',
+    btn_copy:                   '复制',
+    company_report_empty:       '尚未生成报告',
+    company_report_hint:        '点击「生成报告」为该公司创建 AI 风险分析。',
   },
 };
 

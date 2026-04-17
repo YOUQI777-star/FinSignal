@@ -1,42 +1,65 @@
 'use strict';
 
 /* ============================================================
+   I18N HELPER
+   ============================================================ */
+const t = (zh, en) => window._currentLang === 'zh' ? zh : en;
+
+/* ============================================================
    SIGNAL META — names, descriptions, severity, thresholds
    ============================================================ */
 const SIGNAL_META = {
   F1: {
-    name: 'AR Abnormal Growth',
-    desc: 'Accounts receivable is growing significantly faster than revenue, suggesting potential channel stuffing or inflated sales recognition.',
+    name: () => t('应收账款异常增长', 'AR Abnormal Growth'),
+    desc: () => t(
+      '应收账款增速远超营收，可能存在渠道压货或虚增收入的风险。',
+      'Accounts receivable is growing significantly faster than revenue, suggesting potential channel stuffing or inflated sales recognition.'
+    ),
     threshold: 'AR/Revenue ratio grows >30% YoY',
     severity: 'high',
   },
   F2: {
-    name: 'Cash Flow Divergence',
-    desc: 'Net profit is positive but operating cash flow is negative, indicating earnings may not be converting to real cash.',
+    name: () => t('现金流背离', 'Cash Flow Divergence'),
+    desc: () => t(
+      '净利润为正但经营性现金流为负，盈利质量存疑，利润可能无法转化为真实现金。',
+      'Net profit is positive but operating cash flow is negative, indicating earnings may not be converting to real cash.'
+    ),
     threshold: 'Net profit > 0 AND operating cash flow < 0',
     severity: 'high',
   },
   F3: {
-    name: 'High Leverage',
-    desc: 'Debt-to-assets ratio exceeds 70% for two consecutive years, indicating heavy reliance on debt financing.',
+    name: () => t('高杠杆风险', 'High Leverage'),
+    desc: () => t(
+      '连续两年资产负债率超过70%，对债务融资高度依赖，财务风险较高。',
+      'Debt-to-assets ratio exceeds 70% for two consecutive years, indicating heavy reliance on debt financing.'
+    ),
     threshold: 'Total debt / Total assets > 70% for 2 years',
     severity: 'medium',
   },
   F4: {
-    name: 'Margin Decline',
-    desc: 'Net profit margin has dropped more than 10 percentage points year-over-year, indicating deteriorating profitability.',
+    name: () => t('毛利率骤降', 'Margin Decline'),
+    desc: () => t(
+      '净利率同比下滑超过10个百分点，盈利能力明显恶化。',
+      'Net profit margin has dropped more than 10 percentage points year-over-year, indicating deteriorating profitability.'
+    ),
     threshold: 'Net margin drops >10pp YoY',
     severity: 'medium',
   },
   G1: {
-    name: 'Pledge Ratio Alert',
-    desc: 'Controlling shareholders have pledged a significant portion of their shares, creating governance and solvency risk.',
+    name: () => t('大股东高比例质押', 'Pledge Ratio Alert'),
+    desc: () => t(
+      '控股股东大比例质押股份，存在治理风险和偿债风险。',
+      'Controlling shareholders have pledged a significant portion of their shares, creating governance and solvency risk.'
+    ),
     threshold: 'Pledge ratio > 50%',
     severity: 'medium',
   },
   G3: {
-    name: 'Board Independence',
-    desc: 'Independent directors constitute less than one-third of the board, potentially weakening oversight.',
+    name: () => t('两职合一且独董不足', 'Board Independence'),
+    desc: () => t(
+      '独立董事占比不足董事会三分之一，监督职能可能受到削弱。',
+      'Independent directors constitute less than one-third of the board, potentially weakening oversight.'
+    ),
     threshold: 'Independent directors < 33% of board',
     severity: 'low',
   },
@@ -253,12 +276,12 @@ async function loadGraph(market, code) {
   const section = document.getElementById('graphSection');
   const note    = document.getElementById('graphNote');
   section.style.display = '';
-  note.textContent = 'Loading graph…';
+  note.textContent = t('图谱加载中…', 'Loading graph…');
   try {
     const data = await API.getGraph(market, code);
     renderGraph(data);
   } catch (err) {
-    note.textContent = `Graph unavailable: ${err.message}`;
+    note.textContent = t(`图谱不可用：${err.message}`, `Graph unavailable: ${err.message}`);
     document.getElementById('graphMeta').textContent = '';
     console.warn('[graph] failed to load:', err.message);
   }
@@ -272,14 +295,14 @@ function renderGraph(data) {
   const edges   = data.edges || [];
 
   if (!nodes.length) {
-    note.textContent = data.message || 'No supply chain data for this company.';
+    note.textContent = data.message || t('暂无供应链数据。', 'No supply chain data for this company.');
     return;
   }
 
-  meta.textContent = `${nodes.length} nodes · ${edges.length} edges`;
+  meta.textContent = t(`${nodes.length} 节点 · ${edges.length} 边`, `${nodes.length} nodes · ${edges.length} edges`);
 
   if (typeof cytoscape === 'undefined') {
-    note.textContent = 'Graph library not loaded.';
+    note.textContent = t('图谱库未加载。', 'Graph library not loaded.');
     return;
   }
 
@@ -367,8 +390,8 @@ function renderGraph(data) {
 
   const totalNodes = nodes.length;
   note.textContent = totalNodes > 30
-    ? `Showing ${totalNodes} nodes. Scroll / pinch to zoom, drag to pan.`
-    : 'Scroll / pinch to zoom, drag to pan.';
+    ? t(`显示 ${totalNodes} 个节点。滚轮/捏合缩放，拖拽平移。`, `Showing ${totalNodes} nodes. Scroll / pinch to zoom, drag to pan.`)
+    : t('滚轮/捏合缩放，拖拽平移。', 'Scroll / pinch to zoom, drag to pan.');
 }
 
 /* ---------- Topbar ID strip ---------- */
@@ -428,7 +451,7 @@ function renderSummaryCards(data) {
       </div>
       <div class="scard-body">
         <div class="scard-value">${s.total_rules ?? '—'}</div>
-        <div class="scard-label">Rules Evaluated</div>
+        <div class="scard-label">${t('规则总数', 'Rules Evaluated')}</div>
       </div>
     </div>
 
@@ -442,9 +465,9 @@ function renderSummaryCards(data) {
       </div>
       <div class="scard-body">
         <div class="scard-value">${cnt}</div>
-        <div class="scard-label">Triggered Signals</div>
+        <div class="scard-label">${t('触发信号数', 'Triggered Signals')}</div>
       </div>
-      ${cnt > 0 ? `<div class="scard-note">${cnt} rule${cnt > 1 ? 's' : ''} require attention</div>` : ''}
+      ${cnt > 0 ? `<div class="scard-note">${t(`${cnt} 条规则需关注`, `${cnt} rule${cnt > 1 ? 's' : ''} require attention`)}</div>` : ''}
     </div>
 
     <div class="scard">
@@ -457,7 +480,7 @@ function renderSummaryCards(data) {
       </div>
       <div class="scard-body">
         <div class="scard-value"><span class="tier-badge ${tierClass(tier)}">${tierLabel(tier)}</span></div>
-        <div class="scard-label">Data Tier</div>
+        <div class="scard-label">${t('数据层级', 'Data Tier')}</div>
       </div>
     </div>
 
@@ -471,16 +494,16 @@ function renderSummaryCards(data) {
       </div>
       <div class="scard-body">
         <div class="scard-value">${s.total_rules ?? '—'}</div>
-        <div class="scard-label">Rule Coverage</div>
+        <div class="scard-label">${t('规则覆盖', 'Rule Coverage')}</div>
         <div class="status-breakdown">
           <span class="status-dot-item">
-            <span class="status-dot status-dot--triggered"></span>${sc.triggered ?? 0} triggered
+            <span class="status-dot status-dot--triggered"></span>${sc.triggered ?? 0} ${t('触发', 'triggered')}
           </span>
           <span class="status-dot-item">
-            <span class="status-dot status-dot--ok"></span>${sc.ok ?? 0} ok
+            <span class="status-dot status-dot--ok"></span>${sc.ok ?? 0} ${t('正常', 'ok')}
           </span>
           <span class="status-dot-item">
-            <span class="status-dot status-dot--na"></span>${sc.not_available ?? 0} n/a
+            <span class="status-dot status-dot--na"></span>${sc.not_available ?? 0} ${t('缺数据', 'n/a')}
           </span>
         </div>
       </div>
@@ -494,11 +517,11 @@ function renderSignalSection(containerId, metaId, signals) {
 
   const triggered = signals.filter(s => s.status === 'triggered' || s.triggered).length;
   meta.textContent = signals.length
-    ? `${signals.length} rules · ${triggered} triggered`
-    : '0 rules';
+    ? t(`${signals.length} 条规则 · ${triggered} 条触发`, `${signals.length} rules · ${triggered} triggered`)
+    : t('0 条规则', '0 rules');
 
   if (!signals.length) {
-    container.innerHTML = '<div class="sig-empty">No signals in this category</div>';
+    container.innerHTML = `<div class="sig-empty">${t('该类别暂无信号', 'No signals in this category')}</div>`;
     return;
   }
 
@@ -513,23 +536,26 @@ function renderSigCard(sig) {
                 : 'sig-card--ok';
 
   const statusBadge = status === 'triggered'
-    ? '<span class="badge badge-triggered">Triggered</span>'
+    ? `<span class="badge badge-triggered">${t('触发', 'Triggered')}</span>`
     : status === 'not_available'
     ? '<span class="badge badge-na">N/A</span>'
-    : '<span class="badge badge-ok">OK</span>';
+    : `<span class="badge badge-ok">${t('正常', 'OK')}</span>`;
 
   // Use severity from actual signal data, fall back to SIGNAL_META
   const severity = sig.severity || meta.severity;
+  const sevLabel = { high: t('高', 'High'), medium: t('中', 'Medium'), low: t('低', 'Low') };
   const sevBadge = severity
-    ? `<span class="badge badge-${severity}">${severity.charAt(0).toUpperCase() + severity.slice(1)}</span>`
+    ? `<span class="badge badge-${severity}">${sevLabel[severity] || severity}</span>`
     : '';
 
-  const message  = sig.message || meta.desc || '—';
+  // message: from backend, or fall back to SIGNAL_META desc (which is now a function)
+  const metaDesc = typeof meta.desc === 'function' ? meta.desc() : (meta.desc || '—');
+  const message  = sig.message || metaDesc;
   // Use threshold from actual signal data, fall back to SIGNAL_META
   const thresholdText = sig.threshold || meta.threshold;
   const threshold = thresholdText
     ? `<div class="sig-threshold">
-        <span class="sig-threshold-label">Threshold:</span>
+        <span class="sig-threshold-label">${t('阈值：', 'Threshold:')}</span>
         <span class="sig-threshold-val">${esc(thresholdText)}</span>
        </div>`
     : '';
@@ -537,13 +563,14 @@ function renderSigCard(sig) {
   // Field is 'value' from backend (not 'values')
   const valBlock = renderValues(sig.value !== undefined ? sig.value : sig.values);
 
-  // Use signal name from data if available, fall back to SIGNAL_META
-  const sigName = sig.name || meta.name || sig.signal_id;
+  // Use signal name from data if available, fall back to SIGNAL_META (now a function)
+  const metaName = typeof meta.name === 'function' ? meta.name() : (meta.name || sig.signal_id);
+  const sigName  = sig.name || metaName;
 
   const footer = sig.year
     ? `<div class="sig-card-ft">
-        <span class="sig-ft-item"><span class="sig-ft-label">Year:</span> ${sig.year}</span>
-        ${sig.source ? `<span class="sig-ft-item"><span class="sig-ft-label">Source:</span> ${esc(sig.source)}</span>` : ''}
+        <span class="sig-ft-item"><span class="sig-ft-label">${t('年份：', 'Year:')} </span>${sig.year}</span>
+        ${sig.source ? `<span class="sig-ft-item"><span class="sig-ft-label">${t('来源：', 'Source:')} </span>${esc(sig.source)}</span>` : ''}
        </div>`
     : '';
 
@@ -723,7 +750,7 @@ async function generateReport() {
   body.innerHTML = `
     <div class="report-generating">
       <div class="loading-dots"><span></span><span></span><span></span></div>
-      <span>Generating AI risk analysis…</span>
+      <span>${t('AI 风险分析生成中…', 'Generating AI risk analysis…')}</span>
     </div>`;
 
   try {
@@ -732,7 +759,7 @@ async function generateReport() {
 
     body.innerHTML = `<pre class="report-content">${esc(text)}</pre>`;
     copy.style.display = 'block';
-    showToast('Report generated', 'success');
+    showToast(t('报告已生成', 'Report generated'), 'success');
   } catch (err) {
     body.innerHTML = `
       <div class="report-placeholder">
@@ -741,10 +768,10 @@ async function generateReport() {
           <line x1="12" y1="8" x2="12" y2="12"></line>
           <line x1="12" y1="16" x2="12.01" y2="16"></line>
         </svg>
-        <p>Report generation failed</p>
+        <p>${t('报告生成失败', 'Report generation failed')}</p>
         <span>${esc(err.message)}</span>
       </div>`;
-    showToast('Failed to generate report', 'error');
+    showToast(t('报告生成失败', 'Failed to generate report'), 'error');
   } finally {
     state.reportLoading = false;
     btn.disabled = false;
@@ -755,7 +782,7 @@ function copyReport() {
   const el = document.querySelector('.report-content');
   if (!el) return;
   navigator.clipboard.writeText(el.textContent || '').then(() => {
-    showToast('Copied to clipboard', 'success');
+    showToast(t('已复制到剪贴板', 'Copied to clipboard'), 'success');
   });
 }
 
@@ -784,9 +811,9 @@ function renderFatalError(msg) {
         <line x1="12" y1="8" x2="12" y2="12"></line>
         <line x1="12" y1="16" x2="12.01" y2="16"></line>
       </svg>
-      <p>Failed to load company</p>
+      <p>${t('公司数据加载失败', 'Failed to load company')}</p>
       <span>${esc(msg)}</span>
-      <button class="btn btn--primary" style="margin-top:8px" onclick="loadCompany()">Retry</button>
+      <button class="btn btn--primary" style="margin-top:8px" onclick="loadCompany()">${t('重试', 'Retry')}</button>
     </div>`;
   document.getElementById('governanceSignals').innerHTML = '';
 }
@@ -824,10 +851,10 @@ function tierClass(t) {
   return 'tier-shell';
 }
 
-function tierLabel(t) {
-  if (t === 'real_financial_available')    return 'Full Data';
-  if (t === 'partial_financial_available') return 'Partial';
-  return 'Shell Only';
+function tierLabel(tier) {
+  if (tier === 'real_financial_available')    return t('完整数据', 'Full Data');
+  if (tier === 'partial_financial_available') return t('部分数据', 'Partial');
+  return t('仅基础', 'Shell Only');
 }
 
 function esc(str) {
