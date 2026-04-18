@@ -89,15 +89,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function injectAuthButton() {
-  // Find topbar-right div and inject the auth button
-  const topbarRight = document.querySelector('.topbar-right');
-  if (!topbarRight) return;
-
   const btn = document.createElement('div');
   btn.id = 'authEntryBtn';
-  btn.style.cssText = 'display:flex;align-items:center;gap:8px;cursor:pointer;flex-shrink:0';
-  topbarRight.prepend(btn);
-
+  btn.style.cssText = 'position:fixed;top:13px;right:20px;z-index:200;display:flex;align-items:center;gap:8px;cursor:pointer';
+  document.body.appendChild(btn);
   renderAuthEntry();
 }
 
