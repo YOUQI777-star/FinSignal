@@ -33,8 +33,7 @@ async function loadCandidates({ forceRefresh = false } = {}) {
   try {
     const params = buildParams();
     if (forceRefresh) params.refresh = '1';
-    const qs = new URLSearchParams(params).toString();
-    const data = await apiFetch(`/api/candidates${qs ? '?' + qs : ''}`);
+    const data = await API.getCandidates(params);
     state.data     = data;
     state.filtered = data.results || [];
     renderTable(state.filtered);
@@ -132,6 +131,8 @@ function renderTable(rows) {
     { key: '#',                label: '#',                              align: 'right' },
     { key: 'code',             label: t('代码',      'Code'),           align: 'left'  },
     { key: 'name',             label: t('名称',      'Name'),           align: 'left'  },
+    { key: 'financial_check',  label: t('财务状态',   'Financial Check'), align: 'left'  },
+    { key: 'triggered_signals',label: t('触发信号',   'Triggered Signals'), align: 'left' },
     { key: 'current_price',    label: t('现价 (元)', 'Price (¥)'),      align: 'right' },
     { key: 'turnover',         label: t('今日换手%', 'Turnover%'),      align: 'right' },
     { key: 'pct_change',       label: t('今日涨幅%', 'Change%'),        align: 'right' },
@@ -152,11 +153,17 @@ function renderTable(rows) {
     const pctStr = pct != null && isFinite(pct)
       ? (pct > 0 ? `+${pct.toFixed(2)}%` : `${pct.toFixed(2)}%`)
       : '—';
+    const financialCheck = r.financial_check || { status: 'no_data', triggered_signals: [], triggered_count: 0 };
+    const triggeredSignals = financialCheck.triggered_signals?.length
+      ? financialCheck.triggered_signals.join(', ')
+      : t('无触发', 'None');
 
     const cells = [
       `<td style="text-align:right;color:var(--text-secondary)">${i + 1}</td>`,
       `<td><span class="badge badge-market badge-market-cn">CN</span> <code style="font-size:12px">${esc(r.code)}</code></td>`,
       `<td style="font-weight:500">${esc(r.name)}</td>`,
+      `<td>${renderFinancialCheck(financialCheck)}</td>`,
+      `<td><span class="candidate-signal-list">${esc(triggeredSignals)}</span></td>`,
       `<td style="text-align:right;font-variant-numeric:tabular-nums">${fmt(r.current_price, 3)}</td>`,
       `<td style="text-align:right;font-variant-numeric:tabular-nums;color:var(--brand)">${fmt(r.turnover, 2, '%')}</td>`,
       `<td style="text-align:right" class="${pctCls}">${pctStr}</td>`,
@@ -176,9 +183,20 @@ function renderTable(rows) {
     row.addEventListener('click', () => {
       const code   = row.dataset.code;
       const market = row.dataset.market;
-      window.location.href = `company.html?market=${market}&code=${code}`;
+      window.location.href = `company.html?market=${market}&code=${code}&from=candidates`;
     });
   });
+}
+
+function renderFinancialCheck(check) {
+  const map = {
+    high_risk: { cls: 'badge-high-risk', zh: '高风险', en: 'High Risk' },
+    warning:   { cls: 'badge-warning',   zh: '预警',   en: 'Warning' },
+    pass:      { cls: 'badge-pass',      zh: '通过',   en: 'Pass' },
+    no_data:   { cls: 'badge-no-data',   zh: '无数据', en: 'No Data' },
+  };
+  const item = map[check?.status] || map.no_data;
+  return `<span class="badge financial-check-badge ${item.cls}">${t(item.zh, item.en)}</span>`;
 }
 
 function renderError(msg) {

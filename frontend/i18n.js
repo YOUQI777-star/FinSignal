@@ -9,13 +9,14 @@
 const I18N = {
   en: {
     // Nav / Sidebar
-    nav_monitor:        'Monitor',
     nav_dashboard:      'Dashboard',
+    nav_home:           'Home',
+    nav_discover:       'Discover',
+    nav_deep_dive:      'Deep Dive',
     nav_signal_ranking: 'Signal Ranking',
     nav_company_search: 'Company Search',
-    nav_analysis:       'Analysis',
     nav_compare:        'Compare',
-    nav_reports:        'Reports',
+    nav_reports:        'AI Report',
     nav_candidates:     'Candidates',
     nav_system:         'System',
     nav_settings:       'Settings',
@@ -26,6 +27,7 @@ const I18N = {
     // Page titles / crumbs
     page_title_fsm:   'Financial Signal Monitor',
     page_dashboard:   'Dashboard',
+    page_home_crumb:  'Home',
     page_ranking:     'Signal Ranking',
     page_search:      'Company Search',
     page_compare:     'Compare',
@@ -70,6 +72,26 @@ const I18N = {
     dash_recently_viewed:   'Recently Viewed',
     dash_quick_actions:     'Quick Actions',
     dash_compare_companies: 'Compare Companies',
+    dash_no_recent:         'No recent history',
+    dash_deep_dive_title:   'Deep Dive',
+    home_candidates_count:  'Today Candidates',
+    home_candidates_cta:    'Go to Candidates →',
+    home_high_risk_count:   'High-Risk Companies',
+    home_high_risk_cta:     'View Rankings →',
+    home_cn_coverage:       'A-Share Coverage',
+    home_rules_covered:     'Rules Covered',
+    home_candidate_preview: 'Candidate Snapshot',
+    home_candidate_preview_hint: 'Today’s active preview. Click to open company details.',
+
+    // Portal cards (Homepage)
+    portal_discover_label:   'Discover',
+    portal_risk_label:       'Risk Check',
+    portal_candidates_title: 'Candidate Discovery',
+    portal_candidates_desc:  'Discover active stocks from market turnover data, then screen with financial signals',
+    portal_candidates_cta:   'Go to Candidates →',
+    portal_ranking_title:    'Risk Rankings',
+    portal_ranking_desc:     'Companies flagged by 6 financial and governance rules, sorted by signal count',
+    portal_ranking_cta:      'View Rankings →',
 
     // Ranking page
     rank_title:             'Signal Ranking',
@@ -204,13 +226,14 @@ const I18N = {
 
   zh: {
     // Nav / Sidebar
-    nav_monitor:        '监控',
     nav_dashboard:      '仪表盘',
+    nav_home:           '首页',
+    nav_discover:       '发现',
+    nav_deep_dive:      '深入分析',
     nav_signal_ranking: '信号排名',
     nav_company_search: '公司搜索',
-    nav_analysis:       '分析',
-    nav_compare:        '对比',
-    nav_reports:        '报告',
+    nav_compare:        '多股对比',
+    nav_reports:        'AI 报告',
     nav_candidates:     '候选池',
     nav_system:         '系统',
     nav_settings:       '设置',
@@ -221,6 +244,7 @@ const I18N = {
     // Page titles / crumbs
     page_title_fsm:   '财务信号监控平台',
     page_dashboard:   '仪表盘',
+    page_home_crumb:  '首页',
     page_ranking:     '信号排名',
     page_search:      '公司搜索',
     page_compare:     '对比',
@@ -265,6 +289,26 @@ const I18N = {
     dash_recently_viewed:   '最近浏览',
     dash_quick_actions:     '快捷操作',
     dash_compare_companies: '对比公司',
+    dash_no_recent:         '暂无浏览记录',
+    dash_deep_dive_title:   '深入分析',
+    home_candidates_count:  '今日候选池',
+    home_candidates_cta:    '进入候选池 →',
+    home_high_risk_count:   '高风险公司',
+    home_high_risk_cta:     '查看排名 →',
+    home_cn_coverage:       'A 股覆盖',
+    home_rules_covered:     '覆盖规则',
+    home_candidate_preview: '候选池摘要',
+    home_candidate_preview_hint: '今日活跃预览，点击进入公司详情',
+
+    // Portal cards (Homepage)
+    portal_discover_label:   '发现',
+    portal_risk_label:       '排雷',
+    portal_candidates_title: '候选发现',
+    portal_candidates_desc:  '从市场换手行为发现活跃标的，叠加财务与治理信号做排雷',
+    portal_candidates_cta:   '进入候选池 →',
+    portal_ranking_title:    '风险排行',
+    portal_ranking_desc:     '被 6 条财务与治理规则标记的公司，按触发信号数量排序',
+    portal_ranking_cta:      '查看排名 →',
 
     // Ranking page
     rank_title:             '信号排名',

@@ -23,10 +23,26 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function apiFetch(path, options = {}) {
-  const res = await fetch(`${API_BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options,
-  });
+  const { timeoutMs = 0, ...fetchOptions } = options;
+  const controller = timeoutMs ? new AbortController() : null;
+  const timer = controller ? setTimeout(() => controller.abort(), timeoutMs) : null;
+
+  let res;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      headers: { 'Content-Type': 'application/json' },
+      signal: controller?.signal,
+      ...fetchOptions,
+    });
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      throw new Error(`Request timed out after ${timeoutMs}ms`);
+    }
+    throw err;
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+
   if (!res.ok) throw new Error(`HTTP ${res.status} — ${res.statusText}`);
   return res.json();
 }
@@ -69,9 +85,9 @@ const API = {
     return apiFetch(`/api/graph/${market}/${code}`);
   },
 
-  getCandidates(params = {}) {
+  getCandidates(params = {}, options = {}) {
     const qs = new URLSearchParams(params).toString();
-    return apiFetch(`/api/candidates${qs ? '?' + qs : ''}`);
+    return apiFetch(`/api/candidates${qs ? '?' + qs : ''}`, options);
   },
 
   getCandidateDetail(code) {

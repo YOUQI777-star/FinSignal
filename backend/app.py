@@ -38,6 +38,43 @@ def _load_signals_cache(market: str) -> dict[str, dict]:
     return {item["code"]: item for item in results}
 
 
+def _extract_triggered_signal_ids(signal_result: dict | None) -> list[str]:
+    if not signal_result:
+        return []
+    triggered: list[str] = []
+    for sig in signal_result.get("financial_signals", []) + signal_result.get("governance_signals", []):
+        if sig.get("triggered"):
+            signal_id = sig.get("signal_id")
+            if signal_id:
+                triggered.append(str(signal_id))
+    return triggered
+
+
+def _build_financial_check(signal_result: dict | None) -> dict[str, object]:
+    if not signal_result:
+        return {
+            "status": "no_data",
+            "triggered_signals": [],
+            "triggered_count": 0,
+        }
+
+    triggered_signals = _extract_triggered_signal_ids(signal_result)
+    triggered_count = len(triggered_signals)
+
+    if triggered_count >= 2:
+        status = "high_risk"
+    elif triggered_count == 1:
+        status = "warning"
+    else:
+        status = "pass"
+
+    return {
+        "status": status,
+        "triggered_signals": triggered_signals,
+        "triggered_count": triggered_count,
+    }
+
+
 @app.route("/api/health")
 def health() -> tuple[dict, int]:
     return jsonify({"status": "ok"}), 200
@@ -186,13 +223,22 @@ def api_get_candidates():
     )
 
     limit = min(int(request.args.get("limit", 300)), 1000)
+    signal_cache = _load_signals_cache("CN")
+
+    enriched = []
+    for candidate in candidates[:limit]:
+        signal_result = signal_cache.get(candidate["code"])
+        enriched.append({
+            **candidate,
+            "financial_check": _build_financial_check(signal_result),
+        })
 
     return jsonify({
         "generated_at": data.get("generated_at"),
         "source":       data.get("source", "realtime"),
         "thresholds":   data.get("thresholds", {}),
         "total":        len(candidates),
-        "results":      candidates[:limit],
+        "results":      enriched,
     }), 200
 
 
@@ -213,14 +259,15 @@ def get_candidate_detail(code: str):
 
     # Attach brief signal summary if available (non-blocking)
     signal_cache = _load_signals_cache("CN")
-    if code in signal_cache:
-        sig = signal_cache[code]
-        entry = {
-            **entry,
-            "signal_summary": {
-                "triggered_count": sig.get("summary", {}).get("triggered_count", 0),
-                "total_rules":     sig.get("summary", {}).get("total_rules", 0),
-            },
+    sig = signal_cache.get(code)
+    entry = {
+        **entry,
+        "financial_check": _build_financial_check(sig),
+    }
+    if sig:
+        entry["signal_summary"] = {
+            "triggered_count": sig.get("summary", {}).get("triggered_count", 0),
+            "total_rules":     sig.get("summary", {}).get("total_rules", 0),
         }
 
     return jsonify(entry), 200

@@ -71,9 +71,11 @@ const SIGNAL_META = {
 const state = {
   market: '',
   code:   '',
+  sourceFrom: '',
   data:   null,
   usedMock: false,
   reportLoading: false,
+  candidateContext: null,
 };
 
 /* ============================================================
@@ -208,6 +210,7 @@ function parseUrlParams() {
   const p = new URLSearchParams(window.location.search);
   state.market = (p.get('market') || '').toUpperCase();
   state.code   = p.get('code') || '';
+  state.sourceFrom = p.get('from') || '';
 }
 
 /* ============================================================
@@ -231,6 +234,7 @@ async function checkHealth() {
    ============================================================ */
 async function loadCompany(fresh = false) {
   setLoadingUI(true);
+  state.candidateContext = null;
 
   try {
     let data;
@@ -247,6 +251,7 @@ async function loadCompany(fresh = false) {
     }
 
     state.data = data;
+    await loadCandidateContext();
     renderPage(data);
     updateLastUpdated();
   } catch (err) {
@@ -262,10 +267,57 @@ async function loadCompany(fresh = false) {
 function renderPage(data) {
   renderTopbarId(data);
   renderInfoCard(data);
+  renderCandidateContext();
   renderSummaryCards(data);
   renderSignalSection('financialSignals',  'finMeta',  data.financial_signals  || []);
   renderSignalSection('governanceSignals', 'govMeta',  data.governance_signals || []);
   loadGraph(data.market, data.code);
+}
+
+async function loadCandidateContext() {
+  if (state.market !== 'CN' || state.sourceFrom !== 'candidates') return;
+  try {
+    state.candidateContext = await API.getCandidateDetail(state.code);
+  } catch (err) {
+    console.warn('[candidate-context] unavailable:', err.message);
+    state.candidateContext = null;
+  }
+}
+
+function renderCandidateContext() {
+  const el = document.getElementById('candidateContext');
+  if (!el) return;
+
+  if (state.sourceFrom !== 'candidates' || !state.candidateContext) {
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
+  }
+
+  const ctx = state.candidateContext;
+  const check = ctx.financial_check || { status: 'no_data', triggered_signals: [], triggered_count: 0 };
+  const signalText = check.triggered_signals?.length ? check.triggered_signals.join(', ') : t('无触发', 'None');
+
+  el.style.display = '';
+  el.innerHTML = `
+    <div class="candidate-context-head">
+      <span class="candidate-context-eyebrow">${t('候选池上下文', 'Candidate Context')}</span>
+      ${renderFinancialCheckBadge(check)}
+    </div>
+    <div class="candidate-context-body">
+      <div class="candidate-context-item">
+        <span class="candidate-context-label">${t('入池原因', 'Why selected')}</span>
+        <span class="candidate-context-value">${esc(ctx.candidate_reason || '—')}</span>
+      </div>
+      <div class="candidate-context-item">
+        <span class="candidate-context-label">${t('今日换手', 'Turnover today')}</span>
+        <span class="candidate-context-value">${formatMaybePct(ctx.turnover)}</span>
+      </div>
+      <div class="candidate-context-item">
+        <span class="candidate-context-label">${t('触发信号', 'Triggered signals')}</span>
+        <span class="candidate-context-value">${esc(signalText)}</span>
+      </div>
+    </div>`;
 }
 
 /* ============================================================
@@ -755,7 +807,7 @@ async function generateReport() {
 
   try {
     const result = await API.generateReport(state.market, state.code);
-    const text   = result.report || result.content || result.text || JSON.stringify(result, null, 2);
+    const text   = result.report_markdown || result.report || result.content || result.text || JSON.stringify(result, null, 2);
 
     body.innerHTML = `<pre class="report-content">${esc(text)}</pre>`;
     copy.style.display = 'block';
@@ -855,6 +907,22 @@ function tierLabel(tier) {
   if (tier === 'real_financial_available')    return t('完整数据', 'Full Data');
   if (tier === 'partial_financial_available') return t('部分数据', 'Partial');
   return t('仅基础', 'Shell Only');
+}
+
+function renderFinancialCheckBadge(check) {
+  const map = {
+    high_risk: { cls: 'badge-high-risk', zh: '高风险', en: 'High Risk' },
+    warning:   { cls: 'badge-warning', zh: '预警', en: 'Warning' },
+    pass:      { cls: 'badge-pass', zh: '通过', en: 'Pass' },
+    no_data:   { cls: 'badge-no-data', zh: '无数据', en: 'No Data' },
+  };
+  const item = map[check?.status] || map.no_data;
+  return `<span class="badge financial-check-badge ${item.cls}">${t(item.zh, item.en)}</span>`;
+}
+
+function formatMaybePct(value) {
+  if (value == null || !isFinite(value)) return '—';
+  return `${Number(value).toFixed(2)}%`;
 }
 
 function esc(str) {

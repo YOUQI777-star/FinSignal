@@ -482,6 +482,11 @@ input, select { font: inherit; }
   overflow: hidden;
 }
 
+.scard-link {
+  text-decoration: none;
+  color: inherit;
+}
+
 .scard--alert {
   border-color: #fecaca;
   background: linear-gradient(135deg, #fff 60%, #fff8f8 100%);
@@ -702,6 +707,10 @@ input, select { font: inherit; }
 .badge-high      { background: var(--sev-high-bg);     color: var(--sev-high); }
 .badge-medium    { background: var(--sev-med-bg);      color: var(--sev-med); }
 .badge-low       { background: var(--sev-low-bg);      color: var(--sev-low); }
+.financial-check-badge.badge-high-risk { background: #fee2e2; color: #b91c1c; }
+.financial-check-badge.badge-warning   { background: #fef3c7; color: #b45309; }
+.financial-check-badge.badge-pass      { background: #dcfce7; color: #15803d; }
+.financial-check-badge.badge-no-data   { background: #e5e7eb; color: #4b5563; }
 
 /* ============================================================
    PANEL SIDE + CARDS
@@ -809,6 +818,37 @@ input, select { font: inherit; }
   flex-direction: column;
   gap: var(--s2);
 }
+
+.candidate-preview-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: var(--s4);
+}
+
+.candidate-preview-item {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s4);
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  text-decoration: none;
+  color: inherit;
+}
+
+.candidate-preview-head,
+.candidate-preview-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.candidate-preview-name { font-weight: 600; color: var(--txt-1); }
+.candidate-preview-code,
+.candidate-preview-signals,
+.candidate-signal-list { font-size: var(--f-xs); color: var(--txt-3); }
+.candidate-preview-side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
 
 /* Buttons */
 .btn {
@@ -1373,6 +1413,9 @@ mark.srch-hl {
   .summary-row { grid-template-columns: repeat(2, 1fr); }
   .topbar-center { display: none; }
   .filter-select:not(#limitSelect) { display: none; }
+  .portal-row { grid-template-columns: 1fr; }
+  .candidate-preview-item { flex-direction: column; }
+  .candidate-preview-side { align-items: flex-start; }
 }
 
 /* ============================================================
@@ -1436,3 +1479,78 @@ mark.srch-hl {
 /* pct up/down colors in table */
 td.pct-up { color: #16a34a; font-weight: 500; }
 td.pct-dn { color: #dc2626; font-weight: 500; }
+
+/* ============================================================
+   PORTAL ENTRY CARDS (Homepage)
+   ============================================================ */
+.portal-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s4);
+  margin-bottom: var(--s4);
+}
+
+.portal-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  padding: var(--s5);
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
+  cursor: pointer;
+}
+
+.portal-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.portal-card-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--s3);
+}
+
+.portal-card-eyebrow svg {
+  width: 14px;
+  height: 14px;
+}
+
+.portal-card--discover .portal-card-eyebrow { color: var(--brand); }
+.portal-card--risk     .portal-card-eyebrow { color: var(--c-triggered); }
+
+.portal-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--txt-1);
+  margin: 0 0 var(--s2);
+}
+
+.portal-card-desc {
+  font-size: 13px;
+  color: var(--txt-2);
+  line-height: 1.6;
+  margin: 0 0 var(--s4);
+  flex: 1;
+}
+
+.portal-card-footer {
+  padding-top: var(--s3);
+  border-top: 1px solid var(--card-border);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.portal-card--discover .portal-card-footer { color: var(--brand); }
+.portal-card--risk     .portal-card-footer { color: var(--c-triggered); }
+
+.portal-card--discover:hover { border-color: #93c5fd; }
+.portal-card--risk:hover     { border-color: #fca5a5; }

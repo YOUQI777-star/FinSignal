@@ -25,67 +25,48 @@
     </div>
 
     <nav class="sidebar-nav">
-      <div class="nav-group-label" data-i18n="nav_monitor">Monitor</div>
-
       <a href="index.html" class="nav-item nav-item--active">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="7" height="7" rx="1"></rect>
-          <rect x="14" y="3" width="7" height="7" rx="1"></rect>
-          <rect x="3" y="14" width="7" height="7" rx="1"></rect>
-          <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
         </svg>
-        <span data-i18n="nav_dashboard">Dashboard</span>
+        <span data-i18n="nav_home">Home</span>
       </a>
-
-      <a href="ranking.html" class="nav-item">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="8" y1="6" x2="21" y2="6"></line>
-          <line x1="8" y1="12" x2="21" y2="12"></line>
-          <line x1="8" y1="18" x2="21" y2="18"></line>
-          <circle cx="3" cy="6" r="1" fill="currentColor"></circle>
-          <circle cx="3" cy="12" r="1" fill="currentColor"></circle>
-          <circle cx="3" cy="18" r="1" fill="currentColor"></circle>
-        </svg>
-        <span data-i18n="nav_signal_ranking">Signal Ranking</span>
-      </a>
-
-      <a href="search.html" class="nav-item">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <span data-i18n="nav_company_search">Company Search</span>
-      </a>
-
-      <div class="nav-group-label" data-i18n="nav_analysis">Analysis</div>
-
-      <a href="compare.html" class="nav-item">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="20" x2="18" y2="10"></line>
-          <line x1="12" y1="20" x2="12" y2="4"></line>
-          <line x1="6" y1="20" x2="6" y2="14"></line>
-        </svg>
-        <span data-i18n="nav_compare">Compare</span>
-      </a>
-
-      <a href="reports.html" class="nav-item">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-          <polyline points="14 2 14 8 20 8"></polyline>
-          <line x1="16" y1="13" x2="8" y2="13"></line>
-          <line x1="16" y1="17" x2="8" y2="17"></line>
-        </svg>
-        <span data-i18n="nav_reports">Reports</span>
-      </a>
-
+      <div class="nav-group-label" data-i18n="nav_discover">Discover</div>
       <a href="candidates.html" class="nav-item">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
         </svg>
         <span data-i18n="nav_candidates">Candidates</span>
       </a>
-            <div class="nav-group-label" data-i18n="nav_system">System</div>
-
+      <a href="ranking.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line>
+          <circle cx="3" cy="6" r="1" fill="currentColor"></circle><circle cx="3" cy="12" r="1" fill="currentColor"></circle><circle cx="3" cy="18" r="1" fill="currentColor"></circle>
+        </svg>
+        <span data-i18n="nav_signal_ranking">Signal Ranking</span>
+      </a>
+      <div class="nav-group-label" data-i18n="nav_deep_dive">Deep Dive</div>
+      <a href="search.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span data-i18n="nav_company_search">Company Search</span>
+      </a>
+      <a href="compare.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <span data-i18n="nav_compare">Compare</span>
+      </a>
+      <a href="reports.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+        <span data-i18n="nav_reports">AI Report</span>
+      </a>
+      <div class="nav-group-label" data-i18n="nav_system">System</div>
       <a href="settings.html" class="nav-item">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"></circle>
@@ -116,8 +97,8 @@
     <!-- TOPBAR -->
     <header class="topbar">
       <div class="topbar-left">
-        <h1 class="page-title" data-i18n="page_title_fsm">Financial Signal Monitor</h1>
-        <span class="page-crumb" data-i18n="page_dashboard">Dashboard</span>
+        <h1 class="page-title" data-i18n="nav_home">Home</h1>
+        <span class="page-crumb" data-i18n="page_home_crumb">Home</span>
       </div>
 
       <div class="topbar-center">
@@ -136,42 +117,43 @@
         </div>
       </div>
 
-      <div class="topbar-right">
-        <select id="marketFilter" class="filter-select">
-          <option value="" data-i18n="opt_all_markets">All Markets</option>
-          <option value="CN">A-Share (CN)</option>
-          <option value="TW">Taiwan (TW)</option>
-        </select>
-        <select id="signalFilter" class="filter-select">
-          <option value="" data-i18n="opt_all_rules">All Rules</option>
-          <option value="F1">F1 — AR Growth</option>
-          <option value="F2">F2 — Cash Flow</option>
-          <option value="F3">F3 — Leverage</option>
-          <option value="F4">F4 — Margin</option>
-          <option value="G1">G1 — Pledge</option>
-          <option value="G3">G3 — Board</option>
-        </select>
-        <select id="limitSelect" class="filter-select">
-          <option value="20">20 rows</option>
-          <option value="50" selected>50 rows</option>
-          <option value="100">100 rows</option>
-        </select>
-        <button id="refreshBtn" class="btn-refresh">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="23 4 23 10 17 10"></polyline>
-            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-          </svg>
-          <span data-i18n="btn_refresh">Refresh</span>
-        </button>
-      </div>
+      <div class="topbar-right"></div>
     </header>
 
     <!-- CONTENT -->
     <main class="content">
 
-      <!-- Summary Cards -->
+      <!-- Product portal cards -->
       <section class="summary-row">
-        <div class="scard">
+        <a href="candidates.html" class="scard scard-link">
+          <div class="scard-icon scard-icon--cn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+          </div>
+          <div class="scard-body">
+            <div class="scard-value" id="homeCandidatesCount">—</div>
+            <div class="scard-label" data-i18n="home_candidates_count">今日候选池</div>
+            <div class="scard-note" data-i18n="home_candidates_cta">进入候选池 →</div>
+          </div>
+        </a>
+
+        <a href="ranking.html" class="scard scard-link scard--alert">
+          <div class="scard-icon scard-icon--triggered">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </div>
+          <div class="scard-body">
+            <div class="scard-value" id="homeHighRiskCount">—</div>
+            <div class="scard-label" data-i18n="home_high_risk_count">高风险公司</div>
+            <div class="scard-note" data-i18n="home_high_risk_cta">查看排名 →</div>
+          </div>
+        </a>
+
+        <div class="scard scard--alert">
           <div class="scard-icon scard-icon--cn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="20" x2="12" y2="10"></line>
@@ -181,37 +163,8 @@
           </div>
           <div class="scard-body">
             <div class="scard-value">5,502</div>
-            <div class="scard-label" data-i18n="dash_cn_companies">CN Companies</div>
+            <div class="scard-label" data-i18n="home_cn_coverage">A 股覆盖</div>
           </div>
-        </div>
-
-        <div class="scard">
-          <div class="scard-icon scard-icon--tw">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="20" x2="12" y2="10"></line>
-              <line x1="18" y1="20" x2="18" y2="4"></line>
-              <line x1="6" y1="20" x2="6" y2="16"></line>
-            </svg>
-          </div>
-          <div class="scard-body">
-            <div class="scard-value">1,081</div>
-            <div class="scard-label" data-i18n="dash_tw_companies">TW Companies</div>
-          </div>
-        </div>
-
-        <div class="scard scard--alert">
-          <div class="scard-icon scard-icon--triggered">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-              <line x1="12" y1="9" x2="12" y2="13"></line>
-              <line x1="12" y1="17" x2="12.01" y2="17"></line>
-            </svg>
-          </div>
-          <div class="scard-body">
-            <div class="scard-value">1,958</div>
-            <div class="scard-label" data-i18n="dash_triggered_companies">Triggered Companies</div>
-          </div>
-          <div class="scard-note">29.8% of total</div>
         </div>
 
         <div class="scard">
@@ -223,33 +176,64 @@
           </div>
           <div class="scard-body">
             <div class="scard-value">6</div>
-            <div class="scard-label" data-i18n="dash_rules_covered">Rules Covered</div>
+            <div class="scard-label" data-i18n="home_rules_covered">覆盖规则</div>
           </div>
           <div class="scard-note">F1–F4 · G1 · G3</div>
         </div>
       </section>
 
-      <!-- Content Grid -->
+      <!-- Lower grid: recently viewed + rule distribution + quick actions -->
       <div class="content-grid">
 
-        <!-- Main Panel -->
         <section class="panel panel--main">
           <div class="panel-header">
             <div class="panel-header-left">
-              <h2 class="panel-title" data-i18n="page_ranking">Signal Ranking</h2>
-              <span class="panel-meta" id="tableInfo"></span>
+              <h2 class="panel-title" data-i18n="dash_recently_viewed">Recently Viewed</h2>
             </div>
             <div class="panel-header-right">
-              <span class="loading-tag" id="loadingTag" style="display:none">
-                <span class="spinner"></span><span data-i18n="loading_text">Loading</span>
-              </span>
+              <button id="clearRecent" class="btn-text" style="display:none" data-i18n="btn_clear">Clear</button>
             </div>
           </div>
-          <div id="tableContainer" class="table-container"></div>
+          <div id="recentList" class="recent-list" style="padding:0 var(--s4) var(--s4)">
+            <p class="empty-hint" data-i18n="dash_no_recent">No recent history</p>
+          </div>
+
+          <div class="panel-header" style="margin-top:var(--s2)">
+            <div class="panel-header-left">
+              <h2 class="panel-title" data-i18n="home_candidate_preview">候选池摘要</h2>
+              <span class="panel-meta" data-i18n="home_candidate_preview_hint">今日活跃预览，点击进入公司详情</span>
+            </div>
+          </div>
+          <div id="candidatePreview" class="candidate-preview-list"></div>
         </section>
 
-        <!-- Side Panel -->
         <aside class="panel-side">
+          <div class="card">
+            <div class="card-hd">
+              <h3 class="card-title" data-i18n="dash_deep_dive_title">Deep Dive</h3>
+            </div>
+            <div class="quick-actions">
+              <a href="search.html" class="btn btn--outline btn--block">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span data-i18n="nav_company_search">Company Search</span>
+              </a>
+              <a href="compare.html" class="btn btn--outline btn--block">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                <span data-i18n="nav_compare">Compare</span>
+              </a>
+              <a href="reports.html" class="btn btn--outline btn--block">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                <span data-i18n="nav_reports">AI Report</span>
+              </a>
+            </div>
+          </div>
 
           <div class="card">
             <div class="card-hd">
@@ -257,41 +241,8 @@
             </div>
             <div id="ruleDistribution" class="rule-dist"></div>
           </div>
-
-          <div class="card">
-            <div class="card-hd">
-              <h3 class="card-title" data-i18n="dash_recently_viewed">Recently Viewed</h3>
-              <button id="clearRecent" class="btn-text" style="display:none" data-i18n="btn_clear">Clear</button>
-            </div>
-            <div id="recentList" class="recent-list">
-              <p class="empty-hint">No recent history</p>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-hd">
-              <h3 class="card-title" data-i18n="dash_quick_actions">Quick Actions</h3>
-            </div>
-            <div class="quick-actions">
-              <a href="compare.html" class="btn btn--outline btn--block">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="18" y1="20" x2="18" y2="10"></line>
-                  <line x1="12" y1="20" x2="12" y2="4"></line>
-                  <line x1="6" y1="20" x2="6" y2="14"></line>
-                </svg>
-                <span data-i18n="dash_compare_companies">Compare Companies</span>
-              </a>
-              <a href="reports.html" class="btn btn--outline btn--block">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                </svg>
-                <span data-i18n="btn_generate">Generate Report</span>
-              </a>
-            </div>
-          </div>
-
         </aside>
+
       </div>
 
     </main>

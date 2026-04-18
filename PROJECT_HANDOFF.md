@@ -88,13 +88,13 @@ C_G/
 │   ├── styles.css                  # 全局设计系统（design tokens + 所有公共组件）
 │   ├── i18n.js                     # CN/EN 双语切换系统（I18N 字典 + applyLang() + getLang()）
 │   ├── api.js                      # 所有 API 调用封装 + MOCK_DATA fallback
-│   ├── index.html + app.js         # Dashboard 首页
+│   ├── index.html + app.js         # 首页产品门户（候选池 / 风险排行入口 + 最近浏览 + 候选摘要）
 │   ├── company.html + company.js + company.css  # 单公司详情页
 │   ├── ranking.html + ranking.js   # 全量信号排行榜
 │   ├── compare.html + compare.js   # 多公司对比
 │   ├── reports.html + reports.js   # 报告生成页
 │   ├── search.html + search.js     # 公司搜索页
-│   ├── candidates.html + candidates.js  # 实时换手候选池（AKShare 实时行情）
+│   ├── candidates.html + candidates.js  # 实时换手候选池（AKShare 实时行情 + 财务状态联动）
 │   └── settings.html + settings.js # 系统设置
 ├── refresh.sh                      # 每日一键：补 OCF + 重算信号缓存
 ├── .gitignore                      # 排除 data/*.json、.venv、DB 等大文件
@@ -230,6 +230,10 @@ GET  /api/candidates?turnover_min=2&price_max=20&circ_mv_max=80&pct_max=9&exclud
      实时拉取 AKShare stock_zh_a_spot_em()，30 分钟内存缓存，首次约 60-150s
      非交易日（周末/节假日）返回最后一个交易日的收盘快照（East Money 接口不清零）
      ?refresh=1 强制绕过缓存重新拉取
+     每条 result 额外带 `financial_check`：
+       status = `high_risk | warning | pass | no_data`
+       triggered_signals = 已触发的财务/治理信号 ID
+       triggered_count = 触发数量
      启动时 prewarm 线程自动预热缓存，用户请求直接命中缓存
 ```
 
@@ -252,13 +256,13 @@ GET  /api/candidates?turnover_min=2&price_max=20&circ_mv_max=80&pct_max=9&exclud
 
 | 页面 | 文件 | 功能 |
 |------|------|------|
-| Dashboard | `index.html` + `app.js` | 信号排行榜（top 50）+ 规则分布 + 最近查看 |
-| 公司详情 | `company.html` + `company.js` + `company.css` | 单公司完整信号分析，含 sparkline 折线图 |
+| 首页 | `index.html` + `app.js` | 产品门户：首页卡片、最近浏览、候选池摘要、规则分布、快捷入口 |
+| 公司详情 | `company.html` + `company.js` + `company.css` | 单公司完整信号分析，含 sparkline 折线图；从候选池进入时显示 Candidate Context |
 | 全量排行 | `ranking.html` + `ranking.js` | 完整排行表格，支持筛选、前端搜索、Export CSV |
 | 多公司对比 | `compare.html` + `compare.js` | Summary 表 + Rule Matrix（行=规则，列=公司）|
 | 报告 | `reports.html` + `reports.js` | 输入公司 → POST 生成报告 → 展示文本 + Copy |
 | 搜索 | `search.html` + `search.js` | 全文搜索，带搜索词高亮、市场 tab 过滤 |
-| 候选池 | `candidates.html` + `candidates.js` | 实时换手候选池，筛选 + 展示 AKShare 实时行情 |
+| 候选池 | `candidates.html` + `candidates.js` | 实时换手候选池，筛选 + 展示 AKShare 实时行情，并叠加财务状态 / 触发信号 |
 | 设置 | `settings.html` + `settings.js` | API Base URL、默认筛选参数、清除历史 |
 
 ### i18n 双语切换系统
