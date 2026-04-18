@@ -17,6 +17,7 @@ build/
 # Data files
 data/chain_kg/
 data/sync_reports/
+data/turnover_history.db
 
 # CN + TW snapshots included in git (needed for Railway)
 # data/cn/*.json  ← included in git

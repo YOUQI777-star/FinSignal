@@ -76,6 +76,8 @@ const state = {
   usedMock: false,
   reportLoading: false,
   candidateContext: null,
+  historyDays: 10,
+  historyRange: null,
 };
 
 /* ============================================================
@@ -268,6 +270,7 @@ function renderPage(data) {
   renderTopbarId(data);
   renderInfoCard(data);
   renderCandidateContext();
+  loadTurnoverHistory();
   renderSummaryCards(data);
   renderSignalSection('financialSignals',  'finMeta',  data.financial_signals  || []);
   renderSignalSection('governanceSignals', 'govMeta',  data.governance_signals || []);
@@ -317,6 +320,79 @@ function renderCandidateContext() {
         <span class="candidate-context-label">${t('触发信号', 'Triggered signals')}</span>
         <span class="candidate-context-value">${esc(signalText)}</span>
       </div>
+    </div>`;
+}
+
+async function loadTurnoverHistory() {
+  const body = document.getElementById('turnoverHistoryBody');
+  const meta = document.getElementById('turnoverHistoryMeta');
+  if (!body || !meta) return;
+
+  body.innerHTML = `<div class="report-placeholder"><p>${t('历史换手率加载中…', 'Loading turnover history…')}</p></div>`;
+  try {
+    const params = state.historyRange || { days: state.historyDays };
+    const result = await API.getTurnoverHistory(state.market, state.code, params);
+    renderTurnoverHistory(result);
+  } catch (err) {
+    meta.textContent = '';
+    body.innerHTML = `<div class="report-placeholder"><p>${t('历史换手率暂不可用', 'Turnover history unavailable')}</p><span>${esc(err.message)}</span></div>`;
+  }
+}
+
+function renderTurnoverHistory(result) {
+  const body = document.getElementById('turnoverHistoryBody');
+  const meta = document.getElementById('turnoverHistoryMeta');
+  const rows = result.results || [];
+
+  meta.textContent = rows.length
+    ? t(`${rows.length} 个交易日`, `${rows.length} trading days`)
+    : t('暂无历史数据', 'No history yet');
+
+  if (!rows.length) {
+    body.innerHTML = `<div class="report-placeholder"><p>${t('暂无历史换手率数据', 'No turnover history yet')}</p><span>${t('数据会在候选池实时抓取时逐日累积。', 'History accumulates as daily candidate data is fetched.')}</span></div>`;
+    return;
+  }
+
+  const width = 640;
+  const height = 220;
+  const padX = 36;
+  const padY = 24;
+  const values = rows.map(item => Number(item.turnover_rate ?? 0));
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min || 1;
+  const points = rows.map((item, idx) => {
+    const x = padX + (idx / Math.max(rows.length - 1, 1)) * (width - padX * 2);
+    const y = height - padY - ((Number(item.turnover_rate ?? 0) - min) / range) * (height - padY * 2);
+    return `${x},${y}`;
+  }).join(' ');
+
+  body.innerHTML = `
+    <div class="turnover-history-chart-wrap">
+      <svg class="turnover-history-chart" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+        <polyline class="turnover-history-line" points="${points}"></polyline>
+        ${rows.map((item, idx) => {
+          const x = padX + (idx / Math.max(rows.length - 1, 1)) * (width - padX * 2);
+          const y = height - padY - ((Number(item.turnover_rate ?? 0) - min) / range) * (height - padY * 2);
+          return `<circle cx="${x}" cy="${y}" r="3.5" class="turnover-history-dot"></circle>`;
+        }).join('')}
+      </svg>
+      <div class="turnover-history-axis">
+        <span>${esc(rows[0].date)}</span>
+        <span>${esc(rows[rows.length - 1].date)}</span>
+      </div>
+    </div>
+    <div class="turnover-history-stats">
+      <div class="turnover-history-stat"><span>${t('最低', 'Min')}</span><strong>${min.toFixed(2)}%</strong></div>
+      <div class="turnover-history-stat"><span>${t('最高', 'Max')}</span><strong>${max.toFixed(2)}%</strong></div>
+      <div class="turnover-history-stat"><span>${t('最新', 'Latest')}</span><strong>${values[values.length - 1].toFixed(2)}%</strong></div>
+    </div>
+    <div class="turnover-history-table">
+      ${rows.slice().reverse().map(item => `
+        <div class="turnover-history-row">
+          <span>${esc(item.date)}</span>
+          <strong>${Number(item.turnover_rate ?? 0).toFixed(2)}%</strong>
+        </div>`).join('')}
     </div>`;
 }
 
@@ -892,6 +968,21 @@ function bindEvents() {
   document.getElementById('refreshBtn').addEventListener('click', () => loadCompany(true));
   document.getElementById('generateReportBtn').addEventListener('click', generateReport);
   document.getElementById('copyReportBtn').addEventListener('click', copyReport);
+  document.querySelectorAll('.history-range-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.historyDays = Number(btn.dataset.days) || 10;
+      state.historyRange = null;
+      document.getElementById('turnoverStartDate').value = '';
+      document.getElementById('turnoverEndDate').value = '';
+      loadTurnoverHistory();
+    });
+  });
+  document.getElementById('turnoverHistoryApplyBtn')?.addEventListener('click', () => {
+    const start = document.getElementById('turnoverStartDate').value;
+    const end = document.getElementById('turnoverEndDate').value;
+    state.historyRange = (start || end) ? { start, end } : null;
+    loadTurnoverHistory();
+  });
 }
 
 /* ============================================================

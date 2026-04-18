@@ -51,6 +51,7 @@ C_G/
 │   │   ├── local_store.py          # 读取 data/cn/*.json, data/tw/*.json
 │   │   ├── master_store.py         # 读取 SQLite company_master.db
 │   │   ├── company_repository.py   # 合并 master + snapshot，统一对外接口
+│   │   ├── turnover_history_store.py # 轻量历史换手率 SQLite（market/code/date/turnover_rate）
 │   │   └── coverage.py             # 判断 snapshot_tier（full/partial/shell）
 │   ├── rules/
 │   │   ├── base.py                 # RuleDefinition + build_signal_result
@@ -71,9 +72,11 @@ C_G/
 │   │   ├── __init__.py
 │   │   ├── market_loader.py        # AKShare 实时行情拉取 + 交易日历（get_last_trading_date）
 │   │   ├── candidate_rules.py      # 筛选规则：换手率/现价/流通市值/涨幅/ST
-│   │   └── screening_service.py    # 实时候选池主逻辑：30 分钟内存缓存 + thread-safe
+│   │   ├── screening_service.py    # 实时候选池主逻辑：30 分钟内存缓存 + thread-safe
+│   │   └── turnover_bootstrap.py   # 单股换手率历史按需补数 + 候选池批量回填实验
 │   └── scripts/
 │       ├── bulk_enrich_cn.py       # A 股批量财务数据补充（EastMoney bulk）
+│       ├── bootstrap_turnover_history.py # 候选池公司 10 日换手率批量回填实验脚本
 │       ├── enrich_tw_ocf.py        # 台股 OCF 字段补充（FinMind，有配额限制）
 │       ├── run_signals.py          # 跑规则引擎，生成信号缓存 JSON
 │       └── analyze_coverage.py     # 分析覆盖率
@@ -89,12 +92,12 @@ C_G/
 │   ├── i18n.js                     # CN/EN 双语切换系统（I18N 字典 + applyLang() + getLang()）
 │   ├── api.js                      # 所有 API 调用封装 + MOCK_DATA fallback
 │   ├── index.html + app.js         # 首页产品门户（候选池 / 风险排行入口 + 最近浏览 + 候选摘要）
-│   ├── company.html + company.js + company.css  # 单公司详情页
+│   ├── company.html + company.js + company.css  # 单公司详情页（含历史换手率模块）
 │   ├── ranking.html + ranking.js   # 全量信号排行榜
 │   ├── compare.html + compare.js   # 多公司对比
 │   ├── reports.html + reports.js   # 报告生成页
 │   ├── search.html + search.js     # 公司搜索页
-│   ├── candidates.html + candidates.js  # 实时换手候选池（AKShare 实时行情 + 财务状态联动）
+│   ├── candidates.html + candidates.js  # 实时换手候选池（AKShare 实时行情 + 财务状态联动 + 分页 + turnover_max）
 │   └── settings.html + settings.js # 系统设置
 ├── refresh.sh                      # 每日一键：补 OCF + 重算信号缓存
 ├── .gitignore                      # 排除 data/*.json、.venv、DB 等大文件
@@ -218,14 +221,17 @@ GET  /api/graph/{market}/{code}
      → {"nodes": [], "edges": [], "message": "..."}
      Neo4j 占位，返回空
 
-GET  /api/candidates?turnover_min=2&price_max=20&circ_mv_max=80&pct_max=9&exclude_st=1&limit=300&refresh=0
+GET  /api/candidates?turnover_min=2&turnover_max=30&price_max=20&circ_mv_max=80&pct_max=9&exclude_st=1&page=1&page_size=100&refresh=0
      → {
          "total": N,
          "results": [...],
          "generated_at": "2026-04-18T00:34:09Z",   # AKShare 拉取时间（UTC）
          "trading_date": "2026-04-17",              # 对应的上一个 A 股交易日
          "source": "realtime",
-         "thresholds": {...}
+         "thresholds": {...},
+         "page": 1,
+         "page_size": 100,
+         "total_pages": 11
        }
      实时拉取 AKShare stock_zh_a_spot_em()，30 分钟内存缓存，首次约 60-150s
      非交易日（周末/节假日）返回最后一个交易日的收盘快照（East Money 接口不清零）
@@ -235,6 +241,14 @@ GET  /api/candidates?turnover_min=2&price_max=20&circ_mv_max=80&pct_max=9&exclud
        triggered_signals = 已触发的财务/治理信号 ID
        triggered_count = 触发数量
      启动时 prewarm 线程自动预热缓存，用户请求直接命中缓存
+
+GET  /api/candidates/CN/{code}
+     → 候选池中单只股票详情
+     返回 candidate entry + signal_summary（若有）+ financial_check
+
+GET  /api/turnover-history/CN/{code}?days=10
+     → {"market","code","days","total","results":[...]}
+     轻量历史换手率接口。优先读 `data/turnover_history.db`；若本地没有该股票历史，则自动按需抓取该单股最近 N 个交易日换手率并写入 SQLite
 ```
 
 ---
@@ -257,12 +271,12 @@ GET  /api/candidates?turnover_min=2&price_max=20&circ_mv_max=80&pct_max=9&exclud
 | 页面 | 文件 | 功能 |
 |------|------|------|
 | 首页 | `index.html` + `app.js` | 产品门户：首页卡片、最近浏览、候选池摘要、规则分布、快捷入口 |
-| 公司详情 | `company.html` + `company.js` + `company.css` | 单公司完整信号分析，含 sparkline 折线图；从候选池进入时显示 Candidate Context |
+| 公司详情 | `company.html` + `company.js` + `company.css` | 单公司完整信号分析，含 sparkline 折线图；从候选池进入时显示 Candidate Context；新增历史换手率模块 |
 | 全量排行 | `ranking.html` + `ranking.js` | 完整排行表格，支持筛选、前端搜索、Export CSV |
 | 多公司对比 | `compare.html` + `compare.js` | Summary 表 + Rule Matrix（行=规则，列=公司）|
 | 报告 | `reports.html` + `reports.js` | 输入公司 → POST 生成报告 → 展示文本 + Copy |
 | 搜索 | `search.html` + `search.js` | 全文搜索，带搜索词高亮、市场 tab 过滤 |
-| 候选池 | `candidates.html` + `candidates.js` | 实时换手候选池，筛选 + 展示 AKShare 实时行情，并叠加财务状态 / 触发信号 |
+| 候选池 | `candidates.html` + `candidates.js` | 实时换手候选池，新增 `turnover_max` 上限筛选与真分页；展示 AKShare 实时行情并叠加财务状态 / 触发信号 |
 | 设置 | `settings.html` + `settings.js` | API Base URL、默认筛选参数、清除历史 |
 
 ### i18n 双语切换系统
@@ -298,6 +312,24 @@ GET  /api/candidates?turnover_min=2&price_max=20&circ_mv_max=80&pct_max=9&exclud
 1. 对应交易日：`YYYY/MM/DD（周X）` / `YYYY/MM/DD (Weekday)` — 来自 `trading_date` 字段
 2. AKShare 抓取：`generated_at` 转北京时间，缓存有效期内不变
 3. 本次请求：客户端当前时间，每次请求刷新
+
+**筛选与分页补充：**
+- 当前候选池支持 `turnover_min` + `turnover_max`
+- `turnover_max` 为空表示“不设上限”
+- 前端默认每页 100 条，后端真分页：`page / page_size / total_pages`
+- 默认排序按 `turnover desc, code asc`，避免翻页时顺序抖动
+
+### 历史换手率（Turnover History）关键设计
+
+目标是只补“单股连续换手率曲线”，不做全市场历史回放系统。
+
+当前实现：
+- 历史仓只存最小字段：`market / code / date / turnover_rate / updated_at`
+- 不存历史现价、历史涨幅、历史流通市值、历史候选原因
+- 候选池页仍然只看当天；历史换手率仅在 `company.html` 中展示
+- 公司页支持 `5D / 10D / 20D / 自定义日期区间`
+- 历史查询优先读 `data/turnover_history.db`
+- 若某只股票历史不存在，`/api/turnover-history` 会自动按需抓取该单股最近 N 个交易日换手率并写库
 
 ### api.js 关键设计
 - `API_BASE` 读 localStorage `fsm_api_base`，默认 `https://tender-fascination-production.up.railway.app`
@@ -453,6 +485,16 @@ expect -c '
 
 8. **候选池 `trading_date` fallback 不感知节假日**：`get_last_trading_date()` 优先使用 AKShare 交易日历（准确），但若接口失败，fallback 逻辑只跳过周六/周日，不处理法定节假日（如五一、国庆）。节假日期间 fallback 可能显示错误的"上一交易日"。优先级低，因 AKShare 日历接口通常不会失败。
 
+9. **AKShare 免费源不适合批量历史换手率回填**：无论是“全市场 5500+ 支股票逐股补最近 10 日”，还是“候选池 1000+ 支股票逐股补最近 10 日”，都可能触发 `Connection aborted / RemoteDisconnected`。当前结论：
+   - ✅ 当日全市场换手率：稳定可抓（候选池主流程已验证）
+   - ⚠️ 单股历史换手率：通常可按需抓取，适合 company 页懒加载
+   - ❌ 多股票批量历史回填：免费源下不稳定，不建议作为主流程依赖
+
+10. **`backend/scripts/bootstrap_turnover_history.py` 保留为实验脚本，不是推荐主流程**：
+   - 已加 retry + sleep 节流
+   - 仍然会受上游断连影响
+   - 仅适合小批量测试，不应作为“上线前必须先跑完”的前置步骤
+
 ---
 
 ## 十三、下一步优先级建议
@@ -464,6 +506,11 @@ expect -c '
 | ✅ 已完成 | `data/cn/`（48MB）和 `data/tw/`（5.3MB）加入 Git，Railway 全端点可用 |
 | ✅ 已完成 | 全站 CN/EN 双语切换（i18n.js + 8 个 HTML 页面 data-i18n + JS t() helper）|
 | ✅ 已完成 | 候选池实时换手功能（AKShare 实时行情 + 30min 缓存 + 预热线程 + trading_date）|
+| ✅ 已完成 | 候选池筛选增强：新增 `turnover_max` 上限筛选 |
+| ✅ 已完成 | 候选池真分页：`page / page_size / total_pages` |
+| ✅ 已完成 | 公司页历史换手率模块：5D / 10D / 20D / 自定义日期 |
+| ✅ 已完成 | 历史换手率轻量 SQLite：`data/turnover_history.db` |
+| ⚠️ 已记录 | 历史批量回填在免费 AKShare 源下不稳定，当前主流程改为“单股按需抓取并写库” |
 | P2 | 补充 governance 数据（pledge_ratio 可从 AKShare 获取，CN 市场） |
 | P2 | 公司快照定期更新机制（目前是手动跑脚本，可加 cron 或 Railway Cron Service） |
 | P3 | 接入 Neo4j 图谱（股权穿透、关联方分析） |

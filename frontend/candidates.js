@@ -10,6 +10,8 @@ const t = (zh, en) => window._currentLang === 'zh' ? zh : en;
 const state = {
   data:     null,
   filtered: [],
+  page:     1,
+  pageSize: 100,
 };
 
 // ── Health check ─────────────────────────────────────────────────────────────
@@ -35,11 +37,14 @@ async function loadCandidates({ forceRefresh = false } = {}) {
   try {
     const params = buildParams();
     if (forceRefresh) params.refresh = '1';
+    params.page = String(state.page);
+    params.page_size = String(state.pageSize);
     const data = await API.getCandidates(params);
     state.data     = data;
     state.filtered = data.results || [];
     renderTable(state.filtered);
     renderMeta(data);
+    renderPagination(data);
   } catch (err) {
     renderError(err.message);
   } finally {
@@ -53,17 +58,18 @@ async function loadCandidates({ forceRefresh = false } = {}) {
 function buildParams() {
   const p = {};
   const turnoverMin = parseFloat(document.getElementById('fTurnoverMin').value);
+  const turnoverMax = parseFloat(document.getElementById('fTurnoverMax').value);
   const priceMax    = parseFloat(document.getElementById('fPriceMax').value);
   const circMvMax   = parseFloat(document.getElementById('fCircMvMax').value);
   const pctMax      = parseFloat(document.getElementById('fPctMax').value);
   const excludeSt   = document.getElementById('fExcludeSt').checked;
 
   if (!isNaN(turnoverMin)) p.turnover_min = turnoverMin;
+  if (!isNaN(turnoverMax)) p.turnover_max = turnoverMax;
   if (!isNaN(priceMax))    p.price_max    = priceMax;
   if (!isNaN(circMvMax))   p.circ_mv_max  = circMvMax;
   if (!isNaN(pctMax))      p.pct_max      = pctMax;
   p.exclude_st = excludeSt ? '1' : '0';
-  p.limit = 300;
   return p;
 }
 
@@ -86,7 +92,9 @@ const _WDAY_EN = ['Sun',  'Mon',  'Tue',  'Wed',  'Thu',  'Fri',  'Sat'];
 function renderMeta(data) {
   const zh = window._currentLang === 'zh';
   document.getElementById('tableInfo').textContent =
-    zh ? `${data.total} 只候选股` : `${data.total} candidates`;
+    zh
+      ? `${data.total} 只候选股 · 第 ${data.page || 1}/${data.total_pages || 1} 页`
+      : `${data.total} candidates · Page ${data.page || 1}/${data.total_pages || 1}`;
 
   // Corresponding trading date (from backend calendar lookup)
   const tradingEl = document.getElementById('tradingDateDisplay');
@@ -109,6 +117,40 @@ function renderMeta(data) {
   if (clientEl) {
     clientEl.textContent = _timeFmt.format(new Date());
   }
+}
+
+function renderPagination(data) {
+  const wrap = document.getElementById('paginationBar');
+  if (!wrap) return;
+
+  const page = data.page || 1;
+  const total = data.total || 0;
+  const totalPages = data.total_pages || 1;
+
+  if (totalPages <= 1) {
+    wrap.style.display = 'none';
+    wrap.innerHTML = '';
+    return;
+  }
+
+  wrap.style.display = '';
+  wrap.innerHTML = `
+    <div class="pagination-summary">
+      ${window._currentLang === 'zh' ? `共 ${total} 条，当前第 ${page} / ${totalPages} 页` : `${total} total, page ${page} / ${totalPages}`}
+    </div>
+    <div class="pagination-actions">
+      <button class="btn btn--outline pagination-btn" data-page="${page - 1}" ${page <= 1 ? 'disabled' : ''}>${t('上一页', 'Prev')}</button>
+      <button class="btn btn--outline pagination-btn" data-page="${page + 1}" ${page >= totalPages ? 'disabled' : ''}>${t('下一页', 'Next')}</button>
+    </div>`;
+
+  wrap.querySelectorAll('.pagination-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const nextPage = Number(btn.dataset.page);
+      if (!nextPage || nextPage === state.page) return;
+      state.page = nextPage;
+      loadCandidates();
+    });
+  });
 }
 
 function renderTable(rows) {
@@ -147,6 +189,7 @@ function renderTable(rows) {
 
   const fmt = (v, digits = 2, suffix = '') =>
     v != null && isFinite(v) ? v.toFixed(digits) + suffix : '—';
+  const rowOffset = ((state.data?.page || 1) - 1) * (state.data?.page_size || state.pageSize);
 
   const tbody = rows.map((r, i) => {
     const pct    = r.pct_change;
@@ -160,7 +203,7 @@ function renderTable(rows) {
       : t('无触发', 'None');
 
     const cells = [
-      `<td style="text-align:right;color:var(--text-secondary)">${i + 1}</td>`,
+      `<td style="text-align:right;color:var(--text-secondary)">${rowOffset + i + 1}</td>`,
       `<td><span class="badge badge-market badge-market-cn">CN</span> <code style="font-size:12px">${esc(r.code)}</code></td>`,
       `<td style="font-weight:500">${esc(r.name)}</td>`,
       `<td>${renderFinancialCheck(financialCheck)}</td>`,
@@ -202,7 +245,10 @@ function renderFinancialCheck(check) {
 
 function renderError(msg) {
   const container = document.getElementById('tableContainer');
+  const pagination = document.getElementById('paginationBar');
   const zh = window._currentLang === 'zh';
+  pagination.style.display = 'none';
+  pagination.innerHTML = '';
   container.innerHTML = `
     <div class="empty-state">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40">
@@ -229,20 +275,31 @@ function esc(str) {
 }
 
 // ── Controls ──────────────────────────────────────────────────────────────────
-document.getElementById('applyBtn').addEventListener('click', () => loadCandidates());
-document.getElementById('refreshBtn').addEventListener('click', () => loadCandidates({ forceRefresh: true }));
+document.getElementById('applyBtn').addEventListener('click', () => {
+  state.page = 1;
+  loadCandidates();
+});
+document.getElementById('refreshBtn').addEventListener('click', () => {
+  state.page = 1;
+  loadCandidates({ forceRefresh: true });
+});
 document.getElementById('resetBtn').addEventListener('click', () => {
   document.getElementById('fTurnoverMin').value  = '2';
+  document.getElementById('fTurnoverMax').value  = '';
   document.getElementById('fPriceMax').value     = '20';
   document.getElementById('fCircMvMax').value    = '80';
   document.getElementById('fPctMax').value       = '9';
   document.getElementById('fExcludeSt').checked  = true;
+  state.page = 1;
   loadCandidates();
 });
 
 // Enter key in any filter input triggers apply
 document.getElementById('filterBar').addEventListener('keydown', e => {
-  if (e.key === 'Enter') loadCandidates();
+  if (e.key === 'Enter') {
+    state.page = 1;
+    loadCandidates();
+  }
 });
 
 // ── Init ──────────────────────────────────────────────────────────────────────

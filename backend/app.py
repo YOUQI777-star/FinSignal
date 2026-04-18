@@ -14,9 +14,11 @@ from backend.ai.report_generator import generate_report_payload
 from backend.config import APP_DEBUG, APP_HOST, APP_PORT, DATA_DIR, DEFAULT_CORS_ORIGINS
 from backend.data_access.company_repository import CompanyRepository
 from backend.data_access.local_store import LocalDataStore
+from backend.data_access.turnover_history_store import TurnoverHistoryStore
 from backend.graph.neo4j_client import Neo4jClient
 from backend.rules.engine import RuleEngine
 from backend.screening.screening_service import apply_query_filters, get_candidates
+from backend.screening.turnover_bootstrap import hydrate_single_code_turnover_history
 
 _SIGNALS_DIR = DATA_DIR / "signals"
 
@@ -27,6 +29,7 @@ store = LocalDataStore()
 repository = CompanyRepository(local_store=store)
 rule_engine = RuleEngine()
 graph_client = Neo4jClient()
+turnover_history_store = TurnoverHistoryStore()
 
 
 def _load_signals_cache(market: str) -> dict[str, dict]:
@@ -176,6 +179,18 @@ def _float_param(name: str, default: float | None = None) -> float | None:
         return default
 
 
+def _int_param(name: str, default: int, *, minimum: int = 1, maximum: int | None = None) -> int:
+    val = request.args.get(name)
+    try:
+        parsed = int(val) if val is not None else default
+    except ValueError:
+        parsed = default
+    parsed = max(minimum, parsed)
+    if maximum is not None:
+        parsed = min(maximum, parsed)
+    return parsed
+
+
 @app.route("/api/candidates")
 def api_get_candidates():
     """
@@ -185,12 +200,15 @@ def api_get_candidates():
 
     Query params (all optional — narrow the default thresholds):
         turnover_min  float  today's turnover > N%  (default 2)
+        turnover_max  float  today's turnover <= N% (optional)
         price_max     float  price < N yuan          (default 20)
         circ_mv_max   float  流通市值 < N 亿         (default 80)
         pct_max       float  today gain < N%         (default 9)
         pct_min       float  today drop > N%         (default -9)
         exclude_st    0|1    exclude ST              (default 1)
-        limit         int    max rows                (default 300)
+        page         int     page number             (default 1)
+        page_size    int     rows per page           (default 100)
+        limit        int     legacy alias for page_size
         refresh       0|1    force cache refresh     (default 0)
     """
     exclude_st    = request.args.get("exclude_st", "1") not in ("0", "false")
@@ -215,6 +233,7 @@ def api_get_candidates():
     candidates = apply_query_filters(
         candidates,
         turnover_min = _float_param("turnover_min"),
+        turnover_max = _float_param("turnover_max"),
         price_max    = _float_param("price_max"),
         circ_mv_max  = _float_param("circ_mv_max"),
         pct_max      = _float_param("pct_max"),
@@ -222,11 +241,20 @@ def api_get_candidates():
         exclude_st   = exclude_st,
     )
 
-    limit = min(int(request.args.get("limit", 300)), 1000)
+    page = _int_param("page", 1, minimum=1)
+    page_size_default = _int_param("limit", 100, minimum=1, maximum=500)
+    page_size = _int_param("page_size", page_size_default, minimum=1, maximum=500)
     signal_cache = _load_signals_cache("CN")
 
+    candidates.sort(key=lambda c: (-(c.get("turnover") or 0), c.get("code") or ""))
+    total = len(candidates)
+    total_pages = max(1, (total + page_size - 1) // page_size)
+    page = min(page, total_pages)
+    start_idx = (page - 1) * page_size
+    end_idx = start_idx + page_size
+
     enriched = []
-    for candidate in candidates[:limit]:
+    for candidate in candidates[start_idx:end_idx]:
         signal_result = signal_cache.get(candidate["code"])
         enriched.append({
             **candidate,
@@ -235,9 +263,13 @@ def api_get_candidates():
 
     return jsonify({
         "generated_at": data.get("generated_at"),
+        "trading_date": data.get("trading_date"),
         "source":       data.get("source", "realtime"),
         "thresholds":   data.get("thresholds", {}),
-        "total":        len(candidates),
+        "total":        total,
+        "page":         page,
+        "page_size":    page_size,
+        "total_pages":  total_pages,
         "results":      enriched,
     }), 200
 
@@ -271,6 +303,46 @@ def get_candidate_detail(code: str):
         }
 
     return jsonify(entry), 200
+
+
+@app.route("/api/turnover-history/<market>/<code>")
+def get_turnover_history(market: str, code: str):
+    market = market.upper()
+    days = request.args.get("days")
+    start_date = request.args.get("start")
+    end_date = request.args.get("end")
+    try:
+        day_count = int(days) if days else None
+    except ValueError:
+        day_count = None
+
+    rows = turnover_history_store.get_history(
+        market,
+        code,
+        start_date=start_date,
+        end_date=end_date,
+        days=day_count,
+    )
+    if not rows and market == "CN":
+        try:
+            rows = hydrate_single_code_turnover_history(
+                code,
+                market=market,
+                days=day_count or 10,
+                start_date=start_date,
+                end_date=end_date,
+            )
+        except Exception as exc:
+            return jsonify({"error": str(exc)}), 503
+    return jsonify({
+        "market": market,
+        "code": code,
+        "start_date": start_date,
+        "end_date": end_date,
+        "days": day_count,
+        "total": len(rows),
+        "results": rows,
+    }), 200
 
 
 def _prewarm_candidates() -> None:

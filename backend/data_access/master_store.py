@@ -49,6 +49,18 @@ class MasterDataStore:
         )
         return [self._row_to_company(row) for row in rows]
 
+    def list_company_codes(self, market: str) -> list[str]:
+        rows = self._fetch_all(
+            """
+            SELECT code
+            FROM company_master
+            WHERE market = ?
+            ORDER BY code
+            """,
+            (market.upper(),),
+        )
+        return [str(row["code"]) for row in rows]
+
     def _connect(self) -> sqlite3.Connection | None:
         if not self.db_path.exists():
             return None

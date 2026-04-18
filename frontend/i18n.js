@@ -185,8 +185,10 @@ const I18N = {
     cand_filter_title:   'Filters',
     cand_table_title:    'Candidate Stocks',
     cand_turnover_label: 'Today Turnover >',
+    cand_turnover_max_label: 'Today Turnover <',
     cand_price_label:    'Price <',
     cand_circmv_label:   'Circ. MktCap <',
+    cand_circmv_hint:    'Circ. MktCap = tradable listed shares only',
     cand_pct_label:      'Today Change <',
     cand_exclude_st:     'Exclude ST',
     cand_unit_pct:       '%',
@@ -222,6 +224,8 @@ const I18N = {
     company_ai_report:          'AI Risk Report',
     company_report_empty:       'No report generated yet',
     company_report_hint:        'Click "Generate Report" to create an AI risk analysis for this company.',
+    company_turnover_history:   'Turnover History',
+    company_turnover_history_hint: 'View turnover-rate changes for a single stock over time.',
   },
 
   zh: {
@@ -402,8 +406,10 @@ const I18N = {
     cand_filter_title:   '筛选条件',
     cand_table_title:    '候选股票',
     cand_turnover_label: '今日换手 >',
+    cand_turnover_max_label: '今日换手 <',
     cand_price_label:    '现价 <',
     cand_circmv_label:   '流通市值 <',
+    cand_circmv_hint:    '流通市值 = 可上市流通部分对应市值',
     cand_pct_label:      '今日涨幅 <',
     cand_exclude_st:     '排除 ST',
     cand_unit_pct:       '%',
@@ -439,6 +445,8 @@ const I18N = {
     company_ai_report:          'AI 风险报告',
     company_report_empty:       '尚未生成报告',
     company_report_hint:        '点击「生成报告」为该公司创建 AI 风险分析。',
+    company_turnover_history:   '历史换手率',
+    company_turnover_history_hint: '查看单只股票最近一段时间的换手率变化。',
   },
 };
 

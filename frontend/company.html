@@ -140,6 +140,30 @@
 
       <section id="candidateContext" class="candidate-context" style="display:none"></section>
 
+      <section class="panel turnover-history-panel" id="turnoverHistoryPanel">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <h2 class="panel-title" data-i18n="company_turnover_history">历史换手率</h2>
+            <span class="panel-meta" id="turnoverHistoryMeta"></span>
+          </div>
+          <div class="turnover-history-controls">
+            <div class="turnover-history-quick">
+              <button class="btn btn--outline history-range-btn" data-days="5">5D</button>
+              <button class="btn btn--outline history-range-btn" data-days="10">10D</button>
+              <button class="btn btn--outline history-range-btn" data-days="20">20D</button>
+            </div>
+            <input id="turnoverStartDate" type="date" class="filter-input turnover-date-input" />
+            <input id="turnoverEndDate" type="date" class="filter-input turnover-date-input" />
+            <button id="turnoverHistoryApplyBtn" class="btn btn--outline" data-i18n="btn_apply">Apply</button>
+          </div>
+        </div>
+        <div id="turnoverHistoryBody" class="turnover-history-body">
+          <div class="report-placeholder">
+            <p data-i18n="company_turnover_history_hint">查看单只股票最近一段时间的换手率变化。</p>
+          </div>
+        </div>
+      </section>
+
       <!-- Summary Cards -->
       <section class="summary-row" id="summaryCards">
         <div class="scard skeleton-wrap"><div class="skeleton-block" style="height:76px"></div></div>

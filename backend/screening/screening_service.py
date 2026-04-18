@@ -18,6 +18,7 @@ import time
 from datetime import datetime, timezone
 from typing import Any
 
+from backend.data_access.turnover_history_store import TurnoverHistoryStore
 from backend.screening.candidate_rules import (
     DEFAULT_CIRC_MV_MAX,
     DEFAULT_EXCLUDE_ST,
@@ -38,6 +39,7 @@ _CACHE_TTL_SECONDS = 30 * 60   # 30 minutes
 _cache_lock       = threading.Lock()
 _cached_result:   dict | None = None
 _cache_fetched_at: float      = 0.0   # time.monotonic()
+history_store = TurnoverHistoryStore()
 
 
 def _cache_fresh() -> bool:
@@ -59,6 +61,9 @@ def _run_screening(
 ) -> dict[str, Any]:
     """Fetch spots + apply rules. Returns full result dict."""
     spots = fetch_realtime_spots()
+    trading_date = get_last_trading_date()
+    generated_at = datetime.now(timezone.utc).isoformat()
+    history_store.upsert_daily_rows("CN", trading_date, spots, updated_at=generated_at)
     log.info("Screening %d stocks …", len(spots))
 
     candidates = []
@@ -129,8 +134,8 @@ def _run_screening(
         len(candidates), skipped_data,
     )
     return {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "trading_date": get_last_trading_date(),   # e.g. "2026-04-17"
+        "generated_at": generated_at,
+        "trading_date": trading_date,   # e.g. "2026-04-17"
         "source":       "realtime",
         "total":        len(candidates),
         "thresholds": {
@@ -186,6 +191,7 @@ def apply_query_filters(
     candidates: list[dict],
     *,
     turnover_min: float | None = None,
+    turnover_max: float | None = None,
     price_max:    float | None = None,
     circ_mv_max:  float | None = None,
     pct_max:      float | None = None,
@@ -198,6 +204,8 @@ def apply_query_filters(
         if exclude_st and c.get("is_st"):
             continue
         if turnover_min is not None and (c["turnover"] or 0) < turnover_min:
+            continue
+        if turnover_max is not None and (c["turnover"] or 0) > turnover_max:
             continue
         if price_max is not None and (c["current_price"] or 0) >= price_max:
             continue

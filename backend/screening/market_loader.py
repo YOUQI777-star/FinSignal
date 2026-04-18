@@ -78,6 +78,67 @@ def get_last_trading_date() -> str:
     return today_str
 
 
+def get_recent_trading_dates(limit: int = 10) -> list[str]:
+    """
+    Return the most recent A-share trading dates in ascending order.
+    """
+    latest = get_last_trading_date()
+    if _TRADE_DATES:
+      past = [d for d in _TRADE_DATES if d <= latest]
+      if past:
+          return past[-limit:]
+
+    # Fallback: weekdays only
+    dates: list[str] = []
+    current = date.fromisoformat(latest)
+    while len(dates) < limit:
+        if current.weekday() < 5:
+            dates.append(current.isoformat())
+        current -= timedelta(days=1)
+    return sorted(dates)
+
+
+def fetch_turnover_history_for_code(
+    code: str,
+    *,
+    start_date: str,
+    end_date: str,
+) -> list[dict[str, Any]]:
+    """
+    Fetch historical daily turnover-rate rows for one A-share code.
+    """
+    if not _AK_AVAILABLE:
+        raise RuntimeError("AKShare not installed — run: pip install akshare")
+
+    df = ak.stock_zh_a_hist(
+        symbol=str(code).zfill(6),
+        period="daily",
+        start_date=start_date.replace("-", ""),
+        end_date=end_date.replace("-", ""),
+        adjust="",
+    )
+    if df is None or df.empty:
+        return []
+
+    date_col = "日期" if "日期" in df.columns else df.columns[0]
+    turnover_col = "换手率" if "换手率" in df.columns else None
+    if turnover_col is None:
+        return []
+
+    rows: list[dict[str, Any]] = []
+    for _, row in df.iterrows():
+        try:
+            turnover = float(row.get(turnover_col))
+        except (TypeError, ValueError):
+            turnover = None
+        rows.append({
+            "code": str(code).zfill(6),
+            "date": str(row.get(date_col))[:10],
+            "turnover_rate": turnover,
+        })
+    return rows
+
+
 def fetch_realtime_spots() -> list[dict[str, Any]]:
     """
     Single AKShare call → all A-share spot data.

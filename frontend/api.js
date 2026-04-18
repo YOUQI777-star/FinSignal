@@ -93,6 +93,11 @@ const API = {
   getCandidateDetail(code) {
     return apiFetch(`/api/candidates/CN/${code}`);
   },
+
+  getTurnoverHistory(market, code, params = {}) {
+    const qs = new URLSearchParams(params).toString();
+    return apiFetch(`/api/turnover-history/${market}/${code}${qs ? '?' + qs : ''}`);
+  },
 };
 
 /* ============================================================

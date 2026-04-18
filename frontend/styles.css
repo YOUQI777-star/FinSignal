@@ -1554,3 +1554,26 @@ td.pct-dn { color: #dc2626; font-weight: 500; }
 
 .portal-card--discover:hover { border-color: #93c5fd; }
 .portal-card--risk:hover     { border-color: #fca5a5; }
+
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s3) var(--s4) var(--s4);
+}
+
+.pagination-summary {
+  font-size: var(--f-sm);
+  color: var(--txt-3);
+}
+
+.pagination-actions {
+  display: flex;
+  gap: var(--s2);
+}
+
+.pagination-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
