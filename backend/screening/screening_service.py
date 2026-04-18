@@ -28,7 +28,7 @@ from backend.screening.candidate_rules import (
     apply_rules,
     is_st,
 )
-from backend.screening.market_loader import fetch_realtime_spots
+from backend.screening.market_loader import fetch_realtime_spots, get_last_trading_date
 
 log = logging.getLogger(__name__)
 
@@ -130,6 +130,7 @@ def _run_screening(
     )
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
+        "trading_date": get_last_trading_date(),   # e.g. "2026-04-17"
         "source":       "realtime",
         "total":        len(candidates),
         "thresholds": {

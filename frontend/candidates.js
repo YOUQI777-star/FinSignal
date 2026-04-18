@@ -74,10 +74,28 @@ const _timeFmt = new Intl.DateTimeFormat('zh-CN', {
   hour12: false,
 });
 
+const _dateFmt = new Intl.DateTimeFormat('zh-CN', {
+  timeZone: 'UTC',   // trading_date is already local date (no TZ shift needed)
+  year: 'numeric', month: '2-digit', day: '2-digit',
+});
+
+const _WDAY_ZH = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+const _WDAY_EN = ['Sun',  'Mon',  'Tue',  'Wed',  'Thu',  'Fri',  'Sat'];
+
 function renderMeta(data) {
   const zh = window._currentLang === 'zh';
   document.getElementById('tableInfo').textContent =
     zh ? `${data.total} 只候选股` : `${data.total} candidates`;
+
+  // Corresponding trading date (from backend calendar lookup)
+  const tradingEl = document.getElementById('tradingDateDisplay');
+  if (data.trading_date && tradingEl) {
+    // Parse as UTC noon to avoid date-boundary shift on any timezone
+    const d    = new Date(data.trading_date + 'T12:00:00Z');
+    const wday = zh ? _WDAY_ZH[d.getUTCDay()] : _WDAY_EN[d.getUTCDay()];
+    const dateStr = _dateFmt.format(d);
+    tradingEl.textContent = zh ? `${dateStr}（${wday}）` : `${dateStr} (${wday})`;
+  }
 
   // Server-side AKShare fetch time (stays the same while cache is live)
   const serverEl = document.getElementById('serverFetchTime');

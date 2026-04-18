@@ -6,11 +6,18 @@ Fetch A-share realtime spot data from AKShare in a single call.
 fetch_realtime_spots() -> list[dict]
     One call, returns all ~5800 A-share stocks with today's metrics.
     Fields: code, name, price, turnover, circ_mv, total_mv, pct_change
+
+get_last_trading_date() -> str
+    Returns the most recent A-share trading date as "YYYY-MM-DD".
+    Uses AKShare's Sina trading calendar (cached 24h).
+    Falls back to skipping weekends if calendar fetch fails.
 """
 from __future__ import annotations
 
 import logging
 import math
+import time as _time
+from datetime import date, timedelta
 from typing import Any
 
 log = logging.getLogger(__name__)
@@ -25,6 +32,50 @@ except Exception:
 
 def ak_available() -> bool:
     return _AK_AVAILABLE
+
+
+# ── Trading calendar cache ────────────────────────────────────────────────────
+_TRADE_DATES: list[str] = []          # sorted "YYYY-MM-DD" strings
+_TRADE_DATES_AT: float  = 0.0        # time.monotonic() of last fetch
+_TRADE_DATES_TTL        = 24 * 3600  # refresh once per day
+
+
+def get_last_trading_date() -> str:
+    """
+    Return the most recent A-share trading date as "YYYY-MM-DD".
+    Fetches the Sina trading calendar via AKShare (cached 24 h).
+    Falls back to walking backwards and skipping weekends if the API fails.
+    """
+    global _TRADE_DATES, _TRADE_DATES_AT
+
+    today     = date.today()
+    today_str = today.isoformat()
+
+    if _AK_AVAILABLE:
+        now = _time.monotonic()
+        if not _TRADE_DATES or (now - _TRADE_DATES_AT) > _TRADE_DATES_TTL:
+            try:
+                df   = ak.tool_trade_date_hist_sina()
+                col  = df.columns[0]
+                _TRADE_DATES    = sorted(str(d)[:10] for d in df[col].tolist())
+                _TRADE_DATES_AT = now
+                log.info("Loaded %d trading dates from AKShare calendar", len(_TRADE_DATES))
+            except Exception as exc:
+                log.warning("Trading calendar fetch failed (will use weekend fallback): %s", exc)
+
+        if _TRADE_DATES:
+            # last element <= today
+            past = [d for d in _TRADE_DATES if d <= today_str]
+            if past:
+                return past[-1]
+
+    # Fallback: walk backwards skipping Sat/Sun (ignores CN public holidays)
+    d = today
+    for _ in range(7):
+        if d.weekday() < 5:   # Mon=0 … Fri=4
+            return d.isoformat()
+        d -= timedelta(days=1)
+    return today_str
 
 
 def fetch_realtime_spots() -> list[dict[str, Any]]:

@@ -180,6 +180,7 @@ const I18N = {
     cand_empty_title:    'No candidates found',
     cand_empty_hint:     'Try relaxing the filters',
     cand_loading_error:  'Load failed',
+    cand_trading_date_label: 'Trading Date:',
     cand_akshare_label:  'AKShare fetch:',
     cand_request_label:  'This request:',
 
@@ -374,6 +375,7 @@ const I18N = {
     cand_empty_title:    '没有符合条件的候选股',
     cand_empty_hint:     '尝试放宽筛选条件',
     cand_loading_error:  '加载失败',
+    cand_trading_date_label: '对应交易日：',
     cand_akshare_label:  'AKShare 抓取：',
     cand_request_label:  '本次请求：',
 
