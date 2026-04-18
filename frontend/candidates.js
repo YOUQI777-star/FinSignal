@@ -5,6 +5,8 @@
    持续换手候选池 — realtime /api/candidates (30-min in-memory cache)
    ============================================================ */
 
+const t = (zh, en) => window._currentLang === 'zh' ? zh : en;
+
 const state = {
   data:     null,
   filtered: [],
@@ -126,7 +128,6 @@ function renderTable(rows) {
     return;
   }
 
-  const t = (zh, en) => window._currentLang === 'zh' ? zh : en;
   const cols = [
     { key: '#',                label: '#',                              align: 'right' },
     { key: 'code',             label: t('代码',      'Code'),           align: 'left'  },
