@@ -87,11 +87,11 @@
     <header class="topbar">
       <div class="topbar-left">
         <h1 class="page-title" data-i18n="compare_title">Compare</h1>
-        <span class="page-crumb">Analysis</span>
+        <span class="page-crumb" data-i18n="nav_analysis">Analysis</span>
       </div>
       <div class="topbar-right">
         <span class="loading-tag" id="loadingTag" style="display:none">
-          <span class="spinner"></span>Loading
+          <span class="spinner"></span><span data-i18n="loading_text">Loading</span>
         </span>
       </div>
     </header>
@@ -102,8 +102,8 @@
       <div class="panel">
         <div class="panel-header">
           <div class="panel-header-left">
-            <h2 class="panel-title">Select Companies</h2>
-            <span class="panel-meta">Enter 2–5 company IDs separated by commas</span>
+            <h2 class="panel-title" data-i18n="cmp_select_title">Select Companies</h2>
+            <span class="panel-meta" data-i18n="cmp_select_hint">Enter 2–5 company IDs separated by commas</span>
           </div>
         </div>
         <div style="padding:var(--s5) var(--s5) var(--s4);">
@@ -118,14 +118,14 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>
               </svg>
-              Compare
+              <span data-i18n="btn_compare">Compare</span>
             </button>
           </div>
           <div class="cmp-presets">
-            <span class="cmp-preset-label">Quick examples:</span>
-            <button class="btn btn--outline btn--sm" onclick="setPreset('CN:600519,TW:2330,CN:000002')">Moutai · TSMC · Vanke</button>
-            <button class="btn btn--outline btn--sm" onclick="setPreset('CN:600519,CN:600036,CN:000016')">3 CN stocks</button>
-            <button class="btn btn--outline btn--sm" onclick="setPreset('TW:2330,TW:2412,TW:2454')">3 TW stocks</button>
+            <span class="cmp-preset-label" data-i18n="label_quick_examples">Quick examples:</span>
+            <button class="btn btn--outline btn--sm" onclick="setPreset('CN:600519,TW:2330,CN:000002')" data-i18n="cmp_preset_moutai">Moutai · TSMC · Vanke</button>
+            <button class="btn btn--outline btn--sm" onclick="setPreset('CN:600519,CN:600036,CN:000016')" data-i18n="cmp_preset_cn">3 CN stocks</button>
+            <button class="btn btn--outline btn--sm" onclick="setPreset('TW:2330,TW:2412,TW:2454')" data-i18n="cmp_preset_tw">3 TW stocks</button>
           </div>
         </div>
       </div>
@@ -136,8 +136,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
             <line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>
           </svg>
-          <p>No comparison yet</p>
-          <span>Enter company IDs above and click Compare</span>
+          <p data-i18n="cmp_empty_title">No comparison yet</p>
+          <span data-i18n="cmp_empty_hint">Enter company IDs above and click Compare</span>
         </div>
       </div>
 

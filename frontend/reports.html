@@ -87,11 +87,11 @@
     <header class="topbar">
       <div class="topbar-left">
         <h1 class="page-title" data-i18n="page_reports">Reports</h1>
-        <span class="page-crumb">AI Risk Analysis</span>
+        <span class="page-crumb" data-i18n="page_crumb_ai_report">AI Risk Analysis</span>
       </div>
       <div class="topbar-right">
         <span class="loading-tag" id="loadingTag" style="display:none">
-          <span class="spinner"></span>Generating…
+          <span class="spinner"></span><span data-i18n="generating_text">Generating…</span>
         </span>
       </div>
     </header>
@@ -108,21 +108,21 @@
           <div class="panel">
             <div class="panel-header">
               <div class="panel-header-left">
-                <h2 class="panel-title">Generate Report</h2>
-                <span class="panel-meta">Select a company to run an AI risk analysis</span>
+                <h2 class="panel-title" data-i18n="rpt_generate_title">Generate Report</h2>
+                <span class="panel-meta" data-i18n="rpt_generate_hint">Select a company to run an AI risk analysis</span>
               </div>
             </div>
             <div class="rpt-form-body">
               <div class="rpt-field-row">
-                <label class="rpt-label" for="marketSelect">Market</label>
+                <label class="rpt-label" for="marketSelect" data-i18n="label_market">Market</label>
                 <select id="marketSelect" class="filter-select" style="flex:1">
-                  <option value="">Select market…</option>
+                  <option value="" data-i18n="opt_select_market">Select market…</option>
                   <option value="CN">A-Share (CN)</option>
                   <option value="TW">Taiwan (TW)</option>
                 </select>
               </div>
               <div class="rpt-field-row">
-                <label class="rpt-label" for="codeInput">Code</label>
+                <label class="rpt-label" for="codeInput" data-i18n="label_code">Code</label>
                 <input id="codeInput" type="text" class="rpt-text-input"
                   placeholder="e.g. 600519 or 2330"
                   autocomplete="off" spellcheck="false" />
@@ -136,7 +136,7 @@
                 <span data-i18n="btn_generate">Generate Report</span>
               </button>
               <div class="rpt-presets">
-                <span class="rpt-preset-label">Quick examples:</span>
+                <span class="rpt-preset-label" data-i18n="label_quick_examples">Quick examples:</span>
                 <button class="btn btn--outline btn--sm" onclick="setPreset('CN','600519')">贵州茅台</button>
                 <button class="btn btn--outline btn--sm" onclick="setPreset('TW','2330')">台積電</button>
                 <button class="btn btn--outline btn--sm" onclick="setPreset('CN','000002')">万科A</button>
@@ -148,7 +148,7 @@
           <div id="metaCard" class="panel" style="display:none;margin-top:var(--s4)">
             <div class="panel-header">
               <div class="panel-header-left">
-                <h2 class="panel-title">Company</h2>
+                <h2 class="panel-title" data-i18n="label_company">Company</h2>
               </div>
             </div>
             <div id="metaCardBody" class="rpt-meta-body"></div>
@@ -168,12 +168,12 @@
                     <line x1="16" y1="13" x2="8" y2="13"></line>
                     <line x1="16" y1="17" x2="8" y2="17"></line>
                   </svg>
-                  AI Risk Report
+                  <span data-i18n="rpt_ai_report_title">AI Risk Report</span>
                 </h2>
                 <span class="panel-meta" id="reportMeta"></span>
               </div>
               <div class="panel-header-right">
-                <button id="copyBtn" class="btn-text" style="display:none">Copy</button>
+                <button id="copyBtn" class="btn-text" style="display:none" data-i18n="btn_copy">Copy</button>
               </div>
             </div>
             <div id="reportOutput" class="rpt-output-body">
@@ -182,8 +182,8 @@
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                   <polyline points="14 2 14 8 20 8"></polyline>
                 </svg>
-                <p>No report generated yet</p>
-                <span>Select a company and click Generate Report</span>
+                <p data-i18n="rpt_empty_title">No report generated yet</p>
+                <span data-i18n="rpt_empty_hint">Select a company and click Generate Report</span>
               </div>
             </div>
           </div>

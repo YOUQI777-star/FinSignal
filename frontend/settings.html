@@ -87,7 +87,7 @@
     <header class="topbar">
       <div class="topbar-left">
         <h1 class="page-title" data-i18n="settings_title">Settings</h1>
-        <span class="page-crumb">System</span>
+        <span class="page-crumb" data-i18n="nav_system">System</span>
       </div>
     </header>
 
@@ -97,15 +97,15 @@
       <div class="panel">
         <div class="panel-header">
           <div class="panel-header-left">
-            <h2 class="panel-title">API Connection</h2>
-            <span class="panel-meta">Backend server configuration</span>
+            <h2 class="panel-title" data-i18n="stg_api_title">API Connection</h2>
+            <span class="panel-meta" data-i18n="stg_api_hint">Backend server configuration</span>
           </div>
         </div>
         <div class="stg-section">
           <div class="stg-row">
             <div class="stg-row-label">
-              <span class="stg-label">Base URL</span>
-              <span class="stg-hint">All API calls are sent to this address</span>
+              <span class="stg-label" data-i18n="stg_base_url">Base URL</span>
+              <span class="stg-hint" data-i18n="stg_base_url_hint">All API calls are sent to this address</span>
             </div>
             <div class="stg-row-control">
               <input id="apiBaseInput" type="text" class="rpt-text-input" style="width:100%" />
@@ -115,15 +115,15 @@
           <div class="stg-divider"></div>
           <div class="stg-row">
             <div class="stg-row-label">
-              <span class="stg-label">Connection Status</span>
-              <span class="stg-hint">Live health check result</span>
+              <span class="stg-label" data-i18n="stg_conn_status">Connection Status</span>
+              <span class="stg-hint" data-i18n="stg_conn_status_hint">Live health check result</span>
             </div>
             <div class="stg-row-control">
               <div class="stg-health-display" id="healthDisplay">
                 <span class="health-dot" id="settingsHealthDot"></span>
                 <span id="settingsHealthLabel">Checking…</span>
               </div>
-              <button id="recheckBtn" class="btn btn--outline" style="height:34px;margin-top:var(--s2);width:100%">Re-check</button>
+              <button id="recheckBtn" class="btn btn--outline" style="height:34px;margin-top:var(--s2);width:100%" data-i18n="btn_recheck">Re-check</button>
             </div>
           </div>
         </div>
@@ -133,41 +133,41 @@
       <div class="panel">
         <div class="panel-header">
           <div class="panel-header-left">
-            <h2 class="panel-title">Display</h2>
-            <span class="panel-meta">Table and list preferences</span>
+            <h2 class="panel-title" data-i18n="stg_display_title">Display</h2>
+            <span class="panel-meta" data-i18n="stg_display_hint">Table and list preferences</span>
           </div>
         </div>
         <div class="stg-section">
           <div class="stg-row">
             <div class="stg-row-label">
-              <span class="stg-label">Default Row Limit</span>
-              <span class="stg-hint">Number of rows loaded on the ranking and dashboard pages</span>
+              <span class="stg-label" data-i18n="stg_row_limit_label">Default Row Limit</span>
+              <span class="stg-hint" data-i18n="stg_row_limit_hint">Number of rows loaded on the ranking and dashboard pages</span>
             </div>
             <div class="stg-row-control">
               <select id="defaultLimit" class="filter-select" style="width:100%;height:34px">
-                <option value="20">20 rows</option>
-                <option value="50" selected>50 rows</option>
-                <option value="100">100 rows</option>
-                <option value="200">200 rows</option>
+                <option value="20" data-i18n="stg_rows_20">20 rows</option>
+                <option value="50" selected data-i18n="stg_rows_50">50 rows</option>
+                <option value="100" data-i18n="stg_rows_100">100 rows</option>
+                <option value="200" data-i18n="stg_rows_200">200 rows</option>
               </select>
             </div>
           </div>
           <div class="stg-divider"></div>
           <div class="stg-row">
             <div class="stg-row-label">
-              <span class="stg-label">Default Market</span>
-              <span class="stg-hint">Pre-selected market filter when pages load</span>
+              <span class="stg-label" data-i18n="stg_market_label">Default Market</span>
+              <span class="stg-hint" data-i18n="stg_market_hint">Pre-selected market filter when pages load</span>
             </div>
             <div class="stg-row-control">
               <select id="defaultMarket" class="filter-select" style="width:100%;height:34px">
-                <option value="">All Markets</option>
+                <option value="" data-i18n="opt_all_markets">All Markets</option>
                 <option value="CN">A-Share (CN)</option>
                 <option value="TW">Taiwan (TW)</option>
               </select>
             </div>
           </div>
           <div class="stg-save-row">
-            <button id="saveDisplay" class="btn btn--primary" style="height:34px">Save Display Settings</button>
+            <button id="saveDisplay" class="btn btn--primary" style="height:34px" data-i18n="stg_save_display">Save Display Settings</button>
           </div>
         </div>
       </div>
@@ -176,18 +176,18 @@
       <div class="panel">
         <div class="panel-header">
           <div class="panel-header-left">
-            <h2 class="panel-title">Local Data</h2>
-            <span class="panel-meta">Browser storage management</span>
+            <h2 class="panel-title" data-i18n="stg_local_data_title">Local Data</h2>
+            <span class="panel-meta" data-i18n="stg_local_data_hint">Browser storage management</span>
           </div>
         </div>
         <div class="stg-section">
           <div class="stg-row">
             <div class="stg-row-label">
-              <span class="stg-label">Recently Viewed</span>
-              <span class="stg-hint" id="recentCount">Stored in localStorage</span>
+              <span class="stg-label" data-i18n="stg_recent_label">Recently Viewed</span>
+              <span class="stg-hint" id="recentCount" data-i18n="stg_recent_hint">Stored in localStorage</span>
             </div>
             <div class="stg-row-control">
-              <button id="clearRecentBtn" class="btn btn--outline" style="height:34px;width:100%">Clear History</button>
+              <button id="clearRecentBtn" class="btn btn--outline" style="height:34px;width:100%" data-i18n="stg_clear_history">Clear History</button>
             </div>
           </div>
         </div>
@@ -197,16 +197,16 @@
       <div class="panel">
         <div class="panel-header">
           <div class="panel-header-left">
-            <h2 class="panel-title">About</h2>
+            <h2 class="panel-title" data-i18n="stg_about_title">About</h2>
           </div>
         </div>
         <div class="stg-section stg-about">
-          <div class="stg-kv"><span class="stg-kv-key">Version</span><span class="stg-kv-val">FSM v0.1</span></div>
-          <div class="stg-kv"><span class="stg-kv-key">Markets</span><span class="stg-kv-val">CN A-Share · TW Stock Exchange</span></div>
-          <div class="stg-kv"><span class="stg-kv-key">Signal Rules</span><span class="stg-kv-val">F1 · F2 · F3 · F4 · G1 · G3</span></div>
-          <div class="stg-kv"><span class="stg-kv-key">CN Coverage</span><span class="stg-kv-val">5,502 companies</span></div>
-          <div class="stg-kv"><span class="stg-kv-key">TW Coverage</span><span class="stg-kv-val">1,081 companies</span></div>
-          <div class="stg-kv"><span class="stg-kv-key">Backend</span><span class="stg-kv-val">Flask · Python 3.x</span></div>
+          <div class="stg-kv"><span class="stg-kv-key" data-i18n="stg_about_version">Version</span><span class="stg-kv-val">FSM v0.1</span></div>
+          <div class="stg-kv"><span class="stg-kv-key" data-i18n="stg_about_markets">Markets</span><span class="stg-kv-val" data-i18n="stg_about_markets_val">CN A-Share · TW Stock Exchange</span></div>
+          <div class="stg-kv"><span class="stg-kv-key" data-i18n="stg_about_rules">Signal Rules</span><span class="stg-kv-val">F1 · F2 · F3 · F4 · G1 · G3</span></div>
+          <div class="stg-kv"><span class="stg-kv-key" data-i18n="stg_about_cn_cov">CN Coverage</span><span class="stg-kv-val" data-i18n="stg_about_cn_cov_val">5,502 companies</span></div>
+          <div class="stg-kv"><span class="stg-kv-key" data-i18n="stg_about_tw_cov">TW Coverage</span><span class="stg-kv-val" data-i18n="stg_about_tw_cov_val">1,081 companies</span></div>
+          <div class="stg-kv"><span class="stg-kv-key" data-i18n="stg_about_backend">Backend</span><span class="stg-kv-val">Flask · Python 3.x</span></div>
         </div>
       </div>
 
@@ -215,7 +215,7 @@
     <footer class="sys-footer">
       <span>FSM v0.1</span>
       <span class="dot">·</span>
-      <span>CN + TW Markets</span>
+      <span data-i18n="footer_markets">CN + TW Markets</span>
     </footer>
 
   </div>
