@@ -164,13 +164,98 @@ def compare_companies():
     return jsonify({"results": results}), 200
 
 
+def _build_turnover_context(market: str, code: str) -> dict:
+    """
+    Pull last 10 days of turnover history and compress into summary features
+    for the report prompt. Returns empty dict if no data available.
+    """
+    try:
+        rows = turnover_history_store.get_history(market, code, days=10)
+        if not rows:
+            return {}
+        rates = [r["turnover_rate"] for r in rows if r.get("turnover_rate") is not None]
+        if not rates:
+            return {}
+
+        avg_10d = round(sum(rates) / len(rates), 2)
+        avg_5d  = round(sum(rates[-5:]) / len(rates[-5:]), 2) if len(rates) >= 5 else avg_10d
+        latest  = rates[-1]
+
+        # Trend: compare last 3 days vs first half
+        if len(rates) >= 6:
+            early = sum(rates[:len(rates)//2]) / (len(rates)//2)
+            late  = sum(rates[len(rates)//2:]) / (len(rates) - len(rates)//2)
+            if late > early * 1.3:
+                trend = "accelerating"
+            elif late < early * 0.7:
+                trend = "cooling"
+            else:
+                trend = "stable"
+        else:
+            trend = "insufficient_data"
+
+        elevated_days = sum(1 for r in rates if r > avg_10d * 1.5)
+        latest_vs_avg = round(latest / avg_10d, 2) if avg_10d else None
+
+        return {
+            "days_available":   len(rates),
+            "avg_turnover_10d": avg_10d,
+            "avg_turnover_5d":  avg_5d,
+            "latest_turnover":  latest,
+            "trend":            trend,            # accelerating / stable / cooling
+            "elevated_days":    elevated_days,    # days > 1.5x avg
+            "latest_vs_avg":    latest_vs_avg,    # e.g. 2.1 means today is 2.1x the 10d avg
+        }
+    except Exception as exc:
+        log.warning("Turnover context build failed for %s:%s — %s", market, code, exc)
+        return {}
+
+
+def _build_candidate_context(market: str, code: str) -> dict:
+    """
+    Check if the stock is currently in the candidates pool and return realtime metrics.
+    """
+    if market.upper() != "CN":
+        return {}
+    try:
+        from backend.screening.screening_service import get_candidates
+        pool = get_candidates(force_refresh=False)
+        candidates = pool.get("candidates", [])
+        match = next((c for c in candidates if c.get("code") == code), None)
+        if not match:
+            return {"in_candidates_pool": False}
+        signal_cache = _load_signals_cache("CN")
+        fc = _build_financial_check(signal_cache.get(code))
+        return {
+            "in_candidates_pool": True,
+            "current_price":      match.get("current_price"),
+            "turnover_today":     match.get("turnover"),
+            "pct_change_today":   match.get("pct_change"),
+            "circ_mv_yi":         match.get("circ_mv"),
+            "candidate_reason":   match.get("candidate_reason"),
+            "financial_check":    fc.get("status"),
+        }
+    except Exception as exc:
+        log.warning("Candidate context build failed for %s:%s — %s", market, code, exc)
+        return {}
+
+
 @app.route("/api/report/<market>/<code>", methods=["POST"])
 def generate_report(market: str, code: str):
     snapshot = store.get_company_snapshot(market, code)
     if not snapshot:
         return jsonify({"error": "Company snapshot not found"}), 404
     signals = rule_engine.evaluate(snapshot)
-    return jsonify(generate_report_payload(snapshot, signals)), 200
+
+    # Enrich with realtime context
+    turnover_ctx  = _build_turnover_context(market, code)
+    candidate_ctx = _build_candidate_context(market, code)
+
+    return jsonify(generate_report_payload(
+        snapshot, signals,
+        turnover_context=turnover_ctx,
+        candidate_context=candidate_ctx,
+    )), 200
 
 
 @app.route("/api/search")
