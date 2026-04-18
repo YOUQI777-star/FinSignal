@@ -7,7 +7,7 @@ import sqlite3, secrets, time
 from pathlib import Path
 from werkzeug.security import generate_password_hash, check_password_hash
 
-DB_PATH = Path(__file__).parent.parent.parent / "data" / "users.db"
+DB_PATH = Path(__file__).parent.parent.parent / "userdata" / "users.db"
 
 def _conn():
     con = sqlite3.connect(str(DB_PATH))
