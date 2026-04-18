@@ -7,11 +7,15 @@
 set -e
 cd "$(dirname "$0")"
 
-echo "=== [1/2] Enriching TW OCF (FinMind, up to 100 companies) ==="
+echo "=== [1/3] Capturing today's CN turnover snapshot ==="
+.venv/bin/python -m backend.scripts.capture_turnover_snapshot --force-refresh
+
+echo ""
+echo "=== [2/3] Enriching TW OCF (FinMind, up to 100 companies) ==="
 .venv/bin/python -m backend.scripts.enrich_tw_ocf --limit 100 --delay 1.5
 
 echo ""
-echo "=== [2/2] Regenerating signals cache ==="
+echo "=== [3/3] Regenerating signals cache ==="
 .venv/bin/python -m backend.scripts.run_signals --market TW
 .venv/bin/python -m backend.scripts.run_signals --market CN
 

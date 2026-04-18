@@ -99,7 +99,7 @@ C_G/
 │   ├── search.html + search.js     # 公司搜索页
 │   ├── candidates.html + candidates.js  # 实时换手候选池（AKShare 实时行情 + 财务状态联动 + 分页 + turnover_max）
 │   └── settings.html + settings.js # 系统设置
-├── refresh.sh                      # 每日一键：补 OCF + 重算信号缓存
+├── refresh.sh                      # 每日一键：记录当天换手率快照 + 补 OCF + 重算信号缓存
 ├── .gitignore                      # 排除 data/*.json、.venv、DB 等大文件
 └── PROJECT_HANDOFF.md              # 本文档
 ```
@@ -400,15 +400,16 @@ open http://localhost:8080/index.html
 ## 十、每日维护命令
 
 ```bash
-# 每天运行一次，补充台股 OCF 并重算信号缓存
+# 每天运行一次：记录当天换手率快照、补充台股 OCF、重算信号缓存
 cd "/Users/wangyouqi/Documents/DesktopOrganizer/Web Development/C_G"
 ./refresh.sh
 ```
 
 脚本内容：
-1. `enrich_tw_ocf.py --limit 100 --delay 1.5`（FinMind 配额内最大化）
-2. `run_signals.py --market TW`（重算 TW 信号缓存）
-3. `run_signals.py --market CN`（重算 CN 信号缓存）
+1. `capture_turnover_snapshot.py --force-refresh`（记录当天 CN 全市场换手率到 `data/turnover_history.db`）
+2. `enrich_tw_ocf.py --limit 100 --delay 1.5`（FinMind 配额内最大化）
+3. `run_signals.py --market TW`（重算 TW 信号缓存）
+4. `run_signals.py --market CN`（重算 CN 信号缓存）
 
 ---
 
