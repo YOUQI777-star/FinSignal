@@ -114,16 +114,11 @@
           <button id="resetBtn" class="btn btn--outline" style="height:30px;font-size:12px" data-i18n="btn_reset">重置</button>
         </div>
         <div class="candidates-filters" id="filterBar">
-          <label class="filter-field">
-            <span class="filter-label" data-i18n="cand_turnover_label">今日换手 &gt;</span>
+          <div class="filter-field filter-field--range">
             <input id="fTurnoverMin" type="number" class="filter-input" value="2" min="0" max="100" step="0.5" />
-            <span class="filter-unit" data-i18n="cand_unit_pct">%</span>
-          </label>
-          <label class="filter-field">
-            <span class="filter-label" data-i18n="cand_turnover_max_label">今日换手 &lt;</span>
+            <span class="filter-range-label" data-i18n="cand_turnover_range_label">&lt; 今日换手% &lt;</span>
             <input id="fTurnoverMax" type="number" class="filter-input" value="" min="0" max="100" step="0.5" placeholder="∞" />
-            <span class="filter-unit" data-i18n="cand_unit_pct">%</span>
-          </label>
+          </div>
           <label class="filter-field">
             <span class="filter-label" data-i18n="cand_price_label">现价 &lt;</span>
             <input id="fPriceMax" type="number" class="filter-input" value="20" min="0" step="1" />

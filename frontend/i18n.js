@@ -184,8 +184,7 @@ const I18N = {
     // Candidates page
     cand_filter_title:   'Filters',
     cand_table_title:    'Candidate Stocks',
-    cand_turnover_label: 'Today Turnover >',
-    cand_turnover_max_label: 'Today Turnover <',
+    cand_turnover_range_label: '< Today Turnover% <',
     cand_price_label:    'Price <',
     cand_circmv_label:   'Circ. MktCap <',
     cand_circmv_hint:    'Circ. MktCap = tradable listed shares only',
@@ -405,8 +404,7 @@ const I18N = {
     // Candidates page
     cand_filter_title:   '筛选条件',
     cand_table_title:    '候选股票',
-    cand_turnover_label: '今日换手 >',
-    cand_turnover_max_label: '今日换手 <',
+    cand_turnover_range_label: '< 今日换手% <',
     cand_price_label:    '现价 <',
     cand_circmv_label:   '流通市值 <',
     cand_circmv_hint:    '流通市值 = 可上市流通部分对应市值',

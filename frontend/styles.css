@@ -1464,6 +1464,19 @@ mark.srch-hl {
   color: var(--text-secondary, #6b7280);
 }
 
+.filter-field--range {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.filter-range-label {
+  font-size: var(--f-sm);
+  color: var(--text-secondary, #6b7280);
+  user-select: none;
+}
+
 .filter-field--check {
   gap: 6px;
   cursor: pointer;
