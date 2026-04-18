@@ -43,7 +43,7 @@ C_G/
 │   ├── app.py                      # Flask 主入口，所有 API 路由
 │   ├── config.py                   # 环境变量、路径配置
 │   ├── requirements.txt            # Python 依赖
-│   ├── gunicorn.conf.py            # Gunicorn 生产配置（未使用）
+│   ├── gunicorn.conf.py            # Gunicorn 生产配置（timeout=300，已启用）
 │   ├── ai/
 │   │   ├── report_generator.py     # 报告生成（当前是占位规则摘要，未接 LLM）
 │   │   └── prompt_template.py      # LLM prompt 模板（未激活）
@@ -67,6 +67,11 @@ C_G/
 │   │   └── build_master.py         # 构建 company_master.db（SQLite）
 │   ├── graph/
 │   │   └── neo4j_client.py         # Neo4j 占位（未接入，返回空节点）
+│   ├── screening/
+│   │   ├── __init__.py
+│   │   ├── market_loader.py        # AKShare 实时行情拉取 + 交易日历（get_last_trading_date）
+│   │   ├── candidate_rules.py      # 筛选规则：换手率/现价/流通市值/涨幅/ST
+│   │   └── screening_service.py    # 实时候选池主逻辑：30 分钟内存缓存 + thread-safe
 │   └── scripts/
 │       ├── bulk_enrich_cn.py       # A 股批量财务数据补充（EastMoney bulk）
 │       ├── enrich_tw_ocf.py        # 台股 OCF 字段补充（FinMind，有配额限制）
@@ -81,6 +86,7 @@ C_G/
 │       └── summary.json            # 汇总统计
 ├── frontend/
 │   ├── styles.css                  # 全局设计系统（design tokens + 所有公共组件）
+│   ├── i18n.js                     # CN/EN 双语切换系统（I18N 字典 + applyLang() + getLang()）
 │   ├── api.js                      # 所有 API 调用封装 + MOCK_DATA fallback
 │   ├── index.html + app.js         # Dashboard 首页
 │   ├── company.html + company.js + company.css  # 单公司详情页
@@ -88,6 +94,7 @@ C_G/
 │   ├── compare.html + compare.js   # 多公司对比
 │   ├── reports.html + reports.js   # 报告生成页
 │   ├── search.html + search.js     # 公司搜索页
+│   ├── candidates.html + candidates.js  # 实时换手候选池（AKShare 实时行情）
 │   └── settings.html + settings.js # 系统设置
 ├── refresh.sh                      # 每日一键：补 OCF + 重算信号缓存
 ├── .gitignore                      # 排除 data/*.json、.venv、DB 等大文件
@@ -210,6 +217,20 @@ POST /api/report/{market}/{code}
 GET  /api/graph/{market}/{code}
      → {"nodes": [], "edges": [], "message": "..."}
      Neo4j 占位，返回空
+
+GET  /api/candidates?turnover_min=2&price_max=20&circ_mv_max=80&pct_max=9&exclude_st=1&limit=300&refresh=0
+     → {
+         "total": N,
+         "results": [...],
+         "generated_at": "2026-04-18T00:34:09Z",   # AKShare 拉取时间（UTC）
+         "trading_date": "2026-04-17",              # 对应的上一个 A 股交易日
+         "source": "realtime",
+         "thresholds": {...}
+       }
+     实时拉取 AKShare stock_zh_a_spot_em()，30 分钟内存缓存，首次约 60-150s
+     非交易日（周末/节假日）返回最后一个交易日的收盘快照（East Money 接口不清零）
+     ?refresh=1 强制绕过缓存重新拉取
+     启动时 prewarm 线程自动预热缓存，用户请求直接命中缓存
 ```
 
 ---
@@ -237,7 +258,42 @@ GET  /api/graph/{market}/{code}
 | 多公司对比 | `compare.html` + `compare.js` | Summary 表 + Rule Matrix（行=规则，列=公司）|
 | 报告 | `reports.html` + `reports.js` | 输入公司 → POST 生成报告 → 展示文本 + Copy |
 | 搜索 | `search.html` + `search.js` | 全文搜索，带搜索词高亮、市场 tab 过滤 |
+| 候选池 | `candidates.html` + `candidates.js` | 实时换手候选池，筛选 + 展示 AKShare 实时行情 |
 | 设置 | `settings.html` + `settings.js` | API Base URL、默认筛选参数、清除历史 |
+
+### i18n 双语切换系统
+
+全站支持中文 / 英文实时切换，语言偏好持久化到 `localStorage('fsm_lang')`，默认英文。
+
+**核心文件：** `frontend/i18n.js`
+- `I18N` 对象：`{ en: {...}, zh: {...} }`，包含所有页面的翻译 key
+- `applyLang(lang)`：遍历页面所有 `[data-i18n]` 和 `[data-i18n-placeholder]` 元素，替换文本；更新切换按钮标签
+- `getLang()`：读 localStorage，默认 `'en'`
+- 页面加载时自动 `applyLang(getLang())`，切换按钮 `#langToggleBtn` 在 sidebar 底部
+
+**动态渲染的双语：** 各 JS 文件顶部定义 `const t = (zh, en) => window._currentLang === 'zh' ? zh : en`，用于 JS 动态生成的 HTML 片段
+
+**注意事项：**
+- `showToast()` 函数内部 `const el = document.createElement('div')` — 变量命名用 `el` 而非 `t`，避免与全局 `t()` helper 冲突
+- 所有新功能默认做双语，HTML 用 `data-i18n`，JS 用 `t()` helper
+
+### 候选池（Candidates）关键设计
+
+候选池是唯一使用**实时行情数据**的功能，其余页面全部基于预计算的静态信号缓存。
+
+**数据源：** `ak.stock_zh_a_spot_em()`（东方财富实时行情，~5800 只 A 股）
+
+**关键行为：**
+- 首次调用约 60-150s（AKShare 分页拉取 58×100 条）；30 分钟内缓存命中直接返回
+- 非交易日（周末/节假日）返回最后一个交易日的收盘快照，East Money 接口不清零
+- `trading_date` 字段：调用 `ak.tool_trade_date_hist_sina()` 获取完整 A 股交易日历（24h 缓存），返回最近的实际交易日；fallback 为往前跳过周末（不感知节假日）
+- **Gunicorn timeout 必须 ≥ 300s**（见 `gunicorn.conf.py`），否则首次拉取会超时导致 worker 无限重启
+- **启动预热线程：** `app.py` 在模块导入时立即启动 `threading.Thread(target=_prewarm_candidates)`，确保用户首次访问命中缓存
+
+**前端时间戳（候选池面板右上角）：**
+1. 对应交易日：`YYYY/MM/DD（周X）` / `YYYY/MM/DD (Weekday)` — 来自 `trading_date` 字段
+2. AKShare 抓取：`generated_at` 转北京时间，缓存有效期内不变
+3. 本次请求：客户端当前时间，每次请求刷新
 
 ### api.js 关键设计
 - `API_BASE` 读 localStorage `fsm_api_base`，默认 `https://tender-fascination-production.up.railway.app`
@@ -389,6 +445,10 @@ expect -c '
 
 6. **company_master.db 已在 Git 仓库**：712KB，已提交。Railway 上搜索功能正常。
 
+7. ~~**候选池页面无限 Loading**~~ ✅ **已修复**：根因是 AKShare `stock_zh_a_spot_em()` 分页拉取 58×~1s = ~145s，超过原 Gunicorn 120s timeout 导致 worker 无限重启。已将 `gunicorn.conf.py` 的 `timeout` 改为 300，并在 `app.py` 启动时加入后台预热线程。
+
+8. **候选池 `trading_date` fallback 不感知节假日**：`get_last_trading_date()` 优先使用 AKShare 交易日历（准确），但若接口失败，fallback 逻辑只跳过周六/周日，不处理法定节假日（如五一、国庆）。节假日期间 fallback 可能显示错误的"上一交易日"。优先级低，因 AKShare 日历接口通常不会失败。
+
 ---
 
 ## 十三、下一步优先级建议
@@ -396,8 +456,10 @@ expect -c '
 | 优先级 | 任务 |
 |--------|------|
 | P0 | 每天跑 `./refresh.sh` 补台股 OCF，约 8 天清零（当前还剩 790 家）|
-| ✅ 已完成 | 接入 DeepSeek LLM，report_generator.py 生成真实中文风险报告，含降级fallback |
+| ✅ 已完成 | 接入 DeepSeek LLM，report_generator.py 生成真实中文风险报告，含降级 fallback |
 | ✅ 已完成 | `data/cn/`（48MB）和 `data/tw/`（5.3MB）加入 Git，Railway 全端点可用 |
+| ✅ 已完成 | 全站 CN/EN 双语切换（i18n.js + 8 个 HTML 页面 data-i18n + JS t() helper）|
+| ✅ 已完成 | 候选池实时换手功能（AKShare 实时行情 + 30min 缓存 + 预热线程 + trading_date）|
 | P2 | 补充 governance 数据（pledge_ratio 可从 AKShare 获取，CN 市场） |
 | P2 | 公司快照定期更新机制（目前是手动跑脚本，可加 cron 或 Railway Cron Service） |
 | P3 | 接入 Neo4j 图谱（股权穿透、关联方分析） |
