@@ -225,6 +225,19 @@ const I18N = {
     company_report_hint:        'Click "Generate Report" to create an AI risk analysis for this company.',
     company_turnover_history:   'Turnover History',
     company_turnover_history_hint: 'View turnover-rate changes for a single stock over time.',
+
+    // Auth
+    auth_login:          'Login',
+    auth_register:       'Register',
+    auth_login_register: 'Login / Register',
+    auth_logout:         'Logout',
+    auth_email:          'Email',
+    auth_password:       'Password',
+    auth_favorites:      'Saved Stocks',
+    auth_no_favorites:   'No favorites yet',
+    auth_add_favorite:   'Click the favorite button on any company page',
+    auth_save:           'Save',
+    auth_saved:          'Saved',
   },
 
   zh: {
@@ -445,6 +458,19 @@ const I18N = {
     company_report_hint:        '点击「生成报告」为该公司创建 AI 风险分析。',
     company_turnover_history:   '历史换手率',
     company_turnover_history_hint: '查看单只股票最近一段时间的换手率变化。',
+
+    // Auth
+    auth_login:          '登录',
+    auth_register:       '注册',
+    auth_login_register: '登录 / 注册',
+    auth_logout:         '退出登录',
+    auth_email:          '邮箱',
+    auth_password:       '密码',
+    auth_favorites:      '收藏的股票',
+    auth_no_favorites:   '还没有收藏',
+    auth_add_favorite:   '在公司详情页点击收藏按钮',
+    auth_save:           '收藏',
+    auth_saved:          '已收藏',
   },
 };
 

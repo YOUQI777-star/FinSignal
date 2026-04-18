@@ -113,6 +113,12 @@
         <span class="loading-tag" id="loadingTag" style="display:none">
           <span class="spinner"></span>Loading
         </span>
+        <button id="favoriteBtn" class="btn btn--outline fav-btn" style="height:34px" title="收藏">
+          <svg id="favIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          <span id="favBtnLabel">收藏</span>
+        </button>
         <button id="refreshBtn" class="btn-refresh">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="23 4 23 10 17 10"></polyline>
@@ -273,6 +279,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.29.2/cytoscape.min.js"></script>
 <script src="i18n.js"></script>
+<script src="auth.js"></script>
 <script src="api.js"></script>
 <script src="company.js"></script>
 </body>

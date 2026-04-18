@@ -11,6 +11,10 @@ from flask_cors import CORS
 log = logging.getLogger(__name__)
 
 from backend.ai.report_generator import generate_report_payload
+from backend.auth.user_store import (
+    init_db, register_user, login_user, get_user_by_token,
+    logout_token, get_favorites, add_favorite, remove_favorite
+)
 from backend.config import APP_DEBUG, APP_HOST, APP_PORT, DATA_DIR, DEFAULT_CORS_ORIGINS
 from backend.data_access.company_repository import CompanyRepository
 from backend.data_access.local_store import LocalDataStore
@@ -24,6 +28,14 @@ _SIGNALS_DIR = DATA_DIR / "signals"
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": DEFAULT_CORS_ORIGINS}})
+
+init_db()
+
+
+def _get_current_user():
+    auth = request.headers.get("Authorization", "")
+    token = auth.removeprefix("Bearer ").strip()
+    return get_user_by_token(token) if token else None
 
 store = LocalDataStore()
 repository = CompanyRepository(local_store=store)
@@ -343,6 +355,83 @@ def get_turnover_history(market: str, code: str):
         "total": len(rows),
         "results": rows,
     }), 200
+
+
+@app.route("/api/auth/register", methods=["POST"])
+def auth_register():
+    body = request.get_json(silent=True) or {}
+    email = (body.get("email") or "").strip()
+    password = body.get("password") or ""
+    if not email or not password:
+        return jsonify({"error": "Email and password required"}), 400
+    if len(password) < 6:
+        return jsonify({"error": "Password must be at least 6 characters"}), 400
+    try:
+        user = register_user(email, password)
+        token = login_user(email, password)
+        return jsonify({"token": token, "user": {"email": user["email"]}}), 201
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 409
+
+
+@app.route("/api/auth/login", methods=["POST"])
+def auth_login():
+    body = request.get_json(silent=True) or {}
+    email = (body.get("email") or "").strip()
+    password = body.get("password") or ""
+    token = login_user(email, password)
+    if not token:
+        return jsonify({"error": "Invalid email or password"}), 401
+    return jsonify({"token": token, "user": {"email": email}}), 200
+
+
+@app.route("/api/auth/logout", methods=["POST"])
+def auth_logout():
+    auth = request.headers.get("Authorization", "")
+    token = auth.removeprefix("Bearer ").strip()
+    if token:
+        logout_token(token)
+    return jsonify({"ok": True}), 200
+
+
+@app.route("/api/me")
+def me():
+    user = _get_current_user()
+    if not user:
+        return jsonify({"error": "Unauthorized"}), 401
+    return jsonify({"email": user["email"]})
+
+
+@app.route("/api/me/favorites")
+def favorites_list():
+    user = _get_current_user()
+    if not user:
+        return jsonify({"error": "Unauthorized"}), 401
+    return jsonify({"results": get_favorites(user["id"])})
+
+
+@app.route("/api/me/favorites", methods=["POST"])
+def favorites_add():
+    user = _get_current_user()
+    if not user:
+        return jsonify({"error": "Unauthorized"}), 401
+    body = request.get_json(silent=True) or {}
+    market = body.get("market", "").upper()
+    code = body.get("code", "")
+    name = body.get("name", "")
+    if not market or not code:
+        return jsonify({"error": "market and code required"}), 400
+    add_favorite(user["id"], market, code, name)
+    return jsonify({"ok": True}), 201
+
+
+@app.route("/api/me/favorites/<market>/<code>", methods=["DELETE"])
+def favorites_remove(market, code):
+    user = _get_current_user()
+    if not user:
+        return jsonify({"error": "Unauthorized"}), 401
+    remove_favorite(user["id"], market, code)
+    return jsonify({"ok": True}), 200
 
 
 def _prewarm_candidates() -> None:

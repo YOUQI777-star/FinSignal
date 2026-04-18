@@ -275,6 +275,7 @@ function renderPage(data) {
   renderSignalSection('financialSignals',  'finMeta',  data.financial_signals  || []);
   renderSignalSection('governanceSignals', 'govMeta',  data.governance_signals || []);
   loadGraph(data.market, data.code);
+  initFavoriteBtn();
 }
 
 async function loadCandidateContext() {
@@ -1023,4 +1024,53 @@ function esc(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+/* ============================================================
+   FAVORITE BUTTON
+   ============================================================ */
+async function initFavoriteBtn() {
+  const btn = document.getElementById('favoriteBtn');
+  if (!btn) return;
+
+  const market = state.market;
+  const code = state.code;
+
+  // Remove any previous listeners by replacing the element
+  const fresh = btn.cloneNode(true);
+  btn.parentNode.replaceChild(fresh, btn);
+  const favBtn = document.getElementById('favoriteBtn');
+
+  if (!window.AUTH_UI?.isLoggedIn()) {
+    favBtn.addEventListener('click', () => window.AUTH_UI?.openAuthModal());
+    return;
+  }
+
+  // Check if already favorited
+  try {
+    const data = await AUTH.getFavorites();
+    const isFav = (data.results || []).some(f => f.market === market && f.code === code);
+    setFavBtn(isFav);
+  } catch {}
+
+  favBtn.addEventListener('click', async () => {
+    const isActive = favBtn.classList.contains('fav-btn--active');
+    if (isActive) {
+      await AUTH.removeFavorite(market, code);
+      setFavBtn(false);
+    } else {
+      const name = document.getElementById('companyName')?.textContent || code;
+      await AUTH.addFavorite(market, code, name);
+      setFavBtn(true);
+    }
+  });
+}
+
+function setFavBtn(active) {
+  const btn = document.getElementById('favoriteBtn');
+  const label = document.getElementById('favBtnLabel');
+  if (!btn || !label) return;
+  const zh = window._currentLang === 'zh';
+  btn.classList.toggle('fav-btn--active', active);
+  label.textContent = active ? (zh ? '已收藏' : 'Saved') : (zh ? '收藏' : 'Save');
 }
