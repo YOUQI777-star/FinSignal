@@ -270,13 +270,13 @@ GET  /api/turnover-history/CN/{code}?days=10
 
 | 页面 | 文件 | 功能 |
 |------|------|------|
-| 首页 | `index.html` + `app.js` | 产品门户：首页卡片、最近浏览、候选池摘要、规则分布、快捷入口 |
+| 首页 | `index.html` + `app.js` | 产品门户：4 个 `scard` 摘要卡（候选池数量 / 高风险公司数 / A股覆盖 / 规则数）+ 候选池实时预览（带 `financial_check` badge）+ 最近浏览 + 规则分布进度条 + 深入分析快捷入口 |
 | 公司详情 | `company.html` + `company.js` + `company.css` | 单公司完整信号分析，含 sparkline 折线图；从候选池进入时显示 Candidate Context；新增历史换手率模块 |
 | 全量排行 | `ranking.html` + `ranking.js` | 完整排行表格，支持筛选、前端搜索、Export CSV |
 | 多公司对比 | `compare.html` + `compare.js` | Summary 表 + Rule Matrix（行=规则，列=公司）|
 | 报告 | `reports.html` + `reports.js` | 输入公司 → POST 生成报告 → 展示文本 + Copy |
 | 搜索 | `search.html` + `search.js` | 全文搜索，带搜索词高亮、市场 tab 过滤 |
-| 候选池 | `candidates.html` + `candidates.js` | 实时换手候选池，新增 `turnover_max` 上限筛选与真分页；展示 AKShare 实时行情并叠加财务状态 / 触发信号 |
+| 候选池 | `candidates.html` + `candidates.js` | 实时换手候选池，支持 `turnover_min` + `turnover_max` 双端筛选与真分页（默认 100 条/页）；表格含财务状态（`financial_check`）和触发信号列 |
 | 设置 | `settings.html` + `settings.js` | API Base URL、默认筛选参数、清除历史 |
 
 ### i18n 双语切换系统
@@ -294,6 +294,141 @@ GET  /api/turnover-history/CN/{code}?days=10
 **注意事项：**
 - `showToast()` 函数内部 `const el = document.createElement('div')` — 变量命名用 `el` 而非 `t`，避免与全局 `t()` helper 冲突
 - 所有新功能默认做双语，HTML 用 `data-i18n`，JS 用 `t()` helper
+
+### 侧边栏导航结构
+
+所有 9 个 HTML 页面统一使用以下四级导航结构（已全部更新）：
+
+```
+Home（首页，房子图标）
+─ Discover（发现）
+  ├── Candidates（候选池）
+  └── Signal Ranking（信号排行）
+─ Deep Dive（深入分析）
+  ├── Company Search（公司搜索）
+  ├── Compare（多股对比）
+  └── AI Report（AI 报告）
+─ System（系统）
+  └── Settings（设置）
+```
+
+**i18n keys：** `nav_home`, `nav_discover`, `nav_deep_dive`, `nav_signal_ranking`, `nav_company_search`, `nav_compare`, `nav_reports`, `nav_candidates`, `nav_system`, `nav_settings`。旧 key `nav_monitor`, `nav_analysis` 已移除。
+
+---
+
+### 首页产品门户（index.html + app.js）关键设计
+
+首页 `DOMContentLoaded` 并发调用两个接口：
+- `API.getTop({ limit: 200 })` — 获取信号排行数据，用于规则分布进度条 + 高风险公司总数
+- `API.getCandidates({ limit: 5 })` — 获取候选池前 5 条预览，附带 `financial_check` 数据
+
+**布局结构：**
+1. **`summary-row`**：4 个摘要卡（`scard`）— 候选池数量（可点击跳转）、高风险公司数（可点击跳转）、A股覆盖 5502 家、覆盖规则 6 条
+2. **`content-grid`**（两列）：
+   - 左侧主面板：最近浏览（`recentList`）+ 候选池摘要预览（`candidatePreview`，显示财务状态 badge + 触发信号）
+   - 右侧侧栏：深入分析快捷按钮（3 个跳转链接）+ 规则分布进度条（按触发数量排序的横向 bar chart）
+
+**接口容错：** 两个接口各自独立处理异常（`Promise.allSettled`），任一失败只 toast 提示，不影响另一个数据展示。
+
+---
+
+### 用户认证系统（Auth）
+
+**后端：** `backend/auth/user_store.py` — SQLite 实现，DB 写在 Railway Volume `/app/userdata/users.db`
+
+数据表：
+- `users`：id, email（唯一，大小写不敏感）, password_hash（werkzeug bcrypt）, created_at
+- `user_sessions`：token（hex 64位）, user_id, expires_at（30天）
+- `favorites`：user_id, market, code, name, added_at（UNIQUE(user_id, market, code)）
+
+API 端点（均以 `Authorization: Bearer <token>` 鉴权）：
+```
+POST /api/auth/register   → { token, user: { email } }   注册（邮箱不验证）
+POST /api/auth/login      → { token, user: { email } }   登录
+POST /api/auth/logout     → { ok: true }                 删除 session token
+GET  /api/me              → { email }                    当前用户
+GET  /api/me/favorites    → { results: [...] }           收藏列表
+POST /api/me/favorites    → { ok: true }                 添加收藏
+DELETE /api/me/favorites/{market}/{code} → { ok: true }  删除收藏
+```
+
+**前端：** `frontend/auth.js` — 全站注入，所有 9 个 HTML 页面加载
+- `AUTH` 模块：token/user 存 localStorage（`fsm_auth_token` / `fsm_auth_user`）
+- 右上角 `position: fixed` 头像按钮（不占 topbar 布局）
+- 未登录：显示"登录 / 注册"按钮 → 弹出 Modal（Tab 切换登录/注册）
+- 已登录：显示蓝色头像圆圈（邮箱首字母）→ 点击从右侧滑出个人面板
+- 个人面板：显示邮箱 + 收藏股票列表（可删除）+ 退出登录
+- `window.AUTH_UI`：公共接口，供 company.js 调用收藏功能
+
+**company.html** topbar 新增收藏心形按钮：
+- 未登录点击 → 弹出登录框
+- 已登录点击 → 收藏/取消，按钮变红色实心 + "已收藏"
+
+**注意：** `data/users.db` 已加入 `.gitignore`，用户数据不入 Git。
+
+---
+
+### AI 报告生成（report_generator.py）关键设计
+
+**架构：两阶段推理 → 一阶段输出**
+
+#### Phase 1 — 结构化推理（JSON mode）
+
+强制 AI 输出 JSON 判断对象（`response_format: json_object`）：
+```json
+{
+  "stock_situation_type": "财务偏弱+盘面高度活跃",
+  "financial_risk_level": "high | medium | low | unknown",
+  "market_activity_level": "high | medium | low | none",
+  "turnover_pattern": "spike_only | multi_day_elevated | accelerating | cooling | no_data",
+  "evidence_alignment": "aligned | conflicting | neutral",
+  "main_tension": "财务现金流持续承压，但市场资金持续关注",
+  "watch_points": ["观察点1", "观察点2"],
+  "report_tone": "cautious | neutral | constructive"
+}
+```
+
+#### Phase 2 — 报告写作
+
+拿 Phase 1 的判断 + 原始数据，写三段 Markdown：
+- `## 当前状态定位` — 一句话定位 + 财务风险等级 + 市场活跃度
+- `## 多源证据整合` — 各层证据是共振还是冲突
+- `## 核心矛盾与观察要点` — 主矛盾一句话 + 2-3个具体观察点
+
+**每个判断句末强制标注数据来源**：`（来源：规则引擎）` / `（来源：候选池实时）` / `（来源：换手历史）` / `（来源：财务数据）`
+
+#### 生成前的上下文预取（app.py）
+
+`generate_report` 路由调用前先并行构建：
+
+1. **候选池上下文** `_build_candidate_context(market, code)`：
+   - 查当前内存缓存，判断该股是否在候选池
+   - 返回：现价、今日换手率、今日涨幅、流通市值、候选原因、financial_check 等级
+
+2. **换手趋势摘要** `_build_turnover_context(market, code)`：
+   - 读 `turnover_history.db` 最近 10 天数据
+   - 压缩为特征字段：`avg_10d / avg_5d / latest / trend（accelerating/stable/cooling）/ elevated_days / latest_vs_avg`
+   - 不把原始日期序列全塞进 prompt，只传特征
+
+#### 降级机制
+
+LLM 不可用时自动降级为规则摘要（`_fallback_report()`），`source` 字段标注降级原因。
+
+---
+
+### 候选池财务状态叠加（financial_check）
+
+**后端：** `backend/app.py` 中 `_build_financial_check(signal_result)` 函数：
+- 查询信号缓存（`_load_signals_cache("CN")`），找到对应公司的信号结果
+- 统计已触发（`triggered=True`）的信号 ID 列表
+- 映射规则：`triggered_count ≥ 2` → `high_risk`；`= 1` → `warning`；`= 0` → `pass`；无数据 → `no_data`
+- 每条候选结果附带 `financial_check: { status, triggered_signals, triggered_count }`
+
+**前端展示位置：**
+1. **首页候选摘要**（`app.js`）：每条预览显示 `financial-check-badge`（颜色：`badge-high-risk` 红 / `badge-warning` 橙 / `badge-pass` 绿 / `badge-no-data` 灰）
+2. **候选池表格**（`candidates.js`）：表格含"财务状态"和"触发信号"两列
+
+---
 
 ### 候选池（Candidates）关键设计
 
@@ -456,15 +591,16 @@ expect -c '
 - `data/signals/cn_signals.json`（21MB，A 股信号缓存）
 - `data/signals/tw_signals.json`（3.3MB，台股信号缓存）
 - `backend/master/company_master.db`（712KB，公司搜索）
-
-**Railway 已包含的数据文件（在 Git 中）：**
-- `data/signals/cn_signals.json`（21MB，A 股信号缓存）
-- `data/signals/tw_signals.json`（3.3MB，台股信号缓存）
-- `backend/master/company_master.db`（712KB，公司搜索）
 - `data/cn/*.json`（48MB，A 股 5502 家个股快照）✅ 已加入 Git
 - `data/tw/*.json`（5.3MB，台股 1081 家个股快照）✅ 已加入 Git
 
-**已正常工作的云端端点：** 全部端点均可用，包括 `/api/company/{market}/{code}` 详情和 `/api/report/{market}/{code}` 报告生成。
+**Railway Volume（持久化磁盘）：**
+- 卷名：`tender-fascination-volume`
+- 挂载路径：`/app/userdata`（注意：不是 `/app/data`，避免覆盖信号缓存）
+- 用途：存储 `userdata/users.db`（用户账号 + session + 收藏）
+- 重部署不丢失，约 $0.25/GB/月
+
+**已正常工作的云端端点：** 全部端点均可用，包括 `/api/company/{market}/{code}` 详情、`/api/report/{market}/{code}` 报告生成、`/api/auth/*` 用户认证、`/api/me/favorites` 收藏。
 
 ---
 
@@ -474,7 +610,7 @@ expect -c '
 
 2. **Governance 数据几乎全缺**：G1 和 G3 规则对绝大多数公司返回 `not_available`。pledge_ratio 数据源没有接入，board composition 数据未采集。
 
-3. ~~**报告是占位版**~~ ✅ **已完成**：`report_generator.py` 已接入 DeepSeek，使用 `deepseek-chat` 模型，中文 prompt，输出三段式 Markdown 报告（公司概况 / 风险信号解读 / 综合评估），API 失败时自动降级为规则摘要。Railway 环境变量 `LLM_PROVIDER=deepseek`、`LLM_API_KEY` 已配置。
+3. ~~**报告是占位版**~~ ✅ **已完成并升级**：`report_generator.py` 接入 DeepSeek，采用**两阶段推理架构**，API 失败时自动降级为规则摘要。详见下方"AI 报告生成"小节。Railway 环境变量 `LLM_PROVIDER=deepseek`、`LLM_API_KEY` 已配置。
 
 4. ~~**公司快照不在 Git 仓库**~~ ✅ **已完成**：`data/cn/*.json`（48MB，5502 家）和 `data/tw/*.json`（5.3MB，1081 家）已加入 Git 并部署至 Railway。`/api/company/{market}/{code}` 和 `/api/report` 在云端完全可用。
 
@@ -505,13 +641,18 @@ expect -c '
 | P0 | 每天跑 `./refresh.sh` 补台股 OCF，约 8 天清零（当前还剩 790 家）|
 | ✅ 已完成 | 接入 DeepSeek LLM，report_generator.py 生成真实中文风险报告，含降级 fallback |
 | ✅ 已完成 | `data/cn/`（48MB）和 `data/tw/`（5.3MB）加入 Git，Railway 全端点可用 |
-| ✅ 已完成 | 全站 CN/EN 双语切换（i18n.js + 8 个 HTML 页面 data-i18n + JS t() helper）|
+| ✅ 已完成 | 全站 CN/EN 双语切换（i18n.js + 9 个 HTML 页面 data-i18n + JS t() helper）|
 | ✅ 已完成 | 候选池实时换手功能（AKShare 实时行情 + 30min 缓存 + 预热线程 + trading_date）|
 | ✅ 已完成 | 候选池筛选增强：新增 `turnover_max` 上限筛选 |
-| ✅ 已完成 | 候选池真分页：`page / page_size / total_pages` |
+| ✅ 已完成 | 候选池真分页：`page / page_size / total_pages`（默认 100 条/页）|
 | ✅ 已完成 | 公司页历史换手率模块：5D / 10D / 20D / 自定义日期 |
 | ✅ 已完成 | 历史换手率轻量 SQLite：`data/turnover_history.db` |
-| ⚠️ 已记录 | 历史批量回填在免费 AKShare 源下不稳定，当前主流程改为“单股按需抓取并写库” |
+| ✅ 已完成 | 侧边栏导航重构：Home / Discover / Deep Dive / System 四级结构，所有 9 个页面统一更新 |
+| ✅ 已完成 | 首页产品门户重设计：4 个摘要卡 + 候选池预览（带财务状态 badge）+ 规则分布 + 快捷入口 |
+| ✅ 已完成 | 候选池 × 信号系统打通：`_build_financial_check()` 在 app.py 中叠加财务状态到每条候选结果；候选池表格和首页预览均展示 financial_check badge + 触发信号 |
+| ✅ 已完成 | 用户注册/登录系统：邮箱+密码（无需验证），SQLite 存 Railway Volume，30天 session token；收藏股票功能；右上角头像 + 右侧滑出个人面板 |
+| ✅ 已完成 | AI 报告升级：两阶段推理架构（Phase 1 JSON 结构化判断 + Phase 2 报告写作）；接入候选池实时上下文 + 换手趋势特征；每句话标注数据来源 |
+| ⚠️ 已记录 | 历史批量回填在免费 AKShare 源下不稳定，当前主流程改为”单股按需抓取并写库” |
 | P2 | 补充 governance 数据（pledge_ratio 可从 AKShare 获取，CN 市场） |
 | P2 | 公司快照定期更新机制（目前是手动跑脚本，可加 cron 或 Railway Cron Service） |
 | P3 | 接入 Neo4j 图谱（股权穿透、关联方分析） |
