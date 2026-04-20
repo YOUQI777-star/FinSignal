@@ -571,6 +571,10 @@ input, select { font: inherit; }
   display: block;
 }
 
+#tradingDateDisplay {
+  color: var(--txt-1) !important;
+}
+
 .loading-tag {
   display: flex;
   align-items: center;

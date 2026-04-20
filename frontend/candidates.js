@@ -104,6 +104,7 @@ function renderMeta(data) {
     const wday = zh ? _WDAY_ZH[d.getUTCDay()] : _WDAY_EN[d.getUTCDay()];
     const dateStr = _dateFmt.format(d);
     tradingEl.textContent = zh ? `${dateStr}（${wday}）` : `${dateStr} (${wday})`;
+    tradingEl.style.setProperty('color', '#111827', 'important');
   }
 
   // Server-side AKShare fetch time (stays the same while cache is live)
