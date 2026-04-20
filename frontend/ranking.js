@@ -184,7 +184,7 @@ function renderTable() {
         <span class="tier-badge ${tierClass(tier)}">${tierLabel(tier)}</span>
       </td>
       <td class="col-action">
-        <a href="company.html?market=${item.market}&code=${esc(item.code)}" class="btn-view">${t('查看 →', 'View →')}</a>
+        <a href="company.html?market=${item.market}&code=${esc(item.code)}&from=ranking" class="btn-view">${t('查看 →', 'View →')}</a>
       </td>
     </tr>`;
   }).join('');

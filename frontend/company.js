@@ -271,12 +271,60 @@ function renderPage(data) {
   renderTopbarId(data);
   renderInfoCard(data);
   renderCandidateContext();
+  renderScorePanel(data);
   loadTurnoverHistory();
   renderSummaryCards(data);
   renderSignalSection('financialSignals',  'finMeta',  data.financial_signals  || []);
   renderSignalSection('governanceSignals', 'govMeta',  data.governance_signals || []);
   loadGraph(data.market, data.code);
   initFavoriteBtn();
+}
+
+function renderScorePanel(data) {
+  const panel = document.getElementById('scorePanel');
+  const body = document.getElementById('scorePanelBody');
+  const meta = document.getElementById('scorePanelMeta');
+  if (!panel || !body || !meta) return;
+
+  const breakdown = data.score_breakdown || state.candidateContext?.score_breakdown;
+  const score = data.candidate_score ?? state.candidateContext?.candidate_score;
+  const formula = data.score_formula || state.candidateContext?.score_formula;
+
+  if (score == null || !breakdown) {
+    panel.style.display = 'none';
+    body.innerHTML = '';
+    meta.textContent = '';
+    return;
+  }
+
+  panel.style.display = '';
+  meta.textContent = t(`总分 ${Number(score).toFixed(1)}`, `Score ${Number(score).toFixed(1)}`);
+
+  const items = [
+    ['换手质量', 'Turnover Quality', breakdown.turnover_quality],
+    ['涨幅健康度', 'Pct Health', breakdown.pct_health],
+    ['流通市值匹配', 'Circ.MV Fit', breakdown.circ_mv_fit],
+    ['持续活跃度', 'Sustained Activity', breakdown.sustained_activity],
+    ['结构强度', 'Structure Strength', breakdown.structure_strength],
+    ['行业加分', 'Industry Bonus', breakdown.industry_bonus],
+  ];
+
+  body.innerHTML = `
+    <div class="score-panel-total">
+      <div class="score-total-badge">${Number(score).toFixed(1)}</div>
+      <div class="score-total-copy">
+        <div class="score-total-title">${t('综合评分', 'Composite Score')}</div>
+        <div class="score-total-formula">${esc(formula || '—')}</div>
+      </div>
+    </div>
+    <div class="score-breakdown-grid">
+      ${items.map(([zh, en, value]) => `
+        <div class="score-breakdown-item">
+          <span>${t(zh, en)}</span>
+          <strong>${value != null ? Number(value).toFixed(1) : '—'}</strong>
+        </div>
+      `).join('')}
+    </div>`;
 }
 
 async function loadCandidateContext() {
@@ -340,14 +388,18 @@ async function loadTurnoverHistory() {
   const meta = document.getElementById('turnoverHistoryMeta');
   if (!body || !meta) return;
 
-  body.innerHTML = `<div class="report-placeholder"><p>${t('历史换手率加载中…', 'Loading turnover history…')}</p></div>`;
+  renderTurnoverHistoryState('loading', t('历史换手率加载中…', 'Loading turnover history…'));
   try {
     const params = state.historyRange || { days: state.historyDays };
     const result = await API.getTurnoverHistory(state.market, state.code, params);
     const retryKey = JSON.stringify(params);
-    if (!result.results?.length && state.market === 'CN' && state.historyAutoRetryKey !== retryKey) {
+    if (
+      result.summary?.available_points === 0 &&
+      state.market === 'CN' &&
+      state.historyAutoRetryKey !== retryKey
+    ) {
       state.historyAutoRetryKey = retryKey;
-      body.innerHTML = `<div class="report-placeholder"><p>${t('所选区间暂无缓存，正在尝试实时补抓…', 'No cached history for this range, trying live hydration…')}</p></div>`;
+      renderTurnoverHistoryState('hydrating', t('所选区间暂无缓存，正在尝试实时补抓…', 'No cached history for this range, trying live hydration…'));
       const refreshed = await API.getTurnoverHistory(state.market, state.code, params);
       renderTurnoverHistory(refreshed);
       return;
@@ -356,7 +408,7 @@ async function loadTurnoverHistory() {
     renderTurnoverHistory(result);
   } catch (err) {
     meta.textContent = '';
-    body.innerHTML = `<div class="report-placeholder"><p>${t('历史换手率暂不可用', 'Turnover history unavailable')}</p><span>${esc(err.message)}</span></div>`;
+    renderTurnoverHistoryState('failed', t('历史换手率暂不可用', 'Turnover history unavailable'), err.message);
   }
 }
 
@@ -364,13 +416,21 @@ function renderTurnoverHistory(result) {
   const body = document.getElementById('turnoverHistoryBody');
   const meta = document.getElementById('turnoverHistoryMeta');
   const rows = result.results || [];
+  const availableRows = rows.filter(item => item.has_data);
+  const statusLabel = result.hydration?.attempted
+    ? t('已检查并补抓', 'Checked with live hydration')
+    : t('本地历史缓存', 'Cached history');
 
-  meta.textContent = rows.length
-    ? t(`${rows.length} 个交易日`, `${rows.length} trading days`)
+  meta.textContent = availableRows.length
+    ? t(`${availableRows.length} 个有效交易日 · ${statusLabel}`, `${availableRows.length} valid trading days · ${statusLabel}`)
     : t('暂无历史数据', 'No history yet');
 
-  if (!rows.length) {
-    body.innerHTML = `<div class="report-placeholder"><p>${t('暂无历史换手率数据', 'No turnover history yet')}</p><span>${t('数据会在候选池实时抓取时逐日累积。', 'History accumulates as daily candidate data is fetched.')}</span></div>`;
+  if (!availableRows.length) {
+    renderTurnoverHistoryState(
+      result.display_status === 'fetch_failed' ? 'failed' : 'empty',
+      t('暂无历史换手率数据', 'No turnover history yet'),
+      result.hydration?.reason || t('这一时间段还没有可用的换手率历史。', 'No turnover history is available for this range yet.'),
+    );
     return;
   }
 
@@ -380,7 +440,7 @@ function renderTurnoverHistory(result) {
   const padRight = 18;
   const padTop = 18;
   const padBottom = 34;
-  const values = rows.map(item => Number(item.turnover_rate ?? 0));
+  const values = availableRows.map(item => Number(item.turnover_rate ?? 0));
   const min = Math.min(...values);
   const max = Math.max(...values);
   const niceMin = Math.max(0, Math.floor(min));
@@ -395,15 +455,31 @@ function renderTurnoverHistory(result) {
   const chartHeight = height - padTop - padBottom;
   const coords = rows.map((item, idx) => {
     const x = padLeft + (idx / Math.max(rows.length - 1, 1)) * chartWidth;
-    const y = padTop + (1 - ((Number(item.turnover_rate ?? 0) - niceMin) / range)) * chartHeight;
-    return { x, y, date: item.date, value: Number(item.turnover_rate ?? 0) };
+    const value = item.has_data ? Number(item.turnover_rate ?? 0) : null;
+    const y = value == null ? null : padTop + (1 - ((value - niceMin) / range)) * chartHeight;
+    return { x, y, date: item.date, value, hasData: Boolean(item.has_data) };
   });
-  const points = coords.map(({ x, y }) => `${x},${y}`).join(' ');
-  const areaPoints = `${padLeft},${height - padBottom} ${points} ${coords[coords.length - 1].x},${height - padBottom}`;
+  const segments = [];
+  let current = [];
+  for (const point of coords) {
+    if (point.hasData && point.y != null) {
+      current.push(point);
+    } else if (current.length) {
+      segments.push(current);
+      current = [];
+    }
+  }
+  if (current.length) segments.push(current);
   const xTickIndexes = Array.from(new Set([0, Math.floor((rows.length - 1) / 2), rows.length - 1]));
+  const avg = values.reduce((sum, value) => sum + value, 0) / values.length;
+  const sparseMode = availableRows.length <= 3;
 
   body.innerHTML = `
     <div class="turnover-history-chart-wrap">
+      <div class="turnover-history-status-line">
+        <span class="turnover-history-status turnover-history-status--${result.display_status || 'ready'}">${statusLabel}</span>
+        <span class="turnover-history-status-meta">${t(`缺失 ${result.summary?.missing_points || 0} 天`, `${result.summary?.missing_points || 0} missing days`)}</span>
+      </div>
       <svg class="turnover-history-chart" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
         ${axisTicks.map((tick) => {
           const y = padTop + (1 - ((tick.value - niceMin) / range)) * chartHeight;
@@ -413,32 +489,76 @@ function renderTurnoverHistory(result) {
           `;
         }).join('')}
         <line x1="${padLeft}" y1="${height - padBottom}" x2="${width - padRight}" y2="${height - padBottom}" class="turnover-history-base"></line>
-        <polygon class="turnover-history-area" points="${areaPoints}"></polygon>
-        <polyline class="turnover-history-line" points="${points}"></polyline>
-        ${coords.map((item) => {
+        ${segments.map((segment) => {
+          const segmentPoints = segment.map(({ x, y }) => `${x},${y}`).join(' ');
+          const areaPoints = sparseMode
+            ? ''
+            : `${segment[0].x},${height - padBottom} ${segmentPoints} ${segment[segment.length - 1].x},${height - padBottom}`;
           return `
-            <circle cx="${item.x}" cy="${item.y}" r="4" class="turnover-history-dot"></circle>
-            <title>${esc(item.date)} · ${item.value.toFixed(2)}%</title>
+            ${areaPoints ? `<polygon class="turnover-history-area" points="${areaPoints}"></polygon>` : ''}
+            <polyline class="turnover-history-line" points="${segmentPoints}"></polyline>
           `;
+        }).join('')}
+        ${coords.map((item) => {
+          if (!item.hasData || item.y == null) {
+            return `<circle cx="${item.x}" cy="${height - padBottom}" r="3" class="turnover-history-missing-dot"></circle>`;
+          }
+          return `<circle cx="${item.x}" cy="${item.y}" r="${sparseMode ? 5 : 4}" class="turnover-history-dot" data-date="${esc(item.date)}" data-value="${item.value.toFixed(2)}"></circle>`;
         }).join('')}
         ${xTickIndexes.map((idx) => {
           const point = coords[idx];
           return `<text x="${point.x}" y="${height - 10}" text-anchor="${idx === 0 ? 'start' : idx === rows.length - 1 ? 'end' : 'middle'}" class="turnover-history-x-label">${esc(point.date)}</text>`;
         }).join('')}
       </svg>
+      <div class="turnover-history-tooltip" id="turnoverHistoryTooltip" style="display:none"></div>
     </div>
     <div class="turnover-history-stats">
       <div class="turnover-history-stat"><span>${t('最低', 'Min')}</span><strong>${min.toFixed(2)}%</strong></div>
       <div class="turnover-history-stat"><span>${t('最高', 'Max')}</span><strong>${max.toFixed(2)}%</strong></div>
+      <div class="turnover-history-stat"><span>${t('均值', 'Avg')}</span><strong>${avg.toFixed(2)}%</strong></div>
       <div class="turnover-history-stat"><span>${t('最新', 'Latest')}</span><strong>${values[values.length - 1].toFixed(2)}%</strong></div>
     </div>
     <div class="turnover-history-table">
       ${rows.slice().reverse().map(item => `
-        <div class="turnover-history-row">
+        <div class="turnover-history-row ${item.has_data ? '' : 'turnover-history-row--missing'}">
           <span>${esc(item.date)}</span>
-          <strong>${Number(item.turnover_rate ?? 0).toFixed(2)}%</strong>
+          <strong>${item.has_data ? `${Number(item.turnover_rate ?? 0).toFixed(2)}%` : t('未抓到', 'Missing')}</strong>
         </div>`).join('')}
     </div>`;
+
+  bindTurnoverTooltip();
+}
+
+function renderTurnoverHistoryState(kind, title, detail = '') {
+  const body = document.getElementById('turnoverHistoryBody');
+  if (!body) return;
+  body.innerHTML = `
+    <div class="report-placeholder turnover-history-state turnover-history-state--${kind}">
+      <p>${esc(title)}</p>
+      ${detail ? `<span>${esc(detail)}</span>` : ''}
+    </div>`;
+}
+
+function bindTurnoverTooltip() {
+  const wrap = document.querySelector('.turnover-history-chart-wrap');
+  const tooltip = document.getElementById('turnoverHistoryTooltip');
+  if (!wrap || !tooltip) return;
+  wrap.querySelectorAll('.turnover-history-dot').forEach(dot => {
+    dot.addEventListener('mouseenter', () => {
+      tooltip.style.display = 'block';
+      tooltip.innerHTML = `
+        <strong>${dot.dataset.date}</strong>
+        <span>${t('换手率', 'Turnover')}: ${dot.dataset.value}%</span>`;
+    });
+    dot.addEventListener('mousemove', event => {
+      const bounds = wrap.getBoundingClientRect();
+      tooltip.style.left = `${event.clientX - bounds.left + 12}px`;
+      tooltip.style.top = `${event.clientY - bounds.top - 12}px`;
+    });
+    dot.addEventListener('mouseleave', () => {
+      tooltip.style.display = 'none';
+    });
+  });
 }
 
 /* ============================================================

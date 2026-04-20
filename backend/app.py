@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import logging
 import threading
+from datetime import date, timedelta
 from pathlib import Path
 
 from flask import Flask, jsonify, request
@@ -24,6 +25,8 @@ from backend.rules.engine import RuleEngine
 from backend.screening.screening_service import apply_query_filters, get_candidates
 from backend.screening.candidate_scoring import attach_candidate_scores
 from backend.screening.turnover_bootstrap import hydrate_single_code_turnover_history
+from backend.screening.market_loader import get_recent_trading_dates
+from backend.scrapers.cn_tushare import TushareCNClient, tushare_available
 
 _SIGNALS_DIR = DATA_DIR / "signals"
 
@@ -91,6 +94,105 @@ def _build_financial_check(signal_result: dict | None) -> dict[str, object]:
     }
 
 
+def _attach_candidate_score_payload(payload: dict, *, code: str) -> dict:
+    score_seed = {
+        "code": str(code).strip(),
+        "name": payload.get("name"),
+        "turnover": payload.get("turnover"),
+        "pct_change": payload.get("pct_change"),
+        "circ_mv": payload.get("circ_mv"),
+        "current_price": payload.get("current_price") or payload.get("close"),
+    }
+    scored = attach_candidate_scores([score_seed])[0]
+    return {
+        **payload,
+        "candidate_score": scored.get("candidate_score"),
+        "score_formula": scored.get("score_formula"),
+        "score_breakdown": scored.get("score_breakdown"),
+        "history_metrics": scored.get("history_metrics"),
+    }
+
+
+def _favorite_name_needs_repair(item: dict) -> bool:
+    saved_name = str(item.get("name") or "").strip()
+    saved_code = str(item.get("code") or "").strip()
+    return (not saved_name) or saved_name == saved_code
+
+
+def _expected_turnover_dates(
+    market: str,
+    *,
+    start_date: str | None = None,
+    end_date: str | None = None,
+    days: int | None = None,
+) -> list[str]:
+    market = market.upper()
+    if market != "CN":
+        return []
+
+    if days and not start_date and not end_date:
+        return get_recent_trading_dates(days)
+
+    if not start_date and not end_date:
+        return []
+
+    end = end_date or date.today().isoformat()
+    start = start_date or (date.fromisoformat(end) - timedelta(days=30)).isoformat()
+
+    if tushare_available():
+        try:
+            dates = TushareCNClient().get_trade_dates(start_date=start, end_date=end)
+            return [d for d in dates if d >= start and d <= end]
+        except Exception as exc:
+            log.warning("Trade dates fallback to weekdays for %s→%s: %s", start, end, exc)
+
+    expected: list[str] = []
+    current = date.fromisoformat(start)
+    last = date.fromisoformat(end)
+    while current <= last:
+        if current.weekday() < 5:
+            expected.append(current.isoformat())
+        current += timedelta(days=1)
+    return expected
+
+
+def _merge_turnover_rows_with_expected_dates(rows: list[dict], expected_dates: list[str], *, market: str, code: str) -> list[dict]:
+    rows_by_date = {
+        str(row.get("date")): dict(row)
+        for row in rows
+        if row.get("date")
+    }
+    merged: list[dict] = []
+    for trading_date in expected_dates:
+        row = rows_by_date.get(trading_date)
+        if row:
+            merged.append({
+                **row,
+                "date": trading_date,
+                "has_data": row.get("turnover_rate") is not None,
+                "data_status": "available" if row.get("turnover_rate") is not None else "missing",
+            })
+        else:
+            merged.append({
+                "market": market,
+                "code": code,
+                "date": trading_date,
+                "turnover_rate": None,
+                "open": None,
+                "high": None,
+                "low": None,
+                "close": None,
+                "pct_change": None,
+                "volume": None,
+                "amount": None,
+                "circ_mv": None,
+                "updated_at": None,
+                "has_data": False,
+                "data_status": "missing",
+            })
+    return merged
+
+
 @app.route("/api/health")
 def health() -> tuple[dict, int]:
     return jsonify({"status": "ok"}), 200
@@ -110,11 +212,17 @@ def get_signals(market: str, code: str):
     if not fresh:
         cache = _load_signals_cache(market)
         if code in cache:
-            return jsonify(cache[code]), 200
+            payload = cache[code]
+            if market.upper() == "CN":
+                payload = _attach_candidate_score_payload(payload, code=code)
+            return jsonify(payload), 200
     snapshot = store.get_company_snapshot(market, code)
     if not snapshot:
         return jsonify({"error": "Company snapshot not found"}), 404
-    return jsonify(rule_engine.evaluate(snapshot)), 200
+    payload = rule_engine.evaluate(snapshot)
+    if market.upper() == "CN":
+        payload = _attach_candidate_score_payload(payload, code=code)
+    return jsonify(payload), 200
 
 
 @app.route("/api/signals/top")
@@ -443,14 +551,29 @@ def get_turnover_history(market: str, code: str):
         end_date=end_date,
         days=day_count,
     )
+    expected_dates = _expected_turnover_dates(
+        market,
+        start_date=start_date,
+        end_date=end_date,
+        days=day_count,
+    )
+    hydration = {
+        "attempted": False,
+        "status": "not_needed",
+        "reason": None,
+    }
     needs_hydration = False
     if market == "CN":
         if not rows:
             needs_hydration = True
         elif day_count and len(rows) < day_count:
             needs_hydration = True
+        elif expected_dates and len({row.get("date") for row in rows if row.get("date")}) < len(expected_dates):
+            needs_hydration = True
 
     if needs_hydration:
+        hydration["attempted"] = True
+        hydration["status"] = "hydrating"
         try:
             rows = hydrate_single_code_turnover_history(
                 code,
@@ -459,16 +582,59 @@ def get_turnover_history(market: str, code: str):
                 start_date=start_date,
                 end_date=end_date,
             )
+            hydration["status"] = "success"
         except Exception as exc:
-            return jsonify({"error": str(exc)}), 503
+            hydration["status"] = "failed"
+            hydration["reason"] = str(exc)
+            expected_rows = _merge_turnover_rows_with_expected_dates([], expected_dates, market=market, code=code) if expected_dates else []
+            return jsonify({
+                "market": market,
+                "code": code,
+                "start_date": start_date,
+                "end_date": end_date,
+                "days": day_count,
+                "total": len(expected_rows),
+                "results": expected_rows,
+                "hydration": hydration,
+                "summary": {
+                    "available_points": 0,
+                    "missing_points": len(expected_rows),
+                    "zero_value_points": 0,
+                },
+                "display_status": "fetch_failed",
+            }), 503
+    merged_rows = _merge_turnover_rows_with_expected_dates(rows, expected_dates, market=market, code=code) if expected_dates else [
+        {
+            **row,
+            "has_data": row.get("turnover_rate") is not None,
+            "data_status": "available" if row.get("turnover_rate") is not None else "missing",
+        }
+        for row in rows
+    ]
+    available_points = [row for row in merged_rows if row.get("has_data")]
+    zero_value_points = sum(1 for row in available_points if float(row.get("turnover_rate") or 0) == 0.0)
+    missing_points = sum(1 for row in merged_rows if not row.get("has_data"))
+    if not available_points:
+        display_status = "empty"
+    elif missing_points:
+        display_status = "partial"
+    else:
+        display_status = "ready"
     return jsonify({
         "market": market,
         "code": code,
         "start_date": start_date,
         "end_date": end_date,
         "days": day_count,
-        "total": len(rows),
-        "results": rows,
+        "total": len(merged_rows),
+        "results": merged_rows,
+        "hydration": hydration,
+        "summary": {
+            "available_points": len(available_points),
+            "missing_points": missing_points,
+            "zero_value_points": zero_value_points,
+        },
+        "display_status": display_status,
     }), 200
 
 
@@ -524,9 +690,7 @@ def favorites_list():
         return jsonify({"error": "Unauthorized"}), 401
     results = []
     for item in get_favorites(user["id"]):
-        saved_name = str(item.get("name") or "").strip()
-        saved_code = str(item.get("code") or "").strip()
-        if not saved_name or saved_name == saved_code:
+        if _favorite_name_needs_repair(item):
             company = repository.get_company_profile(item.get("market", ""), item.get("code", ""))
             if company and company.get("name"):
                 corrected_name = str(company["name"]).strip()
@@ -547,6 +711,10 @@ def favorites_add():
     name = body.get("name", "")
     if not market or not code:
         return jsonify({"error": "market and code required"}), 400
+    if not name or str(name).strip() == str(code).strip():
+        company = repository.get_company_profile(market, code)
+        if company and company.get("name"):
+            name = company["name"]
     add_favorite(user["id"], market, code, name)
     return jsonify({"ok": True}), 201
 

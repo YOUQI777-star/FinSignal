@@ -13,6 +13,7 @@ const state = {
   page:     1,
   pageSize: 100,
   restoreAnchor: '',
+  scrollTop: 0,
 };
 
 const FILTERS_KEY = 'fsm_candidates_filters_v1';
@@ -56,6 +57,7 @@ async function loadCandidates({ forceRefresh = false } = {}) {
     state.data     = data;
     state.filtered = data.results || [];
     persistCandidatesState();
+    syncStateToUrl();
     renderTable(state.filtered);
     renderMeta(data);
     renderPagination(data);
@@ -250,7 +252,7 @@ function renderTable(rows) {
     });
   });
 
-  restoreReturnAnchor(container);
+  restoreReturnAnchor(container, rows);
 }
 
 function renderFinancialCheck(check) {
@@ -325,17 +327,59 @@ checkHealth();
 loadCandidates();
 
 function restoreCandidatesState() {
+  const query = new URLSearchParams(window.location.search);
+  const queryState = {
+    turnoverMin: query.get('turnover_min'),
+    turnoverMax: query.get('turnover_max'),
+    priceMax: query.get('price_max'),
+    circMvMax: query.get('circ_mv_max'),
+    pctMax: query.get('pct_max'),
+    excludeSt: query.get('exclude_st'),
+    page: query.get('page'),
+  };
   try {
     const saved = JSON.parse(localStorage.getItem(FILTERS_KEY) || 'null');
-    if (saved && typeof saved === 'object') {
-      applyStoredFilters({ ...DEFAULT_FILTERS, ...saved });
-      state.page = Number(saved.page) > 0 ? Number(saved.page) : 1;
-    } else {
-      applyStoredFilters(DEFAULT_FILTERS);
-    }
+    const merged = {
+      ...DEFAULT_FILTERS,
+      ...(saved && typeof saved === 'object' ? saved : {}),
+      ...(queryState.turnoverMin != null ? { turnoverMin: queryState.turnoverMin } : {}),
+      ...(queryState.turnoverMax != null ? { turnoverMax: queryState.turnoverMax } : {}),
+      ...(queryState.priceMax != null ? { priceMax: queryState.priceMax } : {}),
+      ...(queryState.circMvMax != null ? { circMvMax: queryState.circMvMax } : {}),
+      ...(queryState.pctMax != null ? { pctMax: queryState.pctMax } : {}),
+      ...(queryState.excludeSt != null ? { excludeSt: queryState.excludeSt !== '0' } : {}),
+      ...(queryState.page != null ? { page: Number(queryState.page) } : {}),
+    };
+    applyStoredFilters(merged);
+    state.page = Number(merged.page) > 0 ? Number(merged.page) : 1;
   } catch {
     applyStoredFilters(DEFAULT_FILTERS);
+    state.page = 1;
   }
+}
+
+function syncStateToUrl() {
+  const params = new URLSearchParams();
+  const filterState = currentFilterState();
+  params.set('turnover_min', filterState.turnoverMin);
+  if (filterState.turnoverMax) params.set('turnover_max', filterState.turnoverMax);
+  params.set('price_max', filterState.priceMax);
+  params.set('circ_mv_max', filterState.circMvMax);
+  params.set('pct_max', filterState.pctMax);
+  params.set('exclude_st', filterState.excludeSt ? '1' : '0');
+  params.set('page', String(state.page));
+  history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`);
+}
+
+function currentFilterState() {
+  return {
+    turnoverMin: document.getElementById('fTurnoverMin').value,
+    turnoverMax: document.getElementById('fTurnoverMax').value,
+    priceMax: document.getElementById('fPriceMax').value,
+    circMvMax: document.getElementById('fCircMvMax').value,
+    pctMax: document.getElementById('fPctMax').value,
+    excludeSt: document.getElementById('fExcludeSt').checked,
+  };
 }
 
 function applyStoredFilters(filters) {
@@ -349,12 +393,7 @@ function applyStoredFilters(filters) {
 
 function persistCandidatesState() {
   const payload = {
-    turnoverMin: document.getElementById('fTurnoverMin').value,
-    turnoverMax: document.getElementById('fTurnoverMax').value,
-    priceMax: document.getElementById('fPriceMax').value,
-    circMvMax: document.getElementById('fCircMvMax').value,
-    pctMax: document.getElementById('fPctMax').value,
-    excludeSt: document.getElementById('fExcludeSt').checked,
+    ...currentFilterState(),
     page: state.page,
   };
   localStorage.setItem(FILTERS_KEY, JSON.stringify(payload));
@@ -364,18 +403,30 @@ function saveReturnAnchor(code) {
   sessionStorage.setItem(RETURN_KEY, JSON.stringify({
     code,
     page: state.page,
+    scrollTop: window.scrollY || 0,
     ts: Date.now(),
   }));
 }
 
-function restoreReturnAnchor(container) {
+function restoreReturnAnchor(container, rows) {
   let payload = null;
   try {
     payload = JSON.parse(sessionStorage.getItem(RETURN_KEY) || 'null');
   } catch {}
   if (!payload || payload.page !== (state.data?.page || state.page)) return;
   const row = container.querySelector(`.clickable-row[data-code="${CSS.escape(payload.code || '')}"]`);
-  if (!row) return;
-  row.scrollIntoView({ block: 'center' });
+  if (!row) {
+    if (Number.isFinite(payload.scrollTop)) {
+      requestAnimationFrame(() => window.scrollTo({ top: Number(payload.scrollTop), behavior: 'auto' }));
+    } else {
+      const approxIndex = rows.findIndex(item => item.code === payload.code);
+      if (approxIndex >= 0) {
+        requestAnimationFrame(() => window.scrollTo({ top: approxIndex * 56, behavior: 'auto' }));
+      }
+    }
+    sessionStorage.removeItem(RETURN_KEY);
+    return;
+  }
+  requestAnimationFrame(() => row.scrollIntoView({ block: 'center', behavior: 'auto' }));
   sessionStorage.removeItem(RETURN_KEY);
 }

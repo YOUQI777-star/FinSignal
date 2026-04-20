@@ -67,19 +67,21 @@ const AUTH = (() => {
   async function getFavorites() {
     const data = await apiCall('/api/me/favorites');
     const remote = Array.isArray(data?.results) ? data.results : [];
+    const hydratedRemote = await hydrateFavoriteNames(remote);
     const local = loadFavoriteCache();
-    const merged = mergeFavorites(remote, local);
+    const merged = mergeFavorites(hydratedRemote, local);
     saveFavoriteCache(merged);
     return { ...(data || {}), results: merged };
   }
 
   async function addFavorite(market, code, name) {
+    const resolvedName = await resolveFavoriteName({ market, code, name });
     const result = await apiCall('/api/me/favorites', {
       method: 'POST',
-      body: JSON.stringify({ market, code, name }),
+      body: JSON.stringify({ market, code, name: resolvedName }),
     });
     saveFavoriteCache(mergeFavorites(
-      [{ market, code, name }],
+      [{ market, code, name: resolvedName }],
       loadFavoriteCache(),
     ));
     return result;
@@ -123,10 +125,34 @@ const AUTH = (() => {
         ...item,
         market,
         code,
-        name: item?.name || prev?.name || code,
+        name: item?.name || prev?.name || '',
       });
     });
     return [...merged.values()];
+  }
+
+  async function hydrateFavoriteNames(items) {
+    const output = [];
+    for (const item of items) {
+      const fixedName = await resolveFavoriteName(item);
+      output.push({ ...item, name: fixedName });
+    }
+    return output;
+  }
+
+  async function resolveFavoriteName(item) {
+    const market = String(item?.market || '').toUpperCase();
+    const code = String(item?.code || '');
+    const name = String(item?.name || '').trim();
+    if (!market || !code) return name;
+    if (name && name !== code) return name;
+    try {
+      const company = await apiCall(`/api/company/${market}/${code}`);
+      const resolved = String(company?.name || '').trim();
+      return resolved && resolved !== code ? resolved : '';
+    } catch {
+      return '';
+    }
   }
 })();
 
@@ -357,7 +383,7 @@ function renderFavorites(items) {
       <div class="favorite-item-left">
         <span class="badge badge-market badge-market-${String(item.market).toLowerCase()}">${item.market}</span>
         <div style="min-width:0;display:flex;flex-direction:column;gap:1px">
-          <span class="favorite-name">${escAuth(item.name || item.code)}</span>
+          <span class="favorite-name">${escAuth(item.name || (zh ? '名称加载中…' : 'Loading name…'))}</span>
           <span class="favorite-code">${escAuth(item.code)}</span>
         </div>
       </div>
