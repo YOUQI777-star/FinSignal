@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 from backend.ai.report_generator import generate_report_payload
 from backend.auth.user_store import (
     init_db, register_user, login_user, get_user_by_token,
-    logout_token, get_favorites, add_favorite, remove_favorite
+    logout_token, get_favorites, add_favorite, remove_favorite, update_favorite_name
 )
 from backend.config import APP_DEBUG, APP_HOST, APP_PORT, DATA_DIR, DEFAULT_CORS_ORIGINS
 from backend.data_access.company_repository import CompanyRepository
@@ -524,10 +524,14 @@ def favorites_list():
         return jsonify({"error": "Unauthorized"}), 401
     results = []
     for item in get_favorites(user["id"]):
-        if not item.get("name"):
+        saved_name = str(item.get("name") or "").strip()
+        saved_code = str(item.get("code") or "").strip()
+        if not saved_name or saved_name == saved_code:
             company = repository.get_company_profile(item.get("market", ""), item.get("code", ""))
             if company and company.get("name"):
-                item = {**item, "name": company["name"]}
+                corrected_name = str(company["name"]).strip()
+                item = {**item, "name": corrected_name}
+                update_favorite_name(user["id"], item.get("market", ""), item.get("code", ""), corrected_name)
         results.append(item)
     return jsonify({"results": results})
 

@@ -91,6 +91,16 @@ def get_favorites(user_id: int) -> list[dict]:
         ).fetchall()
         return [dict(r) for r in rows]
 
+def update_favorite_name(user_id: int, market: str, code: str, name: str) -> bool:
+    if not name:
+        return False
+    with _conn() as con:
+        con.execute(
+            "UPDATE favorites SET name=? WHERE user_id=? AND market=? AND code=?",
+            (name, user_id, market.upper(), code),
+        )
+    return True
+
 def add_favorite(user_id: int, market: str, code: str, name: str) -> bool:
     try:
         with _conn() as con:

@@ -302,6 +302,8 @@ function renderCandidateContext() {
   const ctx = state.candidateContext;
   const check = ctx.financial_check || { status: 'no_data', triggered_signals: [], triggered_count: 0 };
   const signalText = check.triggered_signals?.length ? check.triggered_signals.join(', ') : t('无触发', 'None');
+  const score = ctx.candidate_score != null ? Number(ctx.candidate_score).toFixed(1) : '—';
+  const scoreFormula = ctx.score_formula || '—';
 
   el.style.display = '';
   el.innerHTML = `
@@ -321,6 +323,14 @@ function renderCandidateContext() {
       <div class="candidate-context-item">
         <span class="candidate-context-label">${t('触发信号', 'Triggered signals')}</span>
         <span class="candidate-context-value">${esc(signalText)}</span>
+      </div>
+      <div class="candidate-context-item">
+        <span class="candidate-context-label">${t('综合评分', 'Score')}</span>
+        <span class="candidate-context-value"><strong>${esc(score)}</strong></span>
+      </div>
+      <div class="candidate-context-item candidate-context-item--wide">
+        <span class="candidate-context-label">${t('评分公式', 'Score formula')}</span>
+        <span class="candidate-context-value candidate-context-formula">${esc(scoreFormula)}</span>
       </div>
     </div>`;
 }
@@ -365,45 +375,57 @@ function renderTurnoverHistory(result) {
   }
 
   const width = 640;
-  const height = 220;
-  const padX = 44;
-  const padY = 24;
+  const height = 260;
+  const padLeft = 58;
+  const padRight = 18;
+  const padTop = 18;
+  const padBottom = 34;
   const values = rows.map(item => Number(item.turnover_rate ?? 0));
   const min = Math.min(...values);
   const max = Math.max(...values);
-  const range = max - min || 1;
+  const niceMin = Math.max(0, Math.floor(min));
+  const niceMax = Math.ceil(max + 1);
+  const range = niceMax - niceMin || 1;
   const axisTicks = [
-    { value: max, label: `${max.toFixed(2)}%` },
-    { value: min + range / 2, label: `${(min + range / 2).toFixed(2)}%` },
-    { value: min, label: `${min.toFixed(2)}%` },
+    { value: niceMax, label: `${niceMax.toFixed(1)}%` },
+    { value: niceMin + range / 2, label: `${(niceMin + range / 2).toFixed(1)}%` },
+    { value: niceMin, label: `${niceMin.toFixed(1)}%` },
   ];
-  const points = rows.map((item, idx) => {
-    const x = padX + (idx / Math.max(rows.length - 1, 1)) * (width - padX * 2);
-    const y = height - padY - ((Number(item.turnover_rate ?? 0) - min) / range) * (height - padY * 2);
-    return `${x},${y}`;
-  }).join(' ');
+  const chartWidth = width - padLeft - padRight;
+  const chartHeight = height - padTop - padBottom;
+  const coords = rows.map((item, idx) => {
+    const x = padLeft + (idx / Math.max(rows.length - 1, 1)) * chartWidth;
+    const y = padTop + (1 - ((Number(item.turnover_rate ?? 0) - niceMin) / range)) * chartHeight;
+    return { x, y, date: item.date, value: Number(item.turnover_rate ?? 0) };
+  });
+  const points = coords.map(({ x, y }) => `${x},${y}`).join(' ');
+  const areaPoints = `${padLeft},${height - padBottom} ${points} ${coords[coords.length - 1].x},${height - padBottom}`;
+  const xTickIndexes = Array.from(new Set([0, Math.floor((rows.length - 1) / 2), rows.length - 1]));
 
   body.innerHTML = `
     <div class="turnover-history-chart-wrap">
       <svg class="turnover-history-chart" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
         ${axisTicks.map((tick) => {
-          const y = height - padY - ((tick.value - min) / range) * (height - padY * 2);
+          const y = padTop + (1 - ((tick.value - niceMin) / range)) * chartHeight;
           return `
-            <line x1="${padX}" y1="${y}" x2="${width - padX}" y2="${y}" class="turnover-history-grid"></line>
-            <text x="${padX - 8}" y="${y + 4}" text-anchor="end" class="turnover-history-y-label">${esc(tick.label)}</text>
+            <line x1="${padLeft}" y1="${y}" x2="${width - padRight}" y2="${y}" class="turnover-history-grid"></line>
+            <text x="${padLeft - 10}" y="${y + 4}" text-anchor="end" class="turnover-history-y-label">${esc(tick.label)}</text>
           `;
         }).join('')}
+        <line x1="${padLeft}" y1="${height - padBottom}" x2="${width - padRight}" y2="${height - padBottom}" class="turnover-history-base"></line>
+        <polygon class="turnover-history-area" points="${areaPoints}"></polygon>
         <polyline class="turnover-history-line" points="${points}"></polyline>
-        ${rows.map((item, idx) => {
-          const x = padX + (idx / Math.max(rows.length - 1, 1)) * (width - padX * 2);
-          const y = height - padY - ((Number(item.turnover_rate ?? 0) - min) / range) * (height - padY * 2);
-          return `<circle cx="${x}" cy="${y}" r="3.5" class="turnover-history-dot"></circle>`;
+        ${coords.map((item) => {
+          return `
+            <circle cx="${item.x}" cy="${item.y}" r="4" class="turnover-history-dot"></circle>
+            <title>${esc(item.date)} · ${item.value.toFixed(2)}%</title>
+          `;
+        }).join('')}
+        ${xTickIndexes.map((idx) => {
+          const point = coords[idx];
+          return `<text x="${point.x}" y="${height - 10}" text-anchor="${idx === 0 ? 'start' : idx === rows.length - 1 ? 'end' : 'middle'}" class="turnover-history-x-label">${esc(point.date)}</text>`;
         }).join('')}
       </svg>
-      <div class="turnover-history-axis">
-        <span>${esc(rows[0].date)}</span>
-        <span>${esc(rows[rows.length - 1].date)}</span>
-      </div>
     </div>
     <div class="turnover-history-stats">
       <div class="turnover-history-stat"><span>${t('最低', 'Min')}</span><strong>${min.toFixed(2)}%</strong></div>

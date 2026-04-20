@@ -649,7 +649,7 @@ input, select { font: inherit; }
 .col-company { min-width: 160px; }
 .col-market  { width: 70px; }
 .col-count   { width: 90px; }
-.col-rules   { min-width: 140px; }
+.col-rules   { min-width: 260px; }
 .col-tier    { width: 110px; }
 .col-action  { width: 80px; text-align: right; }
 
@@ -695,6 +695,17 @@ input, select { font: inherit; }
   color: var(--txt-3, #94a3b8);
   white-space: normal;
   word-break: break-word;
+}
+
+.ranking-score-note {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  background: rgba(37, 99, 235, 0.04);
+  color: var(--txt-2, #475569);
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  line-height: 1.6;
 }
 
 /* ============================================================

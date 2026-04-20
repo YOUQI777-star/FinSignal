@@ -191,6 +191,11 @@ function renderTable() {
 
   const zh = window._currentLang === 'zh';
   container.innerHTML = `
+    <div class="ranking-score-note">
+      ${zh
+        ? '综合评分 = 换手质量×0.28 + 涨幅健康度×0.14 + 流通市值匹配×0.10 + 持续活跃度×0.30 + 结构强度×0.18 + 行业加分'
+        : 'Score = turnover quality×0.28 + pct health×0.14 + circ-mv fit×0.10 + sustained activity×0.30 + structure strength×0.18 + industry bonus'}
+    </div>
     <table class="signal-table">
       <thead>
         <tr>
@@ -199,7 +204,7 @@ function renderTable() {
           <th class="col-market">${zh ? '市场' : 'Market'}</th>
           <th class="col-count">${zh ? '触发' : 'Triggered'}</th>
           <th class="col-count">${zh ? '综合评分' : 'Score'}</th>
-          <th class="col-rules">${zh ? '触发规则' : 'Triggered Rules'}</th>
+          <th class="col-rules">${zh ? '触发规则 / 评分公式' : 'Rules / Score Formula'}</th>
           <th class="col-tier">${zh ? '数据级别' : 'Data Tier'}</th>
           <th class="col-action">${zh ? '操作' : 'Action'}</th>
         </tr>
