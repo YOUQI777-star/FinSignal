@@ -12,6 +12,19 @@ const state = {
   filtered: [],
   page:     1,
   pageSize: 100,
+  restoreAnchor: '',
+};
+
+const FILTERS_KEY = 'fsm_candidates_filters_v1';
+const RETURN_KEY = 'fsm_candidates_return_v1';
+const DEFAULT_FILTERS = {
+  turnoverMin: '2',
+  turnoverMax: '',
+  priceMax: '20',
+  circMvMax: '80',
+  pctMax: '9',
+  excludeSt: true,
+  page: 1,
 };
 
 // ── Health check ─────────────────────────────────────────────────────────────
@@ -42,6 +55,7 @@ async function loadCandidates({ forceRefresh = false } = {}) {
     const data = await API.getCandidates(params);
     state.data     = data;
     state.filtered = data.results || [];
+    persistCandidatesState();
     renderTable(state.filtered);
     renderMeta(data);
     renderPagination(data);
@@ -230,9 +244,13 @@ function renderTable(rows) {
     row.addEventListener('click', () => {
       const code   = row.dataset.code;
       const market = row.dataset.market;
+      persistCandidatesState();
+      saveReturnAnchor(code);
       window.location.href = `company.html?market=${market}&code=${code}&from=candidates`;
     });
   });
+
+  restoreReturnAnchor(container);
 }
 
 function renderFinancialCheck(check) {
@@ -287,13 +305,9 @@ document.getElementById('refreshBtn').addEventListener('click', () => {
   loadCandidates({ forceRefresh: true });
 });
 document.getElementById('resetBtn').addEventListener('click', () => {
-  document.getElementById('fTurnoverMin').value  = '2';
-  document.getElementById('fTurnoverMax').value  = '';
-  document.getElementById('fPriceMax').value     = '20';
-  document.getElementById('fCircMvMax').value    = '80';
-  document.getElementById('fPctMax').value       = '9';
-  document.getElementById('fExcludeSt').checked  = true;
+  applyStoredFilters(DEFAULT_FILTERS);
   state.page = 1;
+  persistCandidatesState();
   loadCandidates();
 });
 
@@ -306,5 +320,62 @@ document.getElementById('filterBar').addEventListener('keydown', e => {
 });
 
 // ── Init ──────────────────────────────────────────────────────────────────────
+restoreCandidatesState();
 checkHealth();
 loadCandidates();
+
+function restoreCandidatesState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(FILTERS_KEY) || 'null');
+    if (saved && typeof saved === 'object') {
+      applyStoredFilters({ ...DEFAULT_FILTERS, ...saved });
+      state.page = Number(saved.page) > 0 ? Number(saved.page) : 1;
+    } else {
+      applyStoredFilters(DEFAULT_FILTERS);
+    }
+  } catch {
+    applyStoredFilters(DEFAULT_FILTERS);
+  }
+}
+
+function applyStoredFilters(filters) {
+  document.getElementById('fTurnoverMin').value = filters.turnoverMin ?? DEFAULT_FILTERS.turnoverMin;
+  document.getElementById('fTurnoverMax').value = filters.turnoverMax ?? DEFAULT_FILTERS.turnoverMax;
+  document.getElementById('fPriceMax').value = filters.priceMax ?? DEFAULT_FILTERS.priceMax;
+  document.getElementById('fCircMvMax').value = filters.circMvMax ?? DEFAULT_FILTERS.circMvMax;
+  document.getElementById('fPctMax').value = filters.pctMax ?? DEFAULT_FILTERS.pctMax;
+  document.getElementById('fExcludeSt').checked = Boolean(filters.excludeSt);
+}
+
+function persistCandidatesState() {
+  const payload = {
+    turnoverMin: document.getElementById('fTurnoverMin').value,
+    turnoverMax: document.getElementById('fTurnoverMax').value,
+    priceMax: document.getElementById('fPriceMax').value,
+    circMvMax: document.getElementById('fCircMvMax').value,
+    pctMax: document.getElementById('fPctMax').value,
+    excludeSt: document.getElementById('fExcludeSt').checked,
+    page: state.page,
+  };
+  localStorage.setItem(FILTERS_KEY, JSON.stringify(payload));
+}
+
+function saveReturnAnchor(code) {
+  sessionStorage.setItem(RETURN_KEY, JSON.stringify({
+    code,
+    page: state.page,
+    ts: Date.now(),
+  }));
+}
+
+function restoreReturnAnchor(container) {
+  let payload = null;
+  try {
+    payload = JSON.parse(sessionStorage.getItem(RETURN_KEY) || 'null');
+  } catch {}
+  if (!payload || payload.page !== (state.data?.page || state.page)) return;
+  const row = container.querySelector(`.clickable-row[data-code="${CSS.escape(payload.code || '')}"]`);
+  if (!row) return;
+  row.scrollIntoView({ block: 'center' });
+  sessionStorage.removeItem(RETURN_KEY);
+}

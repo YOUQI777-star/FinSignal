@@ -86,6 +86,11 @@ def build_candidate_metrics(candidate: dict[str, Any], *, history_days: int = 10
     avg_turnover_10 = _avg(turnover_rates)
     latest_turnover = turnover_rates[-1] if turnover_rates else candidate.get("turnover")
     latest_close = closes[-1] if closes else candidate.get("current_price")
+    latest_pct_change = pct_changes[-1] if pct_changes else candidate.get("pct_change")
+    latest_circ_mv = next(
+        (float(row["circ_mv"]) for row in reversed(history) if row.get("circ_mv") is not None),
+        candidate.get("circ_mv"),
+    )
 
     turnover_stability = 0.0
     if turnover_rates:
@@ -113,6 +118,8 @@ def build_candidate_metrics(candidate: dict[str, Any], *, history_days: int = 10
         "short_return_5d": round(short_return, 2),
         "avg_pct_5": round(avg_pct_5, 2),
         "latest_close": latest_close,
+        "latest_pct_change": round(float(latest_pct_change), 2) if latest_pct_change is not None else None,
+        "latest_circ_mv": round(float(latest_circ_mv), 2) if latest_circ_mv is not None else None,
     }
 
 
@@ -135,9 +142,21 @@ def attach_candidate_scores(candidates: list[dict[str, Any]]) -> list[dict[str, 
         code = str(candidate.get("code") or "")
         metrics = metrics_by_code.get(code, {})
 
-        turnover_score = _score_turnover_quality(candidate.get("turnover"))
-        pct_score = _score_pct_health(candidate.get("pct_change"))
-        circ_mv_score = _score_circ_mv(candidate.get("circ_mv"))
+        current_turnover = candidate.get("turnover")
+        if current_turnover is None:
+            current_turnover = metrics.get("latest_turnover")
+
+        current_pct_change = candidate.get("pct_change")
+        if current_pct_change is None:
+            current_pct_change = metrics.get("latest_pct_change")
+
+        current_circ_mv = candidate.get("circ_mv")
+        if current_circ_mv is None:
+            current_circ_mv = metrics.get("latest_circ_mv")
+
+        turnover_score = _score_turnover_quality(current_turnover)
+        pct_score = _score_pct_health(current_pct_change)
+        circ_mv_score = _score_circ_mv(current_circ_mv)
 
         active_days_5 = int(metrics.get("active_days_5") or 0)
         active_days_10 = int(metrics.get("active_days_10") or 0)
@@ -176,7 +195,19 @@ def attach_candidate_scores(candidates: list[dict[str, Any]]) -> list[dict[str, 
             {
                 **candidate,
                 "industry": industry,
+                "turnover": current_turnover,
+                "pct_change": current_pct_change,
+                "circ_mv": current_circ_mv,
                 "candidate_score": candidate_score,
+                "score_formula": (
+                    f"{candidate_score:.2f} = "
+                    f"{turnover_score:.1f}×0.28 + "
+                    f"{pct_score:.1f}×0.14 + "
+                    f"{circ_mv_score:.1f}×0.10 + "
+                    f"{sustained_score:.1f}×0.30 + "
+                    f"{structure_score:.1f}×0.18 + "
+                    f"{industry_bonus:.1f}"
+                ),
                 "score_breakdown": {
                     "turnover_quality": round(turnover_score, 2),
                     "pct_health": round(pct_score, 2),

@@ -9,6 +9,7 @@
 const AUTH = (() => {
   const TOKEN_KEY = 'fsm_auth_token';
   const USER_KEY  = 'fsm_auth_user';
+  const FAVORITES_CACHE_KEY = 'fsm_favorites_cache_v1';
 
   function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
   function getUser()  {
@@ -27,7 +28,10 @@ const AUTH = (() => {
   }
 
   async function apiCall(path, opts = {}) {
-    const base = localStorage.getItem('fsm_api_base') || 'https://tender-fascination-production.up.railway.app';
+    const stored = localStorage.getItem('fsm_api_base') || '';
+    const base = (stored && !stored.includes('localhost') && !stored.includes('127.0.0.1'))
+      ? stored
+      : 'https://tender-fascination-production.up.railway.app';
     const token = getToken();
     const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
     if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -61,21 +65,69 @@ const AUTH = (() => {
   }
 
   async function getFavorites() {
-    return apiCall('/api/me/favorites');
+    const data = await apiCall('/api/me/favorites');
+    const remote = Array.isArray(data?.results) ? data.results : [];
+    const local = loadFavoriteCache();
+    const merged = mergeFavorites(remote, local);
+    saveFavoriteCache(merged);
+    return { ...(data || {}), results: merged };
   }
 
   async function addFavorite(market, code, name) {
-    return apiCall('/api/me/favorites', {
+    const result = await apiCall('/api/me/favorites', {
       method: 'POST',
       body: JSON.stringify({ market, code, name }),
     });
+    saveFavoriteCache(mergeFavorites(
+      [{ market, code, name }],
+      loadFavoriteCache(),
+    ));
+    return result;
   }
 
   async function removeFavorite(market, code) {
-    return apiCall(`/api/me/favorites/${market}/${code}`, { method: 'DELETE' });
+    const result = await apiCall(`/api/me/favorites/${market}/${code}`, { method: 'DELETE' });
+    saveFavoriteCache(
+      loadFavoriteCache().filter(item => !(item.market === market && item.code === code))
+    );
+    return result;
   }
 
   return { getToken, getUser, isLoggedIn, saveSession, clearSession, register, login, logout, getFavorites, addFavorite, removeFavorite };
+
+  function loadFavoriteCache() {
+    try {
+      const cached = JSON.parse(localStorage.getItem(FAVORITES_CACHE_KEY) || '[]');
+      return Array.isArray(cached) ? cached : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveFavoriteCache(items) {
+    try {
+      localStorage.setItem(FAVORITES_CACHE_KEY, JSON.stringify(items || []));
+    } catch {}
+  }
+
+  function mergeFavorites(primary, fallback) {
+    const merged = new Map();
+    [...primary, ...fallback].forEach(item => {
+      const market = String(item?.market || '').toUpperCase();
+      const code = String(item?.code || '');
+      if (!market || !code) return;
+      const key = `${market}:${code}`;
+      const prev = merged.get(key) || {};
+      merged.set(key, {
+        ...prev,
+        ...item,
+        market,
+        code,
+        name: item?.name || prev?.name || code,
+      });
+    });
+    return [...merged.values()];
+  }
 })();
 
 /* ============================================================

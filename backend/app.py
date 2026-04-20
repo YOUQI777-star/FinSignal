@@ -139,8 +139,28 @@ def get_top_signals():
     else:
         all_results = [r for r in all_results if r.get("summary", {}).get("triggered_count", 0) > 0]
 
-    all_results.sort(key=lambda r: r.get("summary", {}).get("triggered_count", 0), reverse=True)
-    return jsonify({"total": len(all_results), "results": all_results[:limit]}), 200
+    enriched_results = []
+    for result in all_results:
+        if result.get("market") == "CN":
+            entry = attach_candidate_scores([result])[0]
+            result = {
+                **result,
+                "candidate_score": entry.get("candidate_score"),
+                "score_formula": entry.get("score_formula"),
+                "score_breakdown": entry.get("score_breakdown"),
+                "history_metrics": entry.get("history_metrics"),
+            }
+        enriched_results.append(result)
+
+    enriched_results.sort(
+        key=lambda r: (
+            -(r.get("summary", {}).get("triggered_count", 0)),
+            -(r.get("candidate_score") or 0),
+            r.get("market") or "",
+            r.get("code") or "",
+        )
+    )
+    return jsonify({"total": len(enriched_results), "results": enriched_results[:limit]}), 200
 
 
 @app.route("/api/graph/<market>/<code>")

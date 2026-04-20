@@ -78,6 +78,7 @@ const state = {
   candidateContext: null,
   historyDays: 10,
   historyRange: null,
+  historyAutoRetryKey: '',
 };
 
 /* ============================================================
@@ -333,6 +334,15 @@ async function loadTurnoverHistory() {
   try {
     const params = state.historyRange || { days: state.historyDays };
     const result = await API.getTurnoverHistory(state.market, state.code, params);
+    const retryKey = JSON.stringify(params);
+    if (!result.results?.length && state.market === 'CN' && state.historyAutoRetryKey !== retryKey) {
+      state.historyAutoRetryKey = retryKey;
+      body.innerHTML = `<div class="report-placeholder"><p>${t('所选区间暂无缓存，正在尝试实时补抓…', 'No cached history for this range, trying live hydration…')}</p></div>`;
+      const refreshed = await API.getTurnoverHistory(state.market, state.code, params);
+      renderTurnoverHistory(refreshed);
+      return;
+    }
+    state.historyAutoRetryKey = '';
     renderTurnoverHistory(result);
   } catch (err) {
     meta.textContent = '';
@@ -356,12 +366,17 @@ function renderTurnoverHistory(result) {
 
   const width = 640;
   const height = 220;
-  const padX = 36;
+  const padX = 44;
   const padY = 24;
   const values = rows.map(item => Number(item.turnover_rate ?? 0));
   const min = Math.min(...values);
   const max = Math.max(...values);
   const range = max - min || 1;
+  const axisTicks = [
+    { value: max, label: `${max.toFixed(2)}%` },
+    { value: min + range / 2, label: `${(min + range / 2).toFixed(2)}%` },
+    { value: min, label: `${min.toFixed(2)}%` },
+  ];
   const points = rows.map((item, idx) => {
     const x = padX + (idx / Math.max(rows.length - 1, 1)) * (width - padX * 2);
     const y = height - padY - ((Number(item.turnover_rate ?? 0) - min) / range) * (height - padY * 2);
@@ -371,6 +386,13 @@ function renderTurnoverHistory(result) {
   body.innerHTML = `
     <div class="turnover-history-chart-wrap">
       <svg class="turnover-history-chart" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+        ${axisTicks.map((tick) => {
+          const y = height - padY - ((tick.value - min) / range) * (height - padY * 2);
+          return `
+            <line x1="${padX}" y1="${y}" x2="${width - padX}" y2="${y}" class="turnover-history-grid"></line>
+            <text x="${padX - 8}" y="${y + 4}" text-anchor="end" class="turnover-history-y-label">${esc(tick.label)}</text>
+          `;
+        }).join('')}
         <polyline class="turnover-history-line" points="${points}"></polyline>
         ${rows.map((item, idx) => {
           const x = padX + (idx / Math.max(rows.length - 1, 1)) * (width - padX * 2);

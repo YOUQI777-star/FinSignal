@@ -95,8 +95,18 @@ def add_favorite(user_id: int, market: str, code: str, name: str) -> bool:
     try:
         with _conn() as con:
             con.execute(
-                "INSERT OR IGNORE INTO favorites (user_id, market, code, name) VALUES (?,?,?,?)",
-                (user_id, market.upper(), code, name)
+                """
+                INSERT INTO favorites (user_id, market, code, name)
+                VALUES (?,?,?,?)
+                ON CONFLICT(user_id, market, code) DO UPDATE SET
+                    name = CASE
+                        WHEN (favorites.name IS NULL OR favorites.name = '')
+                             AND excluded.name IS NOT NULL AND excluded.name <> ''
+                        THEN excluded.name
+                        ELSE favorites.name
+                    END
+                """,
+                (user_id, market.upper(), code, name),
             )
         return True
     except Exception:

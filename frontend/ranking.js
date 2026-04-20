@@ -152,6 +152,8 @@ function renderTable() {
     const tier      = item.summary?.snapshot_tier   ?? '';
     const mkt       = (item.market || '').toLowerCase();
     const nameSafe  = esc(item.name || '—');
+    const score     = item.candidate_score;
+    const scoreFormula = item.score_formula || '—';
 
     return `<tr>
       <td class="col-idx">${idx + 1}</td>
@@ -167,12 +169,16 @@ function renderTable() {
       <td class="col-count">
         <span class="trigger-count ${countClass(count)}">${count}</span>
       </td>
+      <td class="col-count">
+        <span class="trigger-count ${scoreClass(score)}">${score != null ? Number(score).toFixed(1) : '—'}</span>
+      </td>
       <td class="col-rules">
         <div class="rule-badges">
           ${triggered.length
             ? triggered.map(id => `<span class="badge badge-rule">${id}</span>`).join('')
             : '<span class="no-rules">—</span>'}
         </div>
+        <div class="ranking-score-formula" title="${esc(scoreFormula)}">${esc(scoreFormula)}</div>
       </td>
       <td class="col-tier">
         <span class="tier-badge ${tierClass(tier)}">${tierLabel(tier)}</span>
@@ -192,6 +198,7 @@ function renderTable() {
           <th class="col-company">${zh ? '公司' : 'Company'}</th>
           <th class="col-market">${zh ? '市场' : 'Market'}</th>
           <th class="col-count">${zh ? '触发' : 'Triggered'}</th>
+          <th class="col-count">${zh ? '综合评分' : 'Score'}</th>
           <th class="col-rules">${zh ? '触发规则' : 'Triggered Rules'}</th>
           <th class="col-tier">${zh ? '数据级别' : 'Data Tier'}</th>
           <th class="col-action">${zh ? '操作' : 'Action'}</th>
@@ -268,7 +275,7 @@ function exportCSV() {
     return;
   }
 
-  const headers = ['Rank', 'Name', 'Code', 'Market', 'Triggered', 'Triggered Rules', 'Data Tier'];
+  const headers = ['Rank', 'Name', 'Code', 'Market', 'Triggered', 'Score', 'Triggered Rules', 'Score Formula', 'Data Tier'];
   const rows = results.map((r, idx) => {
     const triggered = getTriggeredRuleIds(r).join(' ');
     const tier = tierLabel(r.summary?.snapshot_tier ?? '');
@@ -279,7 +286,9 @@ function exportCSV() {
       r.code,
       r.market,
       count,
+      r.candidate_score ?? '',
       `"${triggered}"`,
+      `"${(r.score_formula || '').replace(/"/g, '""')}"`,
       tier,
     ].join(',');
   });
@@ -331,6 +340,14 @@ function countClass(n) {
   if (n >= 3) return 'cnt-high';
   if (n === 2) return 'cnt-medium';
   if (n === 1) return 'cnt-low';
+  return 'cnt-zero';
+}
+function scoreClass(n) {
+  const score = Number(n);
+  if (!Number.isFinite(score)) return 'cnt-zero';
+  if (score >= 80) return 'cnt-high';
+  if (score >= 65) return 'cnt-medium';
+  if (score >= 50) return 'cnt-low';
   return 'cnt-zero';
 }
 function tierClass(tier) {
