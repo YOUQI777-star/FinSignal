@@ -20,6 +20,8 @@ import time as _time
 from datetime import date, timedelta
 from typing import Any
 
+from backend.scrapers.cn_tushare import TushareCNClient, tushare_available
+
 log = logging.getLogger(__name__)
 
 try:
@@ -88,6 +90,16 @@ def get_recent_trading_dates(limit: int = 10) -> list[str]:
       if past:
           return past[-limit:]
 
+    if tushare_available():
+        try:
+            client = TushareCNClient()
+            start = (date.fromisoformat(latest) - timedelta(days=max(limit * 3, 30))).isoformat()
+            dates = client.get_trade_dates(start_date=start, end_date=latest)
+            if dates:
+                return dates[-limit:]
+        except Exception as exc:
+            log.warning("Tushare trading calendar fetch failed: %s", exc)
+
     # Fallback: weekdays only
     dates: list[str] = []
     current = date.fromisoformat(latest)
@@ -107,8 +119,18 @@ def fetch_turnover_history_for_code(
     """
     Fetch historical daily turnover-rate rows for one A-share code.
     """
+    if tushare_available():
+        try:
+            return TushareCNClient().fetch_daily_history(
+                code,
+                start_date=start_date,
+                end_date=end_date,
+            )
+        except Exception as exc:
+            log.warning("Tushare history fetch failed for %s (%s → %s): %s", code, start_date, end_date, exc)
+
     if not _AK_AVAILABLE:
-        raise RuntimeError("AKShare not installed — run: pip install akshare")
+        raise RuntimeError("No CN historical source available — install akshare or configure TUSHARE_TOKEN")
 
     df = ak.stock_zh_a_hist(
         symbol=str(code).zfill(6),
@@ -135,6 +157,14 @@ def fetch_turnover_history_for_code(
             "code": str(code).zfill(6),
             "date": str(row.get(date_col))[:10],
             "turnover_rate": turnover,
+            "open": None,
+            "high": None,
+            "low": None,
+            "close": None,
+            "pct_change": None,
+            "volume": None,
+            "amount": None,
+            "circ_mv": None,
         })
     return rows
 

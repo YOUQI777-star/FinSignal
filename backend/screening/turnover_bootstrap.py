@@ -5,6 +5,7 @@ import time
 from datetime import datetime, timezone
 
 from backend.data_access.turnover_history_store import TurnoverHistoryStore
+from backend.screening.candidate_scoring import clear_candidate_score_caches
 from backend.screening.market_loader import fetch_turnover_history_for_code, get_recent_trading_dates
 
 log = logging.getLogger(__name__)
@@ -47,12 +48,21 @@ def hydrate_single_code_turnover_history(
             "code": str(code).strip(),
             "date": row["date"],
             "turnover_rate": row["turnover_rate"],
+            "open": row.get("open"),
+            "high": row.get("high"),
+            "low": row.get("low"),
+            "close": row.get("close"),
+            "pct_change": row.get("pct_change"),
+            "volume": row.get("volume"),
+            "amount": row.get("amount"),
+            "circ_mv": row.get("circ_mv"),
             "updated_at": updated_at,
         }
         for row in rows
         if not expected_dates or row.get("date") in expected_dates
     ]
     store.upsert_records(records)
+    clear_candidate_score_caches()
     return store.get_history(
         market,
         str(code).strip(),
@@ -124,12 +134,21 @@ def bootstrap_recent_turnover_history_for_candidates(
                         "code": code,
                         "date": row["date"],
                         "turnover_rate": row["turnover_rate"],
+                        "open": row.get("open"),
+                        "high": row.get("high"),
+                        "low": row.get("low"),
+                        "close": row.get("close"),
+                        "pct_change": row.get("pct_change"),
+                        "volume": row.get("volume"),
+                        "amount": row.get("amount"),
+                        "circ_mv": row.get("circ_mv"),
                         "updated_at": updated_at,
                     }
                     for row in rows
                     if row.get("date") in dates
                 ]
                 store.upsert_records(records)
+                clear_candidate_score_caches()
                 success += 1
                 code_ok = True
                 break

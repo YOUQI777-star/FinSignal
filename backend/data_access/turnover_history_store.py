@@ -30,6 +30,14 @@ class TurnoverHistoryStore:
                     code TEXT NOT NULL,
                     date TEXT NOT NULL,
                     turnover_rate REAL,
+                    open REAL,
+                    high REAL,
+                    low REAL,
+                    close REAL,
+                    pct_change REAL,
+                    volume REAL,
+                    amount REAL,
+                    circ_mv REAL,
                     updated_at TEXT NOT NULL,
                     PRIMARY KEY (market, code, date)
                 )
@@ -49,6 +57,22 @@ class TurnoverHistoryStore:
                 )
                 """
             )
+            columns = {
+                row["name"]
+                for row in conn.execute("PRAGMA table_info(turnover_history)").fetchall()
+            }
+            for name, definition in (
+                ("open", "REAL"),
+                ("high", "REAL"),
+                ("low", "REAL"),
+                ("close", "REAL"),
+                ("pct_change", "REAL"),
+                ("volume", "REAL"),
+                ("amount", "REAL"),
+                ("circ_mv", "REAL"),
+            ):
+                if name not in columns:
+                    conn.execute(f"ALTER TABLE turnover_history ADD COLUMN {name} {definition}")
 
     def upsert_daily_rows(
         self,
@@ -64,6 +88,14 @@ class TurnoverHistoryStore:
                 str(row.get("code", "")).strip(),
                 trading_date,
                 row.get("turnover"),
+                row.get("price"),
+                row.get("price"),
+                row.get("price"),
+                row.get("price"),
+                row.get("pct_change"),
+                None,
+                None,
+                row.get("circ_mv"),
                 updated_at,
             )
             for row in rows
@@ -75,10 +107,21 @@ class TurnoverHistoryStore:
         with self._connect() as conn:
             conn.executemany(
                 """
-                INSERT INTO turnover_history (market, code, date, turnover_rate, updated_at)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO turnover_history (
+                    market, code, date, turnover_rate, open, high, low, close,
+                    pct_change, volume, amount, circ_mv, updated_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(market, code, date) DO UPDATE SET
                     turnover_rate = excluded.turnover_rate,
+                    open = COALESCE(excluded.open, turnover_history.open),
+                    high = COALESCE(excluded.high, turnover_history.high),
+                    low = COALESCE(excluded.low, turnover_history.low),
+                    close = COALESCE(excluded.close, turnover_history.close),
+                    pct_change = COALESCE(excluded.pct_change, turnover_history.pct_change),
+                    volume = COALESCE(excluded.volume, turnover_history.volume),
+                    amount = COALESCE(excluded.amount, turnover_history.amount),
+                    circ_mv = COALESCE(excluded.circ_mv, turnover_history.circ_mv),
                     updated_at = excluded.updated_at
                 """,
                 payload,
@@ -91,6 +134,14 @@ class TurnoverHistoryStore:
                 str(record.get("code", "")).strip(),
                 str(record.get("date", "")).strip(),
                 record.get("turnover_rate"),
+                record.get("open"),
+                record.get("high"),
+                record.get("low"),
+                record.get("close"),
+                record.get("pct_change"),
+                record.get("volume"),
+                record.get("amount"),
+                record.get("circ_mv"),
                 str(record.get("updated_at", "")).strip(),
             )
             for record in records
@@ -102,10 +153,21 @@ class TurnoverHistoryStore:
         with self._connect() as conn:
             conn.executemany(
                 """
-                INSERT INTO turnover_history (market, code, date, turnover_rate, updated_at)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO turnover_history (
+                    market, code, date, turnover_rate, open, high, low, close,
+                    pct_change, volume, amount, circ_mv, updated_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(market, code, date) DO UPDATE SET
                     turnover_rate = excluded.turnover_rate,
+                    open = COALESCE(excluded.open, turnover_history.open),
+                    high = COALESCE(excluded.high, turnover_history.high),
+                    low = COALESCE(excluded.low, turnover_history.low),
+                    close = COALESCE(excluded.close, turnover_history.close),
+                    pct_change = COALESCE(excluded.pct_change, turnover_history.pct_change),
+                    volume = COALESCE(excluded.volume, turnover_history.volume),
+                    amount = COALESCE(excluded.amount, turnover_history.amount),
+                    circ_mv = COALESCE(excluded.circ_mv, turnover_history.circ_mv),
                     updated_at = excluded.updated_at
                 """,
                 payload,
@@ -130,7 +192,10 @@ class TurnoverHistoryStore:
             end_date = end.isoformat()
 
         query = """
-            SELECT market, code, date, turnover_rate, updated_at
+            SELECT
+                market, code, date, turnover_rate,
+                open, high, low, close, pct_change, volume, amount, circ_mv,
+                updated_at
             FROM turnover_history
             WHERE market = ? AND code = ?
         """

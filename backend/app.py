@@ -22,6 +22,7 @@ from backend.data_access.turnover_history_store import TurnoverHistoryStore
 from backend.graph.neo4j_client import Neo4jClient
 from backend.rules.engine import RuleEngine
 from backend.screening.screening_service import apply_query_filters, get_candidates
+from backend.screening.candidate_scoring import attach_candidate_scores
 from backend.screening.turnover_bootstrap import hydrate_single_code_turnover_history
 
 _SIGNALS_DIR = DATA_DIR / "signals"
@@ -338,12 +339,12 @@ def api_get_candidates():
         exclude_st   = exclude_st,
     )
 
+    candidates = attach_candidate_scores(candidates)
+
     page = _int_param("page", 1, minimum=1)
     page_size_default = _int_param("limit", 100, minimum=1, maximum=500)
     page_size = _int_param("page_size", page_size_default, minimum=1, maximum=500)
     signal_cache = _load_signals_cache("CN")
-
-    candidates.sort(key=lambda c: (-(c.get("turnover") or 0), c.get("code") or ""))
     total = len(candidates)
     total_pages = max(1, (total + page_size - 1) // page_size)
     page = min(page, total_pages)
@@ -385,6 +386,8 @@ def get_candidate_detail(code: str):
     entry = next((c for c in data.get("candidates", []) if c["code"] == code), None)
     if entry is None:
         return jsonify({"error": f"{code} is not in the current candidates pool"}), 404
+
+    entry = attach_candidate_scores([entry])[0]
 
     # Attach brief signal summary if available (non-blocking)
     signal_cache = _load_signals_cache("CN")
@@ -492,7 +495,14 @@ def favorites_list():
     user = _get_current_user()
     if not user:
         return jsonify({"error": "Unauthorized"}), 401
-    return jsonify({"results": get_favorites(user["id"])})
+    results = []
+    for item in get_favorites(user["id"]):
+        if not item.get("name"):
+            company = repository.get_company_profile(item.get("market", ""), item.get("code", ""))
+            if company and company.get("name"):
+                item = {**item, "name": company["name"]}
+        results.append(item)
+    return jsonify({"results": results})
 
 
 @app.route("/api/me/favorites", methods=["POST"])

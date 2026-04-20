@@ -4,3 +4,4 @@ neo4j==5.*
 akshare
 requests>=2.31.0
 gunicorn>=21.2.0
+tushare>=1.2.89

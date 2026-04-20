@@ -304,8 +304,10 @@ function renderFavorites(items) {
     <a class="favorite-item" href="company.html?market=${encodeURIComponent(item.market)}&code=${encodeURIComponent(item.code)}">
       <div class="favorite-item-left">
         <span class="badge badge-market badge-market-${String(item.market).toLowerCase()}">${item.market}</span>
-        <span class="favorite-name">${escAuth(item.name || item.code)}</span>
-        <span class="favorite-code">${escAuth(item.code)}</span>
+        <div style="min-width:0;display:flex;flex-direction:column;gap:1px">
+          <span class="favorite-name">${escAuth(item.name || item.code)}</span>
+          <span class="favorite-code">${escAuth(item.code)}</span>
+        </div>
       </div>
       <button class="favorite-remove-btn" data-market="${item.market}" data-code="${item.code}" title="${zh ? '取消收藏' : 'Remove'}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>

@@ -19,6 +19,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from backend.data_access.turnover_history_store import TurnoverHistoryStore
+from backend.screening.candidate_scoring import clear_candidate_score_caches
 from backend.screening.candidate_rules import (
     DEFAULT_CIRC_MV_MAX,
     DEFAULT_EXCLUDE_ST,
@@ -64,6 +65,7 @@ def _run_screening(
     trading_date = get_last_trading_date()
     generated_at = datetime.now(timezone.utc).isoformat()
     history_store.upsert_daily_rows("CN", trading_date, spots, updated_at=generated_at)
+    clear_candidate_score_caches()
     log.info("Screening %d stocks …", len(spots))
 
     candidates = []

@@ -25,9 +25,9 @@
 | 层 | 技术 |
 |---|---|
 | 后端 | Python 3.x + Flask + flask-cors |
-| 数据存储 | 本地 JSON 文件 (`data/cn/*.json`, `data/tw/*.json`) + SQLite (company_master.db) |
+| 数据存储 | 本地 JSON 文件 (`data/cn/*.json`, `data/tw/*.json`) + SQLite (`company_master.db`, `turnover_history.db`) |
 | 信号缓存 | `data/signals/cn_signals.json`, `data/signals/tw_signals.json` |
-| 数据源（CN） | AKShare EastMoney bulk API |
+| 数据源（CN） | AKShare EastMoney bulk API + Tushare Pro（历史日线 / 换手率） |
 | 数据源（TW） | TWSE OpenAPI + FinMind（OCF 字段） |
 | 前端 | 原生 HTML + CSS + JavaScript（无框架，无构建工具） |
 | 部署（前端） | Cloudflare Pages（直接 wrangler deploy） |
@@ -51,7 +51,7 @@ C_G/
 │   │   ├── local_store.py          # 读取 data/cn/*.json, data/tw/*.json
 │   │   ├── master_store.py         # 读取 SQLite company_master.db
 │   │   ├── company_repository.py   # 合并 master + snapshot，统一对外接口
-│   │   ├── turnover_history_store.py # 轻量历史换手率 SQLite（market/code/date/turnover_rate）
+│   │   ├── turnover_history_store.py # 历史行情轻量 SQLite（turnover_rate + OHLC + pct_change + volume + amount + circ_mv）
 │   │   └── coverage.py             # 判断 snapshot_tier（full/partial/shell）
 │   ├── rules/
 │   │   ├── base.py                 # RuleDefinition + build_signal_result
@@ -61,6 +61,7 @@ C_G/
 │   ├── scrapers/
 │   │   ├── cn_akshare.py           # A 股抓取（AKShare + EastMoney）
 │   │   ├── cn_baostock.py          # A 股补充（BaoStock，较少使用）
+│   │   ├── cn_tushare.py           # A 股 Tushare Pro 客户端（历史日线 / daily_basic / 交易日历）
 │   │   ├── tw_twse.py              # 台股抓取（TWSE OpenAPI + FinMind OCF）
 │   │   ├── schema.py               # 数据 schema 定义
 │   │   └── save_snapshots.py       # 将抓取结果写入 data/cn/ 或 data/tw/
@@ -72,6 +73,7 @@ C_G/
 │   │   ├── __init__.py
 │   │   ├── market_loader.py        # AKShare 实时行情拉取 + 交易日历（get_last_trading_date）
 │   │   ├── candidate_rules.py      # 筛选规则：换手率/现价/流通市值/涨幅/ST
+│   │   ├── candidate_scoring.py    # 候选池综合评分：强度 + 持续活跃 + 结构 + 行业轻量加成
 │   │   ├── screening_service.py    # 实时候选池主逻辑：30 分钟内存缓存 + thread-safe
 │   │   └── turnover_bootstrap.py   # 单股换手率历史按需补数 + 候选池批量回填实验
 │   └── scripts/
@@ -236,6 +238,12 @@ GET  /api/candidates?turnover_min=2&turnover_max=30&price_max=20&circ_mv_max=80&
      实时拉取 AKShare stock_zh_a_spot_em()，30 分钟内存缓存，首次约 60-150s
      非交易日（周末/节假日）返回最后一个交易日的收盘快照（East Money 接口不清零）
      ?refresh=1 强制绕过缓存重新拉取
+     后端在过滤后会追加 `candidate_score`、`score_breakdown`、`history_metrics`
+     默认结果顺序按综合评分排序，不再只是单纯按当日换手率：
+       - `turnover_quality`
+       - `sustained_activity`（近 5/10 日持续活跃）
+       - `structure_strength`（近几日价格/换手结构）
+       - `industry_bonus`（同板块轻量共振）
      每条 result 额外带 `financial_check`：
        status = `high_risk | warning | pass | no_data`
        triggered_signals = 已触发的财务/治理信号 ID
@@ -248,7 +256,14 @@ GET  /api/candidates/CN/{code}
 
 GET  /api/turnover-history/CN/{code}?days=10
      → {"market","code","days","total","results":[...]}
-     轻量历史换手率接口。优先读 `data/turnover_history.db`；若本地没有该股票历史，则自动按需抓取该单股最近 N 个交易日换手率并写入 SQLite
+     历史换手率 / 日线接口。优先读 `data/turnover_history.db`；若本地没有该股票历史，则自动按需抓取该单股最近 N 个交易日数据并写入 SQLite
+     新版本优先走 Tushare Pro（`TUSHARE_TOKEN` + `TUSHARE_HTTP_URL`），可拿到：
+       - `turnover_rate`
+       - `open/high/low/close`
+       - `pct_change`
+       - `volume / amount`
+       - `circ_mv`
+     若 Tushare 不可用，则回落到 AKShare 历史接口，仅保证 `turnover_rate`
 ```
 
 ---
