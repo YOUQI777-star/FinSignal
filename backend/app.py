@@ -423,7 +423,14 @@ def get_turnover_history(market: str, code: str):
         end_date=end_date,
         days=day_count,
     )
-    if not rows and market == "CN":
+    needs_hydration = False
+    if market == "CN":
+        if not rows:
+            needs_hydration = True
+        elif day_count and len(rows) < day_count:
+            needs_hydration = True
+
+    if needs_hydration:
         try:
             rows = hydrate_single_code_turnover_history(
                 code,
