@@ -308,22 +308,34 @@ function renderScorePanel(data) {
     ['结构强度', 'Structure Strength', breakdown.structure_strength],
     ['行业加分', 'Industry Bonus', breakdown.industry_bonus],
   ];
+  const scoreValue = Number(score).toFixed(1);
 
   body.innerHTML = `
-    <div class="score-panel-total">
-      <div class="score-total-badge">${Number(score).toFixed(1)}</div>
-      <div class="score-total-copy">
-        <div class="score-total-title">${t('综合评分', 'Composite Score')}</div>
-        <div class="score-total-formula">${esc(formula || '—')}</div>
-      </div>
-    </div>
-    <div class="score-breakdown-grid">
-      ${items.map(([zh, en, value]) => `
-        <div class="score-breakdown-item">
-          <span>${t(zh, en)}</span>
-          <strong>${value != null ? Number(value).toFixed(1) : '—'}</strong>
+    <div class="score-panel-shell">
+      <div class="score-panel-hero">
+        <div class="score-hero-scorecard">
+          <span class="score-hero-label">${t('综合评分', 'Composite Score')}</span>
+          <strong class="score-hero-value">${scoreValue}</strong>
+          <span class="score-hero-footnote">${t('候选排序主分数', 'Primary candidate ranking score')}</span>
         </div>
-      `).join('')}
+        <div class="score-hero-main">
+          <div class="score-total-copy">
+            <div class="score-total-title">${t('评分公式', 'Score Formula')}</div>
+            <div class="score-total-formula">${esc(formula || '—')}</div>
+          </div>
+          <div class="score-hero-note">
+            ${t('分数越高，代表换手质量、持续活跃度与结构强度的综合表现越强。', 'Higher scores indicate stronger combined turnover quality, sustained activity, and structural strength.')}
+          </div>
+        </div>
+      </div>
+      <div class="score-breakdown-grid">
+        ${items.map(([zh, en, value]) => `
+          <div class="score-breakdown-item">
+            <span>${t(zh, en)}</span>
+            <strong>${value != null ? Number(value).toFixed(1) : '—'}</strong>
+          </div>
+        `).join('')}
+      </div>
     </div>`;
 }
 
@@ -417,9 +429,14 @@ function renderTurnoverHistory(result) {
   const meta = document.getElementById('turnoverHistoryMeta');
   const rows = result.results || [];
   const availableRows = rows.filter(item => item.has_data);
-  const statusLabel = result.hydration?.attempted
-    ? t('已检查并补抓', 'Checked with live hydration')
-    : t('本地历史缓存', 'Cached history');
+  const hydrationStatus = result.hydration?.status || 'not_needed';
+  const statusLabel = hydrationStatus === 'success'
+    ? t('补抓完成', 'Hydration complete')
+    : hydrationStatus === 'hydrating'
+      ? t('正在补抓', 'Hydrating')
+      : hydrationStatus === 'failed'
+        ? t('补抓失败', 'Hydration failed')
+        : t('本地历史缓存', 'Cached history');
 
   meta.textContent = availableRows.length
     ? t(`${availableRows.length} 个有效交易日 · ${statusLabel}`, `${availableRows.length} valid trading days · ${statusLabel}`)
@@ -435,28 +452,29 @@ function renderTurnoverHistory(result) {
   }
 
   const width = 640;
-  const height = 260;
-  const padLeft = 58;
-  const padRight = 18;
+  const height = 276;
+  const padLeft = 56;
+  const padRight = 20;
   const padTop = 18;
-  const padBottom = 34;
+  const padBottom = 36;
   const values = availableRows.map(item => Number(item.turnover_rate ?? 0));
   const min = Math.min(...values);
   const max = Math.max(...values);
-  const niceMin = Math.max(0, Math.floor(min));
-  const niceMax = Math.ceil(max + 1);
-  const range = niceMax - niceMin || 1;
-  const axisTicks = [
-    { value: niceMax, label: `${niceMax.toFixed(1)}%` },
-    { value: niceMin + range / 2, label: `${(niceMin + range / 2).toFixed(1)}%` },
-    { value: niceMin, label: `${niceMin.toFixed(1)}%` },
-  ];
+  const axisStep = max > 20 ? 4 : 2;
+  const axisMax = Math.max(12, Math.ceil(max / axisStep) * axisStep);
+  const axisMin = 0;
+  const range = axisMax - axisMin || axisStep;
+  const axisTicks = [];
+  for (let tick = axisMax; tick >= axisMin; tick -= axisStep) {
+    axisTicks.push({ value: tick, label: `${tick.toFixed(0)}%` });
+  }
   const chartWidth = width - padLeft - padRight;
   const chartHeight = height - padTop - padBottom;
   const coords = rows.map((item, idx) => {
     const x = padLeft + (idx / Math.max(rows.length - 1, 1)) * chartWidth;
     const value = item.has_data ? Number(item.turnover_rate ?? 0) : null;
-    const y = value == null ? null : padTop + (1 - ((value - niceMin) / range)) * chartHeight;
+    const safeValue = value == null ? null : Math.min(Math.max(value, axisMin), axisMax);
+    const y = safeValue == null ? null : padTop + (1 - ((safeValue - axisMin) / range)) * chartHeight;
     return { x, y, date: item.date, value, hasData: Boolean(item.has_data) };
   });
   const segments = [];
@@ -470,54 +488,73 @@ function renderTurnoverHistory(result) {
     }
   }
   if (current.length) segments.push(current);
-  const xTickIndexes = Array.from(new Set([0, Math.floor((rows.length - 1) / 2), rows.length - 1]));
+  const xTickIndexes = Array.from(new Set([
+    0,
+    Math.floor((rows.length - 1) / 3),
+    Math.floor(((rows.length - 1) * 2) / 3),
+    rows.length - 1,
+  ])).filter(idx => idx >= 0 && idx < rows.length);
   const avg = values.reduce((sum, value) => sum + value, 0) / values.length;
   const sparseMode = availableRows.length <= 3;
+  const latestRow = availableRows[availableRows.length - 1];
+  const summaryItems = [
+    [t('最近值', 'Latest'), `${Number(latestRow?.turnover_rate ?? values[values.length - 1]).toFixed(2)}%`],
+    [t('区间均值', 'Average'), `${avg.toFixed(2)}%`],
+    [t('最大值', 'High'), `${max.toFixed(2)}%`],
+    [t('最小值', 'Low'), `${min.toFixed(2)}%`],
+  ];
 
   body.innerHTML = `
-    <div class="turnover-history-chart-wrap">
-      <div class="turnover-history-status-line">
-        <span class="turnover-history-status turnover-history-status--${result.display_status || 'ready'}">${statusLabel}</span>
-        <span class="turnover-history-status-meta">${t(`缺失 ${result.summary?.missing_points || 0} 天`, `${result.summary?.missing_points || 0} missing days`)}</span>
+    <div class="turnover-history-shell">
+      <div class="turnover-history-summary">
+        ${summaryItems.map(([label, value]) => `
+          <div class="turnover-summary-pill">
+            <span>${esc(label)}</span>
+            <strong>${esc(value)}</strong>
+          </div>
+        `).join('')}
       </div>
-      <svg class="turnover-history-chart" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
-        ${axisTicks.map((tick) => {
-          const y = padTop + (1 - ((tick.value - niceMin) / range)) * chartHeight;
-          return `
-            <line x1="${padLeft}" y1="${y}" x2="${width - padRight}" y2="${y}" class="turnover-history-grid"></line>
-            <text x="${padLeft - 10}" y="${y + 4}" text-anchor="end" class="turnover-history-y-label">${esc(tick.label)}</text>
-          `;
-        }).join('')}
-        <line x1="${padLeft}" y1="${height - padBottom}" x2="${width - padRight}" y2="${height - padBottom}" class="turnover-history-base"></line>
-        ${segments.map((segment) => {
-          const segmentPoints = segment.map(({ x, y }) => `${x},${y}`).join(' ');
-          const areaPoints = sparseMode
-            ? ''
-            : `${segment[0].x},${height - padBottom} ${segmentPoints} ${segment[segment.length - 1].x},${height - padBottom}`;
-          return `
-            ${areaPoints ? `<polygon class="turnover-history-area" points="${areaPoints}"></polygon>` : ''}
-            <polyline class="turnover-history-line" points="${segmentPoints}"></polyline>
-          `;
-        }).join('')}
-        ${coords.map((item) => {
-          if (!item.hasData || item.y == null) {
-            return `<circle cx="${item.x}" cy="${height - padBottom}" r="3" class="turnover-history-missing-dot"></circle>`;
-          }
-          return `<circle cx="${item.x}" cy="${item.y}" r="${sparseMode ? 5 : 4}" class="turnover-history-dot" data-date="${esc(item.date)}" data-value="${item.value.toFixed(2)}"></circle>`;
-        }).join('')}
-        ${xTickIndexes.map((idx) => {
-          const point = coords[idx];
-          return `<text x="${point.x}" y="${height - 10}" text-anchor="${idx === 0 ? 'start' : idx === rows.length - 1 ? 'end' : 'middle'}" class="turnover-history-x-label">${esc(point.date)}</text>`;
-        }).join('')}
-      </svg>
-      <div class="turnover-history-tooltip" id="turnoverHistoryTooltip" style="display:none"></div>
-    </div>
-    <div class="turnover-history-stats">
-      <div class="turnover-history-stat"><span>${t('最低', 'Min')}</span><strong>${min.toFixed(2)}%</strong></div>
-      <div class="turnover-history-stat"><span>${t('最高', 'Max')}</span><strong>${max.toFixed(2)}%</strong></div>
-      <div class="turnover-history-stat"><span>${t('均值', 'Avg')}</span><strong>${avg.toFixed(2)}%</strong></div>
-      <div class="turnover-history-stat"><span>${t('最新', 'Latest')}</span><strong>${values[values.length - 1].toFixed(2)}%</strong></div>
-    </div>
+      <div class="turnover-history-chart-wrap">
+        <div class="turnover-history-status-line">
+          <span class="turnover-history-status turnover-history-status--${result.display_status || 'ready'}">${statusLabel}</span>
+          <span class="turnover-history-status-meta">${t(`缺失 ${result.summary?.missing_points || 0} 天`, `${result.summary?.missing_points || 0} missing days`)}</span>
+        </div>
+        <div class="turnover-history-chart-head">
+          <span>${t('区间走势', 'Range Trend')}</span>
+          <span>${t(`0 值 ${result.summary?.zero_value_points || 0} 天`, `${result.summary?.zero_value_points || 0} zero-value days`)}</span>
+        </div>
+        <svg class="turnover-history-chart" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+          ${axisTicks.map((tick) => {
+            const y = padTop + (1 - ((tick.value - axisMin) / range)) * chartHeight;
+            return `
+              <line x1="${padLeft}" y1="${y}" x2="${width - padRight}" y2="${y}" class="turnover-history-grid"></line>
+              <text x="${padLeft - 10}" y="${y + 4}" text-anchor="end" class="turnover-history-y-label">${esc(tick.label)}</text>
+            `;
+          }).join('')}
+          <line x1="${padLeft}" y1="${height - padBottom}" x2="${width - padRight}" y2="${height - padBottom}" class="turnover-history-base"></line>
+          ${segments.map((segment) => {
+            const segmentPoints = segment.map(({ x, y }) => `${x},${y}`).join(' ');
+            const areaPoints = sparseMode || segment.length <= 1
+              ? ''
+              : `${segment[0].x},${height - padBottom} ${segmentPoints} ${segment[segment.length - 1].x},${height - padBottom}`;
+            return `
+              ${areaPoints ? `<polygon class="turnover-history-area" points="${areaPoints}"></polygon>` : ''}
+              ${segment.length > 1 ? `<polyline class="turnover-history-line" points="${segmentPoints}"></polyline>` : ''}
+            `;
+          }).join('')}
+          ${coords.map((item) => {
+            if (!item.hasData || item.y == null) {
+              return `<circle cx="${item.x}" cy="${height - padBottom}" r="3" class="turnover-history-missing-dot"></circle>`;
+            }
+            return `<circle cx="${item.x}" cy="${item.y}" r="${sparseMode ? 5.5 : 4.5}" class="turnover-history-dot" data-date="${esc(item.date)}" data-value="${item.value.toFixed(2)}"></circle>`;
+          }).join('')}
+          ${xTickIndexes.map((idx) => {
+            const point = coords[idx];
+            return `<text x="${point.x}" y="${height - 10}" text-anchor="${idx === 0 ? 'start' : idx === rows.length - 1 ? 'end' : 'middle'}" class="turnover-history-x-label">${esc(point.date)}</text>`;
+          }).join('')}
+        </svg>
+        <div class="turnover-history-tooltip" id="turnoverHistoryTooltip" style="display:none"></div>
+      </div>
     <div class="turnover-history-table">
       ${rows.slice().reverse().map(item => `
         <div class="turnover-history-row ${item.has_data ? '' : 'turnover-history-row--missing'}">

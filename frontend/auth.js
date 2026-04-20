@@ -120,12 +120,13 @@ const AUTH = (() => {
       if (!market || !code) return;
       const key = `${market}:${code}`;
       const prev = merged.get(key) || {};
+      const nextName = pickFavoriteName(item?.name, code, prev?.name);
       merged.set(key, {
         ...prev,
         ...item,
         market,
         code,
-        name: item?.name || prev?.name || '',
+        name: nextName,
       });
     });
     return [...merged.values()];
@@ -145,14 +146,26 @@ const AUTH = (() => {
     const code = String(item?.code || '');
     const name = String(item?.name || '').trim();
     if (!market || !code) return name;
-    if (name && name !== code) return name;
+    if (isUsableFavoriteName(name, code)) return name;
     try {
       const company = await apiCall(`/api/company/${market}/${code}`);
       const resolved = String(company?.name || '').trim();
-      return resolved && resolved !== code ? resolved : '';
+      return isUsableFavoriteName(resolved, code) ? resolved : '';
     } catch {
       return '';
     }
+  }
+
+  function isUsableFavoriteName(name, code) {
+    const normalizedName = String(name || '').trim();
+    const normalizedCode = String(code || '').trim();
+    return Boolean(normalizedName) && normalizedName !== normalizedCode;
+  }
+
+  function pickFavoriteName(nextName, code, prevName) {
+    if (isUsableFavoriteName(nextName, code)) return String(nextName).trim();
+    if (isUsableFavoriteName(prevName, code)) return String(prevName).trim();
+    return '';
   }
 })();
 
