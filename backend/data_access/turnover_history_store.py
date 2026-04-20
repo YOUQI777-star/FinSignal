@@ -215,6 +215,32 @@ class TurnoverHistoryStore:
             rows = rows[-days:]
         return rows
 
+    def list_rows_for_date(self, market: str, trading_date: str) -> list[dict[str, Any]]:
+        market = market.upper()
+        with self._connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT
+                    market, code, date, turnover_rate,
+                    open, high, low, close, pct_change, volume, amount, circ_mv,
+                    updated_at
+                FROM turnover_history
+                WHERE market = ? AND date = ?
+                ORDER BY code
+                """,
+                (market, trading_date),
+            ).fetchall()
+        return [dict(row) for row in rows]
+
+    def latest_date(self, market: str) -> str | None:
+        market = market.upper()
+        with self._connect() as conn:
+            row = conn.execute(
+                "SELECT MAX(date) AS latest_date FROM turnover_history WHERE market = ?",
+                (market,),
+            ).fetchone()
+        return str(row["latest_date"]) if row and row["latest_date"] else None
+
     def get_meta(self, key: str) -> str | None:
         with self._connect() as conn:
             row = conn.execute(

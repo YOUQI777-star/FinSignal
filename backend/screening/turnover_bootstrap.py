@@ -11,6 +11,7 @@ from backend.screening.market_loader import fetch_turnover_history_for_code, get
 log = logging.getLogger(__name__)
 
 BOOTSTRAP_META_KEY = "bootstrap_cn_candidates_recent_10d_until"
+STRUCTURE_BOOTSTRAP_META_PREFIX = "bootstrap_cn_structure_60d"
 
 
 def hydrate_single_code_turnover_history(
@@ -179,3 +180,115 @@ def bootstrap_recent_turnover_history_for_candidates(
         failed,
         latest_date,
     )
+
+
+def bootstrap_structure_history(
+    *,
+    market: str = "CN",
+    days: int = 60,
+    codes: list[str] | None = None,
+    max_codes: int | None = None,
+    retry_limit: int = 3,
+    sleep_seconds: float = 0.25,
+    meta_scope: str = "custom",
+) -> dict[str, object]:
+    market = market.upper()
+    if market != "CN":
+        raise ValueError("Only CN structure bootstrap is supported in v1")
+
+    store = TurnoverHistoryStore()
+    recent_dates = get_recent_trading_dates(days)
+    if not recent_dates:
+        raise RuntimeError("No trading dates available for structure bootstrap")
+
+    if not codes:
+        raise ValueError("No codes provided for structure bootstrap")
+
+    normalized_codes = sorted({str(code).strip() for code in codes if str(code).strip()})
+    if max_codes is not None:
+        normalized_codes = normalized_codes[:max_codes]
+    if not normalized_codes:
+        raise ValueError("No valid codes provided for structure bootstrap")
+
+    latest_date = recent_dates[-1]
+    start_date = recent_dates[0]
+    end_date = recent_dates[-1]
+    meta_key = f"{STRUCTURE_BOOTSTRAP_META_PREFIX}_{meta_scope}_{days}d_until"
+    updated_at = datetime.now(timezone.utc).isoformat()
+
+    log.info(
+        "[structure-bootstrap] market=%s scope=%s days=%d codes=%d range=%s→%s",
+        market,
+        meta_scope,
+        days,
+        len(normalized_codes),
+        start_date,
+        end_date,
+    )
+
+    success = 0
+    failed = 0
+    for idx, code in enumerate(normalized_codes, start=1):
+        code_ok = False
+        last_exc: Exception | None = None
+        for attempt in range(1, retry_limit + 1):
+            try:
+                rows = fetch_turnover_history_for_code(code, start_date=start_date, end_date=end_date)
+                records = [
+                    {
+                        "market": market,
+                        "code": code,
+                        "date": row["date"],
+                        "turnover_rate": row.get("turnover_rate"),
+                        "open": row.get("open"),
+                        "high": row.get("high"),
+                        "low": row.get("low"),
+                        "close": row.get("close"),
+                        "pct_change": row.get("pct_change"),
+                        "volume": row.get("volume"),
+                        "amount": row.get("amount"),
+                        "circ_mv": row.get("circ_mv"),
+                        "updated_at": updated_at,
+                    }
+                    for row in rows
+                    if row.get("date") in recent_dates
+                ]
+                store.upsert_records(records)
+                success += 1
+                code_ok = True
+                break
+            except Exception as exc:
+                last_exc = exc
+                if attempt < retry_limit:
+                    time.sleep(sleep_seconds * attempt)
+        if not code_ok:
+            failed += 1
+            if failed <= 10:
+                log.warning("[structure-bootstrap] %s failed after %d attempts: %s", code, retry_limit, last_exc)
+
+        if idx % 200 == 0 or idx == len(normalized_codes):
+            log.info(
+                "[structure-bootstrap] progress %d/%d | success=%d failed=%d",
+                idx,
+                len(normalized_codes),
+                success,
+                failed,
+            )
+        time.sleep(sleep_seconds)
+
+    clear_candidate_score_caches()
+    if success > 0:
+        store.set_meta(meta_key, latest_date)
+    summary = {
+        "market": market,
+        "scope": meta_scope,
+        "days": days,
+        "total": len(normalized_codes),
+        "success": success,
+        "failed": failed,
+        "start_date": start_date,
+        "end_date": end_date,
+        "meta_key": meta_key,
+    }
+    log.info("[structure-bootstrap] Done %s", summary)
+    return summary

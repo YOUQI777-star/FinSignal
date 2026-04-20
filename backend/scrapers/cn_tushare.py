@@ -105,6 +105,9 @@ class TushareCNClient:
                 except (TypeError, ValueError):
                     return None
 
+            circ_mv_raw = _float(basic.get("circ_mv"))
+            circ_mv_yi = (circ_mv_raw / 10000) if circ_mv_raw is not None else None
+
             rows.append(
                 {
                     "market": "CN",
@@ -118,7 +121,7 @@ class TushareCNClient:
                     "pct_change": _float(daily.get("pct_chg")),
                     "volume": _float(daily.get("vol")),
                     "amount": _float(daily.get("amount")),
-                    "circ_mv": _float(basic.get("circ_mv")),
+                    "circ_mv": circ_mv_yi,
                 }
             )
         return sorted(rows, key=lambda item: item["date"])

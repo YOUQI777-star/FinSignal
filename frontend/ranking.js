@@ -193,8 +193,8 @@ function renderTable() {
   container.innerHTML = `
     <div class="ranking-score-note">
       ${zh
-        ? '综合评分 = 换手质量×0.28 + 涨幅健康度×0.14 + 流通市值匹配×0.10 + 持续活跃度×0.30 + 结构强度×0.18 + 行业加分'
-        : 'Score = turnover quality×0.28 + pct health×0.14 + circ-mv fit×0.10 + sustained activity×0.30 + structure strength×0.18 + industry bonus'}
+        ? '结构评分 = 吸筹活跃×0.30 + 价格结构×0.30 + 量价配合×0.25 + 板块共振×0.15'
+        : 'Structure Score = activity base×0.30 + price structure×0.30 + volume-price×0.25 + sector resonance×0.15'}
     </div>
     <table class="signal-table">
       <thead>

@@ -286,9 +286,19 @@ function renderScorePanel(data) {
   const meta = document.getElementById('scorePanelMeta');
   if (!panel || !body || !meta) return;
 
-  const breakdown = data.score_breakdown || state.candidateContext?.score_breakdown;
-  const score = data.candidate_score ?? state.candidateContext?.candidate_score;
-  const formula = data.score_formula || state.candidateContext?.score_formula;
+  const preferredScoreSource =
+    state.sourceFrom === 'candidates' && state.candidateContext
+      ? state.candidateContext
+      : data;
+
+  const fallbackScoreSource =
+    preferredScoreSource === data
+      ? state.candidateContext
+      : data;
+
+  const breakdown = preferredScoreSource?.score_breakdown || fallbackScoreSource?.score_breakdown;
+  const score = preferredScoreSource?.candidate_score ?? fallbackScoreSource?.candidate_score;
+  const formula = preferredScoreSource?.score_formula || fallbackScoreSource?.score_formula;
 
   if (score == null || !breakdown) {
     panel.style.display = 'none';
@@ -301,12 +311,10 @@ function renderScorePanel(data) {
   meta.textContent = t(`总分 ${Number(score).toFixed(1)}`, `Score ${Number(score).toFixed(1)}`);
 
   const items = [
-    ['换手质量', 'Turnover Quality', breakdown.turnover_quality],
-    ['涨幅健康度', 'Pct Health', breakdown.pct_health],
-    ['流通市值匹配', 'Circ.MV Fit', breakdown.circ_mv_fit],
-    ['持续活跃度', 'Sustained Activity', breakdown.sustained_activity],
-    ['结构强度', 'Structure Strength', breakdown.structure_strength],
-    ['行业加分', 'Industry Bonus', breakdown.industry_bonus],
+    ['吸筹活跃', 'Activity Base', breakdown.activity_base],
+    ['价格结构', 'Price Structure', breakdown.price_structure],
+    ['量价配合', 'Volume-Price', breakdown.volume_price],
+    ['板块共振', 'Sector Resonance', breakdown.sector_resonance],
   ];
   const scoreValue = Number(score).toFixed(1);
 
@@ -324,7 +332,7 @@ function renderScorePanel(data) {
             <div class="score-total-formula">${esc(formula || '—')}</div>
           </div>
           <div class="score-hero-note">
-            ${t('分数越高，代表换手质量、持续活跃度与结构强度的综合表现越强。', 'Higher scores indicate stronger combined turnover quality, sustained activity, and structural strength.')}
+            ${t('分数越高，代表持续活跃、价格结构、量价配合与板块共振的综合表现越强。', 'Higher scores indicate stronger sustained activity, price structure, volume-price alignment, and sector resonance.')}
           </div>
         </div>
       </div>
