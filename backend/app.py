@@ -68,6 +68,32 @@ def _load_signals_cache(market: str) -> dict[str, dict]:
     return {item["code"]: item for item in results}
 
 
+def _get_signal_result(market: str, code: str, *, cache: dict[str, dict] | None = None) -> dict | None:
+    market = str(market or "").upper()
+    code = str(code or "").strip()
+    if not market or not code:
+        return None
+
+    signal_cache = cache if cache is not None else _load_signals_cache(market)
+    cached = signal_cache.get(code)
+    if cached:
+        return cached
+
+    stored_signal = store.get_signal_snapshot(market, code)
+    if stored_signal:
+        return stored_signal
+
+    snapshot = store.get_company_snapshot(market, code)
+    if not snapshot:
+        return None
+
+    try:
+        return rule_engine.evaluate(snapshot)
+    except Exception as exc:
+        log.warning("Failed to evaluate fallback signals for %s:%s: %s", market, code, exc)
+        return None
+
+
 def _extract_triggered_signal_ids(signal_result: dict | None) -> list[str]:
     if not signal_result:
         return []
@@ -275,9 +301,8 @@ def get_company(market: str, code: str):
 def get_signals(market: str, code: str):
     fresh = request.args.get("fresh", "").lower() in ("1", "true")
     if not fresh:
-        cache = _load_signals_cache(market)
-        if code in cache:
-            payload = cache[code]
+        payload = _get_signal_result(market, code, cache=_load_signals_cache(market))
+        if payload:
             if market.upper() == "CN":
                 payload = _attach_candidate_score_payload(payload, code=code)
             return jsonify(payload), 200
@@ -540,7 +565,7 @@ def api_get_candidates():
 
         enriched = []
         for candidate in filtered[start_idx:end_idx]:
-            signal_result = signal_cache.get(candidate["code"])
+            signal_result = _get_signal_result("CN", candidate["code"], cache=signal_cache)
             enriched.append({
                 **candidate,
                 "financial_check": _build_financial_check(signal_result),
