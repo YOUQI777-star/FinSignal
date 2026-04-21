@@ -210,6 +210,30 @@ def _build_candidates_from_history(trading_date: str) -> list[dict]:
     return candidates
 
 
+def _snapshot_ready_for_candidates(trading_date: str) -> bool:
+    if not trading_date:
+        return False
+    stats = turnover_history_store.date_stats("CN", trading_date)
+    total_rows = int(stats.get("total_rows", 0) or 0)
+    complete_rows = int(stats.get("complete_rows", 0) or 0)
+    if total_rows < 3000:
+        return False
+    if complete_rows < max(int(total_rows * 0.75), 2500):
+        return False
+    return True
+
+
+def _latest_candidates_snapshot_date() -> str | None:
+    preferred = (turnover_history_store.get_meta("cn_latest_snapshot_date") or "").strip()
+    if preferred and _snapshot_ready_for_candidates(preferred):
+        return preferred
+
+    latest = turnover_history_store.latest_date("CN")
+    if latest and _snapshot_ready_for_candidates(latest):
+        return latest
+    return None
+
+
 def _expected_turnover_dates(
     market: str,
     *,
@@ -605,6 +629,32 @@ def api_get_candidates():
             source="history",
             source_note="manual_previous_day",
         )
+
+    if not force_refresh:
+        snapshot_date = _latest_candidates_snapshot_date()
+        if snapshot_date:
+            snapshot_candidates = _build_candidates_from_history(snapshot_date)
+            if snapshot_candidates:
+                return _respond_with_candidates(
+                    snapshot_candidates,
+                    generated_at=turnover_history_store.get_meta("cn_latest_snapshot_generated_at"),
+                    trading_date=snapshot_date,
+                    source="snapshot",
+                    source_note="latest_cached_snapshot",
+                )
+            previous_snapshot_date = turnover_history_store.previous_date("CN", snapshot_date)
+            if previous_snapshot_date and _snapshot_ready_for_candidates(previous_snapshot_date):
+                previous_snapshot_candidates = _build_candidates_from_history(previous_snapshot_date)
+                if previous_snapshot_candidates:
+                    return _respond_with_candidates(
+                        previous_snapshot_candidates,
+                        generated_at=turnover_history_store.get_meta("cn_latest_snapshot_generated_at"),
+                        trading_date=previous_snapshot_date,
+                        source="snapshot",
+                        source_note="latest_cached_snapshot_previous_day",
+                        fallback_used=True,
+                        fallback_from=snapshot_date,
+                    )
 
     try:
         data = get_candidates(

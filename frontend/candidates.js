@@ -16,6 +16,7 @@ const state = {
   scrollTop: 0,
   tradingDate: '',
   baseTradingDate: '',
+  refreshing: false,
 };
 
 const FILTERS_KEY = 'fsm_candidates_filters_v1';
@@ -46,6 +47,7 @@ async function checkHealth() {
 
 // ── Load candidates from API ─────────────────────────────────────────────────
 async function loadCandidates({ forceRefresh = false } = {}) {
+  state.refreshing = forceRefresh;
   setLoading(true);
   document.getElementById('tableContainer').innerHTML = '';
   document.getElementById('tableInfo').textContent    = '';
@@ -66,6 +68,7 @@ async function loadCandidates({ forceRefresh = false } = {}) {
   } catch (err) {
     renderError(err.message);
   } finally {
+    state.refreshing = false;
     setLoading(false);
     document.getElementById('lastUpdated').textContent =
       'Updated ' + new Date().toLocaleTimeString();
@@ -137,12 +140,26 @@ function renderMeta(data) {
 
   // Server-side AKShare fetch time (stays the same while cache is live)
   const serverEl = document.getElementById('serverFetchTime');
+  const serverLabelEl = document.querySelector('[data-i18n="cand_akshare_label"]');
   if (data.generated_at && serverEl) {
     serverEl.textContent = _timeFmt.format(new Date(data.generated_at));
   } else if (serverEl) {
-    serverEl.textContent = data.source === 'history' || data.source === 'history_fallback'
+    serverEl.textContent = (
+      data.source === 'history'
+      || data.source === 'history_fallback'
+      || data.source === 'snapshot'
+    )
       ? t('历史缓存', 'History cache')
       : '—';
+  }
+  if (serverLabelEl) {
+    if (data.source === 'snapshot') {
+      serverLabelEl.textContent = t('快照时间：', 'Snapshot:');
+    } else if (data.source === 'history' || data.source === 'history_fallback') {
+      serverLabelEl.textContent = t('历史来源：', 'History:');
+    } else {
+      serverLabelEl.textContent = t('AKShare 抓取：', 'AKShare Fetch:');
+    }
   }
 
   // Client-side request time (always "now")
@@ -310,6 +327,12 @@ function renderError(msg) {
 
 function setLoading(on) {
   document.getElementById('loadingTag').style.display = on ? '' : 'none';
+  const loadingTag = document.getElementById('loadingTag');
+  if (loadingTag) {
+    loadingTag.textContent = state.refreshing
+      ? t('刷新中', 'Refreshing')
+      : t('加载中', 'Loading');
+  }
 }
 
 function esc(str) {
