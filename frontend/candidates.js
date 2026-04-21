@@ -15,6 +15,7 @@ const state = {
   restoreAnchor: '',
   scrollTop: 0,
   tradingDate: '',
+  baseTradingDate: '',
 };
 
 const FILTERS_KEY = 'fsm_candidates_filters_v1';
@@ -109,6 +110,9 @@ const _WDAY_EN = ['Sun',  'Mon',  'Tue',  'Wed',  'Thu',  'Fri',  'Sat'];
 
 function renderMeta(data) {
   const zh = window._currentLang === 'zh';
+  if (!state.baseTradingDate) {
+    state.baseTradingDate = data.fallback_from || data.trading_date || '';
+  }
   document.getElementById('tableInfo').textContent =
     zh
       ? `${data.total} 只候选股 · 第 ${data.page || 1}/${data.total_pages || 1} 页`
@@ -126,8 +130,9 @@ function renderMeta(data) {
   }
   const prevBtn = document.getElementById('prevTradingDateBtn');
   if (prevBtn) {
-    prevBtn.style.display = data.previous_trading_date ? '' : 'none';
-    prevBtn.textContent = t('前一天', 'Previous Day');
+    const isHistoricalView = Boolean(state.tradingDate) || Boolean(data.fallback_used);
+    prevBtn.style.display = isHistoricalView || data.previous_trading_date ? '' : 'none';
+    prevBtn.textContent = isHistoricalView ? t('返回', 'Back') : t('前一天', 'Previous Day');
   }
 
   // Server-side AKShare fetch time (stays the same while cache is live)
@@ -328,10 +333,18 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   applyStoredFilters(DEFAULT_FILTERS);
   state.page = 1;
   state.tradingDate = '';
+  state.baseTradingDate = '';
   persistCandidatesState();
   loadCandidates();
 });
 document.getElementById('prevTradingDateBtn').addEventListener('click', () => {
+  const isHistoricalView = Boolean(state.tradingDate) || Boolean(state.data?.fallback_used);
+  if (isHistoricalView) {
+    state.tradingDate = '';
+    state.page = 1;
+    loadCandidates({ forceRefresh: true });
+    return;
+  }
   if (!state.data?.previous_trading_date) return;
   state.tradingDate = state.data.previous_trading_date;
   state.page = 1;
@@ -380,10 +393,12 @@ function restoreCandidatesState() {
     applyStoredFilters(merged);
     state.page = Number(merged.page) > 0 ? Number(merged.page) : 1;
     state.tradingDate = merged.tradingDate || '';
+    state.baseTradingDate = '';
   } catch {
     applyStoredFilters(DEFAULT_FILTERS);
     state.page = 1;
     state.tradingDate = '';
+    state.baseTradingDate = '';
   }
 }
 
