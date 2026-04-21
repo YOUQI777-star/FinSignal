@@ -585,7 +585,7 @@ npx wrangler pages deploy frontend --project-name finsignal --commit-dirty=true
 
 **数据持久化：**
 - `backend/config.py` 已支持 `APP_DATA_DIR` / `DATA_DIR`
-- 生产环境必须把它指向 Railway 持久卷路径，例如 `/data`
+- 生产环境必须把它指向 Railway 持久卷路径，例如 `/app/userdata`（当前这个 Railway 服务的实际挂载路径）
 - `turnover_history.db`、用户数据 SQLite、信号缓存都应落在该目录，而不是容器临时文件系统
 
 **启动保障：**
