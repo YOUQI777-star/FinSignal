@@ -27,6 +27,7 @@ from backend.screening.candidate_scoring import attach_candidate_scores
 from backend.screening.turnover_bootstrap import hydrate_single_code_turnover_history
 from backend.screening.market_loader import get_recent_trading_dates
 from backend.scrapers.cn_tushare import TushareCNClient, tushare_available
+from backend.startup_maintenance import start_background_maintenance
 from backend.screening.candidate_rules import (
     DEFAULT_CIRC_MV_MAX,
     DEFAULT_EXCLUDE_ST,
@@ -859,6 +860,7 @@ def _prewarm_candidates() -> None:
 
 # Pre-warm on startup — runs in background so gunicorn can accept requests immediately
 threading.Thread(target=_prewarm_candidates, daemon=True, name="prewarm").start()
+start_background_maintenance()
 
 
 if __name__ == "__main__":

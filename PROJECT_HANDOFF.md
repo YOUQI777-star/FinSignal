@@ -583,6 +583,30 @@ npx wrangler pages deploy frontend --project-name finsignal --commit-dirty=true
 **计划：** Hobby（$5/月）  
 **构建：** Nixpacks 自动检测 Python，读 `requirements.txt`，启动命令见 `railway.toml`
 
+**数据持久化：**
+- `backend/config.py` 已支持 `APP_DATA_DIR` / `DATA_DIR`
+- 生产环境必须把它指向 Railway 持久卷路径，例如 `/data`
+- `turnover_history.db`、用户数据 SQLite、信号缓存都应落在该目录，而不是容器临时文件系统
+
+**启动保障：**
+- `backend/startup_maintenance.py` 会在应用启动后后台检查 CN 最近交易日快照
+- 若发现最近交易日没有快照，或完整度明显不足，会自动触发一次 `get_candidates(force_refresh=True)` 写入 `turnover_history.db`
+- 这能保证“今天第一次有人打开站点时”尽快落库，但不能替代定时任务
+
+**推荐每日维护命令：**
+```bash
+.venv/bin/python -m backend.scripts.maintain_daily_history --force-refresh
+```
+
+作用：
+- 强制抓取并落库当天 CN 全市场快照
+- 再用 Tushare Pro 回填最近 60 个交易日的候选池结构历史
+- 这样第二天候选池页点“前一天”时，不会依赖临时容器里的残缺 SQLite
+
+**推荐 Railway 定时任务：**
+- 每个交易日下午收盘后运行一次上面的命令
+- 如果没有 Railway Cron，也至少保留启动保障 + 手动执行该命令补库
+
 **更新后端：**
 ```bash
 cd "/Users/wangyouqi/Documents/DesktopOrganizer/Web Development/C_G"

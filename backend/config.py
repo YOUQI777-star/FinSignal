@@ -20,7 +20,12 @@ except ImportError:
 
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent
-DATA_DIR = PROJECT_ROOT / "data"
+DATA_DIR = Path(
+    os.getenv("APP_DATA_DIR")
+    or os.getenv("DATA_DIR")
+    or (PROJECT_ROOT / "data")
+).expanduser()
+DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 APP_HOST = os.getenv("APP_HOST", "127.0.0.1")
 APP_PORT = int(os.getenv("APP_PORT", "5000"))

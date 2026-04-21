@@ -254,6 +254,42 @@ class TurnoverHistoryStore:
             ).fetchone()
         return str(row["previous_date"]) if row and row["previous_date"] else None
 
+    def date_stats(self, market: str, trading_date: str) -> dict[str, int]:
+        market = market.upper()
+        with self._connect() as conn:
+            row = conn.execute(
+                """
+                SELECT
+                    COUNT(*) AS total_rows,
+                    SUM(CASE WHEN turnover_rate IS NOT NULL THEN 1 ELSE 0 END) AS turnover_rows,
+                    SUM(CASE WHEN close IS NOT NULL THEN 1 ELSE 0 END) AS close_rows,
+                    SUM(CASE WHEN pct_change IS NOT NULL THEN 1 ELSE 0 END) AS pct_rows,
+                    SUM(CASE WHEN circ_mv IS NOT NULL THEN 1 ELSE 0 END) AS circ_mv_rows,
+                    SUM(
+                        CASE
+                            WHEN turnover_rate IS NOT NULL
+                             AND close IS NOT NULL
+                             AND pct_change IS NOT NULL
+                             AND circ_mv IS NOT NULL
+                            THEN 1 ELSE 0
+                        END
+                    ) AS complete_rows
+                FROM turnover_history
+                WHERE market = ? AND date = ?
+                """,
+                (market, trading_date),
+            ).fetchone()
+        if not row:
+            return {
+                "total_rows": 0,
+                "turnover_rows": 0,
+                "close_rows": 0,
+                "pct_rows": 0,
+                "circ_mv_rows": 0,
+                "complete_rows": 0,
+            }
+        return {key: int(row[key] or 0) for key in row.keys()}
+
     def get_meta(self, key: str) -> str | None:
         with self._connect() as conn:
             row = conn.execute(

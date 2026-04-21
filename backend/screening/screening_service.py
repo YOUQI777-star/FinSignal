@@ -65,6 +65,8 @@ def _run_screening(
     trading_date = get_last_trading_date()
     generated_at = datetime.now(timezone.utc).isoformat()
     history_store.upsert_daily_rows("CN", trading_date, spots, updated_at=generated_at)
+    history_store.set_meta("cn_latest_snapshot_date", trading_date)
+    history_store.set_meta("cn_latest_snapshot_generated_at", generated_at)
     clear_candidate_score_caches()
     log.info("Screening %d stocks …", len(spots))
 
