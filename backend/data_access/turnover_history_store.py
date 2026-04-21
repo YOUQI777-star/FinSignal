@@ -241,6 +241,19 @@ class TurnoverHistoryStore:
             ).fetchone()
         return str(row["latest_date"]) if row and row["latest_date"] else None
 
+    def previous_date(self, market: str, trading_date: str) -> str | None:
+        market = market.upper()
+        with self._connect() as conn:
+            row = conn.execute(
+                """
+                SELECT MAX(date) AS previous_date
+                FROM turnover_history
+                WHERE market = ? AND date < ?
+                """,
+                (market, trading_date),
+            ).fetchone()
+        return str(row["previous_date"]) if row and row["previous_date"] else None
+
     def get_meta(self, key: str) -> str | None:
         with self._connect() as conn:
             row = conn.execute(

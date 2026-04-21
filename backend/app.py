@@ -27,6 +27,16 @@ from backend.screening.candidate_scoring import attach_candidate_scores
 from backend.screening.turnover_bootstrap import hydrate_single_code_turnover_history
 from backend.screening.market_loader import get_recent_trading_dates
 from backend.scrapers.cn_tushare import TushareCNClient, tushare_available
+from backend.screening.candidate_rules import (
+    DEFAULT_CIRC_MV_MAX,
+    DEFAULT_EXCLUDE_ST,
+    DEFAULT_PCT_MAX,
+    DEFAULT_PCT_MIN,
+    DEFAULT_PRICE_MAX,
+    DEFAULT_TURNOVER_MIN,
+    apply_rules,
+    is_st,
+)
 
 _SIGNALS_DIR = DATA_DIR / "signals"
 
@@ -117,6 +127,60 @@ def _favorite_name_needs_repair(item: dict) -> bool:
     saved_name = str(item.get("name") or "").strip()
     saved_code = str(item.get("code") or "").strip()
     return (not saved_name) or saved_name == saved_code
+
+
+def _normalize_circ_mv_yi(value: object) -> float | None:
+    try:
+        numeric = float(value)
+    except (TypeError, ValueError):
+        return None
+    return round(numeric / 10000, 2) if numeric > 1000 else round(numeric, 2)
+
+
+def _build_candidates_from_history(trading_date: str) -> list[dict]:
+    rows = turnover_history_store.list_rows_for_date("CN", trading_date)
+    candidates: list[dict] = []
+    for row in rows:
+        code = str(row.get("code") or "").strip()
+        if not code:
+            continue
+        company = repository.get_company_profile("CN", code) or {}
+        name = str(company.get("name") or "")
+        circ_mv_yi = _normalize_circ_mv_yi(row.get("circ_mv"))
+        rule_row = {
+            "name": name,
+            "price": row.get("close"),
+            "turnover": row.get("turnover_rate"),
+            "circ_mv_yi": circ_mv_yi,
+            "pct_change": row.get("pct_change"),
+            "is_st": is_st(name),
+        }
+        passed, matched, reason = apply_rules(
+            rule_row,
+            turnover_min=DEFAULT_TURNOVER_MIN,
+            price_max=DEFAULT_PRICE_MAX,
+            circ_mv_max=DEFAULT_CIRC_MV_MAX,
+            pct_max=DEFAULT_PCT_MAX,
+            pct_min=DEFAULT_PCT_MIN,
+            exclude_st=DEFAULT_EXCLUDE_ST,
+        )
+        if not passed:
+            continue
+        candidates.append({
+            "code": code,
+            "name": name,
+            "market": "CN",
+            "current_price": row.get("close"),
+            "turnover": row.get("turnover_rate"),
+            "pct_change": row.get("pct_change"),
+            "circ_mv": circ_mv_yi,
+            "total_shares": None,
+            "is_st": is_st(name),
+            "matched_rules": matched,
+            "candidate_reason": reason,
+        })
+    candidates = attach_candidate_scores(candidates)
+    return candidates
 
 
 def _expected_turnover_dates(
@@ -439,6 +503,82 @@ def api_get_candidates():
     """
     exclude_st    = request.args.get("exclude_st", "1") not in ("0", "false")
     force_refresh = request.args.get("refresh", "0") in ("1", "true")
+    requested_trading_date = (request.args.get("trading_date") or "").strip()
+
+    def _respond_with_candidates(
+        base_candidates: list[dict],
+        *,
+        generated_at: str | None,
+        trading_date: str,
+        source: str,
+        source_note: str | None = None,
+        fallback_used: bool = False,
+        fallback_from: str | None = None,
+    ):
+        previous_trading_date = turnover_history_store.previous_date("CN", trading_date) if trading_date else None
+        filtered = apply_query_filters(
+            base_candidates,
+            turnover_min = _float_param("turnover_min"),
+            turnover_max = _float_param("turnover_max"),
+            price_max    = _float_param("price_max"),
+            circ_mv_max  = _float_param("circ_mv_max"),
+            pct_max      = _float_param("pct_max"),
+            pct_min      = _float_param("pct_min"),
+            exclude_st   = exclude_st,
+        )
+
+        page = _int_param("page", 1, minimum=1)
+        page_size_default = _int_param("limit", 100, minimum=1, maximum=500)
+        page_size = _int_param("page_size", page_size_default, minimum=1, maximum=500)
+        signal_cache = _load_signals_cache("CN")
+        total = len(filtered)
+        total_pages = max(1, (total + page_size - 1) // page_size)
+        page = min(page, total_pages)
+        start_idx = (page - 1) * page_size
+        end_idx = start_idx + page_size
+
+        enriched = []
+        for candidate in filtered[start_idx:end_idx]:
+            signal_result = signal_cache.get(candidate["code"])
+            enriched.append({
+                **candidate,
+                "financial_check": _build_financial_check(signal_result),
+            })
+
+        return jsonify({
+            "generated_at": generated_at,
+            "trading_date": trading_date,
+            "source": source,
+            "source_note": source_note,
+            "fallback_used": fallback_used,
+            "fallback_from": fallback_from,
+            "previous_trading_date": previous_trading_date,
+            "thresholds": {
+                "turnover_min": _float_param("turnover_min", 2.0),
+                "price_max": _float_param("price_max", 20.0),
+                "circ_mv_max": _float_param("circ_mv_max", 80.0),
+                "pct_max": _float_param("pct_max", 9.0),
+                "pct_min": _float_param("pct_min", -9.0),
+                "exclude_st": exclude_st,
+            },
+            "total": total,
+            "page": page,
+            "page_size": page_size,
+            "total_pages": total_pages,
+            "results": enriched,
+        }), 200
+
+    if requested_trading_date:
+        history_candidates = _build_candidates_from_history(requested_trading_date)
+        if not history_candidates:
+            return jsonify({"error": f"No stored candidates available for {requested_trading_date}"}), 404
+        return _respond_with_candidates(
+            history_candidates,
+            generated_at=None,
+            trading_date=requested_trading_date,
+            source="history",
+            source_note="manual_previous_day",
+        )
 
     try:
         data = get_candidates(
@@ -453,51 +593,29 @@ def api_get_candidates():
     except Exception as exc:
         return jsonify({"error": str(exc)}), 503
 
-    candidates = data.get("candidates", [])
+    candidates = attach_candidate_scores(data.get("candidates", []))
+    trading_date = str(data.get("trading_date") or "")
+    if not candidates:
+        previous_date = turnover_history_store.previous_date("CN", trading_date) or turnover_history_store.latest_date("CN")
+        if previous_date and previous_date != trading_date:
+            history_candidates = _build_candidates_from_history(previous_date)
+            if history_candidates:
+                return _respond_with_candidates(
+                    history_candidates,
+                    generated_at=data.get("generated_at"),
+                    trading_date=previous_date,
+                    source="history_fallback",
+                    source_note="realtime_empty_auto_previous_day",
+                    fallback_used=True,
+                    fallback_from=trading_date or None,
+                )
 
-    # Apply any tighter per-request filters
-    candidates = apply_query_filters(
+    return _respond_with_candidates(
         candidates,
-        turnover_min = _float_param("turnover_min"),
-        turnover_max = _float_param("turnover_max"),
-        price_max    = _float_param("price_max"),
-        circ_mv_max  = _float_param("circ_mv_max"),
-        pct_max      = _float_param("pct_max"),
-        pct_min      = _float_param("pct_min"),
-        exclude_st   = exclude_st,
+        generated_at=data.get("generated_at"),
+        trading_date=trading_date,
+        source=data.get("source", "realtime"),
     )
-
-    candidates = attach_candidate_scores(candidates)
-
-    page = _int_param("page", 1, minimum=1)
-    page_size_default = _int_param("limit", 100, minimum=1, maximum=500)
-    page_size = _int_param("page_size", page_size_default, minimum=1, maximum=500)
-    signal_cache = _load_signals_cache("CN")
-    total = len(candidates)
-    total_pages = max(1, (total + page_size - 1) // page_size)
-    page = min(page, total_pages)
-    start_idx = (page - 1) * page_size
-    end_idx = start_idx + page_size
-
-    enriched = []
-    for candidate in candidates[start_idx:end_idx]:
-        signal_result = signal_cache.get(candidate["code"])
-        enriched.append({
-            **candidate,
-            "financial_check": _build_financial_check(signal_result),
-        })
-
-    return jsonify({
-        "generated_at": data.get("generated_at"),
-        "trading_date": data.get("trading_date"),
-        "source":       data.get("source", "realtime"),
-        "thresholds":   data.get("thresholds", {}),
-        "total":        total,
-        "page":         page,
-        "page_size":    page_size,
-        "total_pages":  total_pages,
-        "results":      enriched,
-    }), 200
 
 
 @app.route("/api/candidates/CN/<code>")

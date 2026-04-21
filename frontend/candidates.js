@@ -14,6 +14,7 @@ const state = {
   pageSize: 100,
   restoreAnchor: '',
   scrollTop: 0,
+  tradingDate: '',
 };
 
 const FILTERS_KEY = 'fsm_candidates_filters_v1';
@@ -86,6 +87,7 @@ function buildParams() {
   if (!isNaN(circMvMax))   p.circ_mv_max  = circMvMax;
   if (!isNaN(pctMax))      p.pct_max      = pctMax;
   p.exclude_st = excludeSt ? '1' : '0';
+  if (state.tradingDate) p.trading_date = state.tradingDate;
   return p;
 }
 
@@ -122,17 +124,33 @@ function renderMeta(data) {
     tradingEl.textContent = zh ? `${dateStr}（${wday}）` : `${dateStr} (${wday})`;
     tradingEl.style.setProperty('color', '#111827', 'important');
   }
+  const prevBtn = document.getElementById('prevTradingDateBtn');
+  if (prevBtn) {
+    prevBtn.style.display = data.previous_trading_date ? '' : 'none';
+    prevBtn.textContent = t('前一天', 'Previous Day');
+  }
 
   // Server-side AKShare fetch time (stays the same while cache is live)
   const serverEl = document.getElementById('serverFetchTime');
   if (data.generated_at && serverEl) {
     serverEl.textContent = _timeFmt.format(new Date(data.generated_at));
+  } else if (serverEl) {
+    serverEl.textContent = data.source === 'history' || data.source === 'history_fallback'
+      ? t('历史缓存', 'History cache')
+      : '—';
   }
 
   // Client-side request time (always "now")
   const clientEl = document.getElementById('clientFetchTime');
   if (clientEl) {
     clientEl.textContent = _timeFmt.format(new Date());
+  }
+
+  const infoEl = document.getElementById('tableInfo');
+  if (data.fallback_used && infoEl) {
+    infoEl.textContent += zh
+      ? ` · 已自动回退到 ${data.trading_date}`
+      : ` · Auto-fallback to ${data.trading_date}`;
   }
 }
 
@@ -309,7 +327,14 @@ document.getElementById('refreshBtn').addEventListener('click', () => {
 document.getElementById('resetBtn').addEventListener('click', () => {
   applyStoredFilters(DEFAULT_FILTERS);
   state.page = 1;
+  state.tradingDate = '';
   persistCandidatesState();
+  loadCandidates();
+});
+document.getElementById('prevTradingDateBtn').addEventListener('click', () => {
+  if (!state.data?.previous_trading_date) return;
+  state.tradingDate = state.data.previous_trading_date;
+  state.page = 1;
   loadCandidates();
 });
 
@@ -336,6 +361,7 @@ function restoreCandidatesState() {
     pctMax: query.get('pct_max'),
     excludeSt: query.get('exclude_st'),
     page: query.get('page'),
+    tradingDate: query.get('trading_date'),
   };
   try {
     const saved = JSON.parse(localStorage.getItem(FILTERS_KEY) || 'null');
@@ -349,12 +375,15 @@ function restoreCandidatesState() {
       ...(queryState.pctMax != null ? { pctMax: queryState.pctMax } : {}),
       ...(queryState.excludeSt != null ? { excludeSt: queryState.excludeSt !== '0' } : {}),
       ...(queryState.page != null ? { page: Number(queryState.page) } : {}),
+      ...(queryState.tradingDate != null ? { tradingDate: queryState.tradingDate } : {}),
     };
     applyStoredFilters(merged);
     state.page = Number(merged.page) > 0 ? Number(merged.page) : 1;
+    state.tradingDate = merged.tradingDate || '';
   } catch {
     applyStoredFilters(DEFAULT_FILTERS);
     state.page = 1;
+    state.tradingDate = '';
   }
 }
 
@@ -368,6 +397,7 @@ function syncStateToUrl() {
   params.set('pct_max', filterState.pctMax);
   params.set('exclude_st', filterState.excludeSt ? '1' : '0');
   params.set('page', String(state.page));
+  if (state.tradingDate) params.set('trading_date', state.tradingDate);
   history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`);
 }
 
@@ -395,6 +425,7 @@ function persistCandidatesState() {
   const payload = {
     ...currentFilterState(),
     page: state.page,
+    tradingDate: state.tradingDate,
   };
   localStorage.setItem(FILTERS_KEY, JSON.stringify(payload));
 }
