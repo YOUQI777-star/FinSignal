@@ -245,12 +245,20 @@ async function loadCompany(fresh = false) {
       data = await API.getSignals(state.market, state.code, fresh);
       state.usedMock = false;
     } catch (err) {
-      console.warn('[company] API unreachable, trying mock:', err.message);
-      const key = `${state.market}:${state.code}`;
-      data = MOCK_COMPANY[key];
-      if (!data) throw new Error(`No mock data for ${key}`);
-      state.usedMock = true;
-      showToast('Backend not running — showing demo data', 'warning');
+      console.warn('[company] signals unavailable, trying company profile:', err.message);
+      try {
+        const profile = await API.getCompany(state.market, state.code);
+        data = buildProfileOnlySnapshot(profile);
+        state.usedMock = false;
+        showToast(t('该公司暂无信号快照，已降级显示基础资料', 'No signal snapshot yet; showing company profile instead'), 'warning');
+      } catch (profileErr) {
+        console.warn('[company] profile unavailable, trying mock:', profileErr.message);
+        const key = `${state.market}:${state.code}`;
+        data = MOCK_COMPANY[key];
+        if (!data) throw new Error(`No mock data for ${key}`);
+        state.usedMock = true;
+        showToast('Backend not running — showing demo data', 'warning');
+      }
     }
 
     state.data = data;
@@ -262,6 +270,29 @@ async function loadCompany(fresh = false) {
   } finally {
     setLoadingUI(false);
   }
+}
+
+function buildProfileOnlySnapshot(profile) {
+  return {
+    company_id: profile.company_id || `${profile.market}:${profile.code}`,
+    market: profile.market,
+    code: profile.code,
+    name: profile.name,
+    industry: profile.industry,
+    status: profile.status || 'active',
+    summary: {
+      total_rules: 0,
+      triggered_count: 0,
+      status_counts: { triggered: 0, ok: 0, not_available: 0 },
+      snapshot_tier: 'shell_only',
+    },
+    financial_signals: [],
+    governance_signals: [],
+    equity_structure: profile.equity_structure || [],
+    financials: profile.financials || { annual: [] },
+    governance: profile.governance || {},
+    updated_at: profile.updated_at || null,
+  };
 }
 
 /* ============================================================

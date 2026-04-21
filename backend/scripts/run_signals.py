@@ -20,7 +20,7 @@ import json
 from collections import Counter
 from pathlib import Path
 
-from backend.config import DATA_DIR
+from backend.config import SNAPSHOT_DATA_DIR
 from backend.data_access.coverage import snapshot_tier
 from backend.rules.engine import RuleEngine
 
@@ -73,7 +73,7 @@ def build_summary(market_results: dict[str, list[dict]]) -> dict:
 def run(
     markets: list[str] | None = None,
     triggered_only: bool = False,
-    data_dir: Path = DATA_DIR,
+    data_dir: Path = SNAPSHOT_DATA_DIR,
 ) -> dict:
     engine = RuleEngine()
     target_markets = markets or ["CN", "TW"]

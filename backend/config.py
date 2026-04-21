@@ -20,12 +20,19 @@ except ImportError:
 
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent
+BUNDLED_DATA_DIR = (PROJECT_ROOT / "data").expanduser()
 DATA_DIR = Path(
     os.getenv("APP_DATA_DIR")
     or os.getenv("DATA_DIR")
-    or (PROJECT_ROOT / "data")
+    or BUNDLED_DATA_DIR
 ).expanduser()
+BUNDLED_DATA_DIR.mkdir(parents=True, exist_ok=True)
 DATA_DIR.mkdir(parents=True, exist_ok=True)
+SNAPSHOT_DATA_DIR = Path(
+    os.getenv("SNAPSHOT_DATA_DIR")
+    or BUNDLED_DATA_DIR
+).expanduser()
+SNAPSHOT_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 APP_HOST = os.getenv("APP_HOST", "127.0.0.1")
 APP_PORT = int(os.getenv("APP_PORT", "5000"))

@@ -16,7 +16,7 @@ from backend.auth.user_store import (
     init_db, register_user, login_user, get_user_by_token,
     logout_token, get_favorites, add_favorite, remove_favorite, update_favorite_name
 )
-from backend.config import APP_DEBUG, APP_HOST, APP_PORT, DATA_DIR, DEFAULT_CORS_ORIGINS
+from backend.config import APP_DEBUG, APP_HOST, APP_PORT, SNAPSHOT_DATA_DIR, DEFAULT_CORS_ORIGINS
 from backend.data_access.company_repository import CompanyRepository
 from backend.data_access.local_store import LocalDataStore
 from backend.data_access.turnover_history_store import TurnoverHistoryStore
@@ -39,7 +39,7 @@ from backend.screening.candidate_rules import (
     is_st,
 )
 
-_SIGNALS_DIR = DATA_DIR / "signals"
+_SIGNALS_DIR = SNAPSHOT_DATA_DIR / "signals"
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": DEFAULT_CORS_ORIGINS}})

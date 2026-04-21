@@ -4,14 +4,14 @@ import json
 from pathlib import Path
 from typing import Any
 
-from backend.config import DATA_DIR
+from backend.config import SNAPSHOT_DATA_DIR
 
 
 class LocalDataStore:
     """Simple filesystem-backed store for company and signal snapshots."""
 
     def __init__(self, data_dir: Path | None = None) -> None:
-        self.data_dir = data_dir or DATA_DIR
+        self.data_dir = data_dir or SNAPSHOT_DATA_DIR
 
     def get_company_snapshot(self, market: str, code: str) -> dict[str, Any] | None:
         path = self.data_dir / market.lower() / f"{code}.json"
