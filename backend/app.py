@@ -161,7 +161,11 @@ def _normalize_circ_mv_yi(value: object) -> float | None:
         numeric = float(value)
     except (TypeError, ValueError):
         return None
-    return round(numeric / 10000, 2) if numeric > 1000 else round(numeric, 2)
+    # turnover_history.circ_mv may come from older snapshot rows in 元, while
+    # Tushare-backed history rows are stored directly in 亿. Normalize both.
+    if numeric > 1e6:
+        numeric = numeric / 1e8
+    return round(numeric, 2)
 
 
 def _build_candidates_from_history(trading_date: str) -> list[dict]:
