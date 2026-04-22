@@ -73,7 +73,11 @@ def _normalize_circ_mv_yi(value) -> float | None:
         numeric = float(value)
     except (TypeError, ValueError):
         return None
-    return round(numeric / 10000, 2) if numeric > 1000 else round(numeric, 2)
+    # turnover_history.circ_mv is stored in 亿 for Tushare-backed history rows,
+    # but some older snapshot rows may still be in 元. Normalize both forms.
+    if numeric > 1e6:
+        numeric = numeric / 1e8
+    return round(numeric, 2)
 
 
 def _market_codes(market: str) -> list[str]:

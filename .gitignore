@@ -17,7 +17,8 @@ build/
 # Data files
 data/chain_kg/
 data/sync_reports/
-data/turnover_history.db
+# keep Railway/runtime SQLite snapshots in git when explicitly updated
+!data/turnover_history.db
 data/users.db
 
 # CN + TW snapshots included in git (needed for Railway)
@@ -30,6 +31,9 @@ data/users.db
 # Keep signals cache + master DB (needed for Railway deployment)
 # backend/master/company_master.db  ← included in git
 # data/signals/*.json               ← included in git
+# data/turnover_history.db          ← included in git
+# userdata/users.db                 ← included in git
+!userdata/users.db
 
 # Frontend build artifacts
 frontend/node_modules/
