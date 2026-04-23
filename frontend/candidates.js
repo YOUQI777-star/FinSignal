@@ -350,6 +350,8 @@ document.getElementById('applyBtn').addEventListener('click', () => {
 });
 document.getElementById('refreshBtn').addEventListener('click', () => {
   state.page = 1;
+  state.tradingDate = '';
+  state.baseTradingDate = '';
   loadCandidates({ forceRefresh: true });
 });
 document.getElementById('resetBtn').addEventListener('click', () => {
@@ -415,7 +417,8 @@ function restoreCandidatesState() {
     };
     applyStoredFilters(merged);
     state.page = Number(merged.page) > 0 ? Number(merged.page) : 1;
-    state.tradingDate = merged.tradingDate || '';
+    // Historical date is explicit, not sticky: only restore it from URL.
+    state.tradingDate = queryState.tradingDate || '';
     state.baseTradingDate = '';
   } catch {
     applyStoredFilters(DEFAULT_FILTERS);
@@ -463,7 +466,6 @@ function persistCandidatesState() {
   const payload = {
     ...currentFilterState(),
     page: state.page,
-    tradingDate: state.tradingDate,
   };
   localStorage.setItem(FILTERS_KEY, JSON.stringify(payload));
 }
