@@ -4,6 +4,7 @@ import json
 import logging
 import threading
 from datetime import date, timedelta
+from functools import lru_cache
 from pathlib import Path
 
 from flask import Flask, jsonify, request
@@ -132,13 +133,15 @@ def _build_financial_check(signal_result: dict | None) -> dict[str, object]:
 
 
 def _attach_candidate_score_payload(payload: dict, *, code: str) -> dict:
+    snapshot_seed = _latest_snapshot_candidate_seed(str(code).strip())
     score_seed = {
         "code": str(code).strip(),
-        "name": payload.get("name"),
-        "turnover": payload.get("turnover"),
-        "pct_change": payload.get("pct_change"),
-        "circ_mv": payload.get("circ_mv"),
-        "current_price": payload.get("current_price") or payload.get("close"),
+        "name": snapshot_seed.get("name") or payload.get("name"),
+        "turnover": snapshot_seed.get("turnover", payload.get("turnover")),
+        "pct_change": snapshot_seed.get("pct_change", payload.get("pct_change")),
+        "circ_mv": snapshot_seed.get("circ_mv", payload.get("circ_mv")),
+        "current_price": snapshot_seed.get("current_price") or payload.get("current_price") or payload.get("close"),
+        "industry": snapshot_seed.get("industry") or payload.get("industry"),
     }
     scored = attach_candidate_scores([score_seed])[0]
     return {
@@ -147,6 +150,39 @@ def _attach_candidate_score_payload(payload: dict, *, code: str) -> dict:
         "score_formula": scored.get("score_formula"),
         "score_breakdown": scored.get("score_breakdown"),
         "history_metrics": scored.get("history_metrics"),
+        "score_model": scored.get("score_model"),
+    }
+
+
+@lru_cache(maxsize=4)
+def _snapshot_candidates_map_for_date(snapshot_date: str) -> dict[str, dict]:
+    if not snapshot_date:
+        return {}
+    candidates = _build_candidates_from_history(snapshot_date)
+    return {
+        str(candidate.get("code") or "").strip(): candidate
+        for candidate in candidates
+        if candidate.get("code")
+    }
+
+
+def _latest_snapshot_candidate_seed(code: str) -> dict:
+    if not code:
+        return {}
+    snapshot_date = _latest_candidates_snapshot_date()
+    if not snapshot_date:
+        return {}
+    entry = _snapshot_candidates_map_for_date(snapshot_date).get(code)
+    if not entry:
+        return {}
+    return {
+        "code": entry.get("code"),
+        "name": entry.get("name"),
+        "turnover": entry.get("turnover"),
+        "pct_change": entry.get("pct_change"),
+        "circ_mv": entry.get("circ_mv"),
+        "current_price": entry.get("current_price") or entry.get("close"),
+        "industry": entry.get("industry"),
     }
 
 
@@ -333,6 +369,10 @@ def get_signals(market: str, code: str):
         if payload:
             if market.upper() == "CN":
                 payload = _attach_candidate_score_payload(payload, code=code)
+            payload = {
+                **payload,
+                "data_source": "signals_cache",
+            }
             return jsonify(payload), 200
     snapshot = store.get_company_snapshot(market, code)
     if not snapshot:
@@ -340,6 +380,10 @@ def get_signals(market: str, code: str):
     payload = rule_engine.evaluate(snapshot)
     if market.upper() == "CN":
         payload = _attach_candidate_score_payload(payload, code=code)
+    payload = {
+        **payload,
+        "data_source": "snapshot_eval",
+    }
     return jsonify(payload), 200
 
 
@@ -368,14 +412,7 @@ def get_top_signals():
     enriched_results = []
     for result in all_results:
         if result.get("market") == "CN":
-            entry = attach_candidate_scores([result])[0]
-            result = {
-                **result,
-                "candidate_score": entry.get("candidate_score"),
-                "score_formula": entry.get("score_formula"),
-                "score_breakdown": entry.get("score_breakdown"),
-                "history_metrics": entry.get("history_metrics"),
-            }
+            result = _attach_candidate_score_payload(result, code=str(result.get("code") or "").strip())
         enriched_results.append(result)
 
     enriched_results.sort(
@@ -386,7 +423,13 @@ def get_top_signals():
             r.get("code") or "",
         )
     )
-    return jsonify({"total": len(enriched_results), "results": enriched_results[:limit]}), 200
+    return jsonify({
+        "total": len(enriched_results),
+        "results": enriched_results[:limit],
+        "source": "signals_cache",
+        "score_model": "structure_v3",
+        "sort_mode": "triggered_then_structure_score",
+    }), 200
 
 
 @app.route("/api/graph/<market>/<code>")
@@ -704,12 +747,20 @@ def get_candidate_detail(code: str):
     GET /api/candidates/CN/<code>
     Returns the realtime candidate entry for one stock.
     """
-    try:
-        data = get_candidates()
-    except Exception as exc:
-        return jsonify({"error": str(exc)}), 503
+    entry = None
 
-    entry = next((c for c in data.get("candidates", []) if c["code"] == code), None)
+    snapshot_date = _latest_candidates_snapshot_date()
+    if snapshot_date:
+        snapshot_candidates = _build_candidates_from_history(snapshot_date)
+        entry = next((c for c in snapshot_candidates if c["code"] == code), None)
+
+    if entry is None:
+        try:
+            data = get_candidates(force_refresh=False)
+        except Exception as exc:
+            return jsonify({"error": str(exc)}), 503
+        entry = next((c for c in data.get("candidates", []) if c["code"] == code), None)
+
     if entry is None:
         return jsonify({"error": f"{code} is not in the current candidates pool"}), 404
 

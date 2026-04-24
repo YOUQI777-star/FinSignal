@@ -80,6 +80,7 @@ const state = {
   historyRange: null,
   historyAutoRetryKey: '',
 };
+const CANDIDATE_CONTEXT_KEY = 'fsm_candidate_context_v1';
 
 /* ============================================================
    MOCK DATA
@@ -252,12 +253,7 @@ async function loadCompany(fresh = false) {
         state.usedMock = false;
         showToast(t('该公司暂无信号快照，已降级显示基础资料', 'No signal snapshot yet; showing company profile instead'), 'warning');
       } catch (profileErr) {
-        console.warn('[company] profile unavailable, trying mock:', profileErr.message);
-        const key = `${state.market}:${state.code}`;
-        data = MOCK_COMPANY[key];
-        if (!data) throw new Error(`No mock data for ${key}`);
-        state.usedMock = true;
-        showToast('Backend not running — showing demo data', 'warning');
+        throw new Error(profileErr.message || err.message);
       }
     }
 
@@ -292,6 +288,7 @@ function buildProfileOnlySnapshot(profile) {
     financials: profile.financials || { annual: [] },
     governance: profile.governance || {},
     updated_at: profile.updated_at || null,
+    data_source: 'profile_only',
   };
 }
 
@@ -330,6 +327,8 @@ function renderScorePanel(data) {
   const breakdown = preferredScoreSource?.score_breakdown || fallbackScoreSource?.score_breakdown;
   const score = preferredScoreSource?.candidate_score ?? fallbackScoreSource?.candidate_score;
   const formula = preferredScoreSource?.score_formula || fallbackScoreSource?.score_formula;
+  const scoreModel = preferredScoreSource?.score_model || fallbackScoreSource?.score_model || '—';
+  const scoreSourceLabel = getScoreSourceLabel(preferredScoreSource, data);
 
   if (score == null || !breakdown) {
     panel.style.display = 'none';
@@ -339,7 +338,10 @@ function renderScorePanel(data) {
   }
 
   panel.style.display = '';
-  meta.textContent = t(`总分 ${Number(score).toFixed(1)}`, `Score ${Number(score).toFixed(1)}`);
+  meta.textContent = t(
+    `总分 ${Number(score).toFixed(1)} · 评分来源：${scoreSourceLabel.zh} · 模型：${scoreModel}`,
+    `Score ${Number(score).toFixed(1)} · Source: ${scoreSourceLabel.en} · Model: ${scoreModel}`,
+  );
 
   const items = [
     ['吸筹活跃', 'Activity Base', breakdown.activity_base],
@@ -380,11 +382,27 @@ function renderScorePanel(data) {
 
 async function loadCandidateContext() {
   if (state.market !== 'CN' || state.sourceFrom !== 'candidates') return;
+  const cached = readCandidateContextCache();
+  if (cached) {
+    state.candidateContext = cached;
+    return;
+  }
   try {
     state.candidateContext = await API.getCandidateDetail(state.code);
   } catch (err) {
     console.warn('[candidate-context] unavailable:', err.message);
     state.candidateContext = null;
+  }
+}
+
+function readCandidateContextCache() {
+  try {
+    const payload = JSON.parse(sessionStorage.getItem(CANDIDATE_CONTEXT_KEY) || 'null');
+    if (!payload) return null;
+    if (payload.market !== state.market || payload.code !== state.code) return null;
+    return payload.entry || null;
+  } catch {
+    return null;
   }
 }
 
@@ -885,9 +903,10 @@ function renderSignalSection(containerId, metaId, signals) {
   const meta      = document.getElementById(metaId);
 
   const triggered = signals.filter(s => s.status === 'triggered' || s.triggered).length;
+  const sourceLabel = getDetailDataSourceLabel();
   meta.textContent = signals.length
-    ? t(`${signals.length} 条规则 · ${triggered} 条触发`, `${signals.length} rules · ${triggered} triggered`)
-    : t('0 条规则', '0 rules');
+    ? t(`${signals.length} 条规则 · ${triggered} 条触发 · 来源：${sourceLabel.zh}`, `${signals.length} rules · ${triggered} triggered · Source: ${sourceLabel.en}`)
+    : t(`0 条规则 · 来源：${sourceLabel.zh}`, `0 rules · Source: ${sourceLabel.en}`);
 
   if (!signals.length) {
     container.innerHTML = `<div class="sig-empty">${t('该类别暂无信号', 'No signals in this category')}</div>`;
@@ -996,6 +1015,52 @@ function renderValues(values) {
         <span class="val-value">${esc(String(v ?? '—'))}</span>
       </div>`).join('')}
   </div>`;
+}
+
+function getScoreSourceLabel(preferredScoreSource, primaryData) {
+  if (state.sourceFrom === 'candidates' && preferredScoreSource === state.candidateContext) {
+    return {
+      zh: '候选池上下文',
+      en: 'Candidate context',
+    };
+  }
+  const dataSource = primaryData?.data_source || preferredScoreSource?.data_source || '';
+  if (dataSource === 'signals_cache') {
+    return {
+      zh: '信号快照',
+      en: 'Signals snapshot',
+    };
+  }
+  if (dataSource === 'snapshot_eval') {
+    return {
+      zh: '快照现算',
+      en: 'Snapshot evaluation',
+    };
+  }
+  if (dataSource === 'profile_only') {
+    return {
+      zh: '基础资料降级',
+      en: 'Profile-only fallback',
+    };
+  }
+  return {
+    zh: '详情数据',
+    en: 'Detail payload',
+  };
+}
+
+function getDetailDataSourceLabel() {
+  const dataSource = state.data?.data_source || '';
+  if (dataSource === 'signals_cache') {
+    return { zh: '信号快照', en: 'Signals snapshot' };
+  }
+  if (dataSource === 'snapshot_eval') {
+    return { zh: '快照现算', en: 'Snapshot evaluation' };
+  }
+  if (dataSource === 'profile_only') {
+    return { zh: '基础资料降级', en: 'Profile-only fallback' };
+  }
+  return { zh: '详情数据', en: 'Detail payload' };
 }
 
 /* ============================================================

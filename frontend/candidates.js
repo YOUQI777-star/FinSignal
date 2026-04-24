@@ -21,6 +21,7 @@ const state = {
 
 const FILTERS_KEY = 'fsm_candidates_filters_v1';
 const RETURN_KEY = 'fsm_candidates_return_v1';
+const CANDIDATE_CONTEXT_KEY = 'fsm_candidate_context_v1';
 const DEFAULT_FILTERS = {
   turnoverMin: '2',
   turnoverMax: '',
@@ -113,13 +114,21 @@ const _WDAY_EN = ['Sun',  'Mon',  'Tue',  'Wed',  'Thu',  'Fri',  'Sat'];
 
 function renderMeta(data) {
   const zh = window._currentLang === 'zh';
-  if (!state.baseTradingDate) {
-    state.baseTradingDate = data.fallback_from || data.trading_date || '';
-  }
-  document.getElementById('tableInfo').textContent =
-    zh
-      ? `${data.total} 只候选股 · 第 ${data.page || 1}/${data.total_pages || 1} 页`
-      : `${data.total} candidates · Page ${data.page || 1}/${data.total_pages || 1}`;
+  state.baseTradingDate = deriveBaseTradingDate(data);
+
+  const viewState = deriveCandidateViewState(data);
+  const sourceSummary = zh
+    ? `模式：${viewState.modeLabelZh} · 来源：${viewState.sourceLabelZh}`
+    : `Mode: ${viewState.modeLabelEn} · Source: ${viewState.sourceLabelEn}`;
+  const fallbackSummary = data.fallback_used
+    ? zh
+      ? ` · fallback: ${data.fallback_from || 'unknown'} -> ${data.trading_date || 'unknown'}`
+      : ` · fallback: ${data.fallback_from || 'unknown'} -> ${data.trading_date || 'unknown'}`
+    : '';
+
+  document.getElementById('tableInfo').textContent = zh
+    ? `${data.total} 只候选股 · 第 ${data.page || 1}/${data.total_pages || 1} 页 · ${sourceSummary}${fallbackSummary}`
+    : `${data.total} candidates · Page ${data.page || 1}/${data.total_pages || 1} · ${sourceSummary}${fallbackSummary}`;
 
   // Corresponding trading date (from backend calendar lookup)
   const tradingEl = document.getElementById('tradingDateDisplay');
@@ -133,7 +142,7 @@ function renderMeta(data) {
   }
   const prevBtn = document.getElementById('prevTradingDateBtn');
   if (prevBtn) {
-    const isHistoricalView = Boolean(state.tradingDate) || Boolean(data.fallback_used);
+    const isHistoricalView = viewState.mode === 'manual_history' || viewState.mode === 'auto_fallback';
     prevBtn.style.display = isHistoricalView || data.previous_trading_date ? '' : 'none';
     prevBtn.textContent = isHistoricalView ? t('返回', 'Back') : t('前一天', 'Previous Day');
   }
@@ -167,13 +176,60 @@ function renderMeta(data) {
   if (clientEl) {
     clientEl.textContent = _timeFmt.format(new Date());
   }
+}
 
-  const infoEl = document.getElementById('tableInfo');
-  if (data.fallback_used && infoEl) {
-    infoEl.textContent += zh
-      ? ` · 已自动回退到 ${data.trading_date}`
-      : ` · Auto-fallback to ${data.trading_date}`;
-  }
+function deriveCandidateViewState(data) {
+  const mode = state.tradingDate
+    ? 'manual_history'
+    : data.fallback_used
+      ? 'auto_fallback'
+      : data.source === 'realtime'
+        ? 'realtime'
+        : 'default_snapshot';
+
+  const sourceMap = {
+    realtime: {
+      zh: data.source_note === 'realtime_empty_auto_previous_day' ? '实时抓取后自动回退' : '实时抓取',
+      en: data.source_note === 'realtime_empty_auto_previous_day' ? 'Realtime with auto fallback' : 'Realtime fetch',
+    },
+    snapshot: {
+      zh: data.source_note === 'latest_cached_snapshot_previous_day' ? '上一交易日快照' : '今日快照',
+      en: data.source_note === 'latest_cached_snapshot_previous_day' ? 'Previous-day snapshot' : 'Latest snapshot',
+    },
+    history: {
+      zh: '手动历史查看',
+      en: 'Manual history view',
+    },
+    history_fallback: {
+      zh: '历史自动回退',
+      en: 'History fallback',
+    },
+  };
+  const modeMap = {
+    default_snapshot: { zh: '默认打开', en: 'Default open' },
+    realtime: { zh: '手动刷新', en: 'Manual refresh' },
+    manual_history: { zh: '手动前一天', en: 'Manual previous day' },
+    auto_fallback: { zh: '自动回退', en: 'Auto fallback' },
+  };
+
+  return {
+    mode,
+    modeLabelZh: modeMap[mode]?.zh || '未知',
+    modeLabelEn: modeMap[mode]?.en || 'Unknown',
+    sourceLabelZh: sourceMap[data.source]?.zh || data.source || '未知',
+    sourceLabelEn: sourceMap[data.source]?.en || data.source || 'Unknown',
+  };
+}
+
+function deriveBaseTradingDate(data) {
+  return data.fallback_used
+    ? (data.fallback_from || '')
+    : (data.trading_date || '');
+}
+
+function isHistoricalCandidateView(data = state.data) {
+  if (!data) return Boolean(state.tradingDate);
+  return Boolean(state.tradingDate) || Boolean(data.fallback_used);
 }
 
 function renderPagination(data) {
@@ -288,6 +344,7 @@ function renderTable(rows) {
       const market = row.dataset.market;
       persistCandidatesState();
       saveReturnAnchor(code);
+      saveCandidateContext(code, market, rows.find(item => item.code === code) || null);
       window.location.href = `company.html?market=${market}&code=${code}&from=candidates`;
     });
   });
@@ -363,11 +420,12 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   loadCandidates();
 });
 document.getElementById('prevTradingDateBtn').addEventListener('click', () => {
-  const isHistoricalView = Boolean(state.tradingDate) || Boolean(state.data?.fallback_used);
+  const isHistoricalView = isHistoricalCandidateView();
   if (isHistoricalView) {
     state.tradingDate = '';
+    state.baseTradingDate = '';
     state.page = 1;
-    loadCandidates({ forceRefresh: true });
+    loadCandidates();
     return;
   }
   if (!state.data?.previous_trading_date) return;
@@ -476,6 +534,18 @@ function saveReturnAnchor(code) {
     page: state.page,
     scrollTop: window.scrollY || 0,
     ts: Date.now(),
+  }));
+}
+
+function saveCandidateContext(code, market, entry) {
+  if (!entry) return;
+  sessionStorage.setItem(CANDIDATE_CONTEXT_KEY, JSON.stringify({
+    market,
+    code,
+    tradingDate: state.data?.trading_date || '',
+    source: state.data?.source || '',
+    capturedAt: Date.now(),
+    entry,
   }));
 }
 
