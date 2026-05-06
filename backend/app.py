@@ -60,13 +60,26 @@ graph_client = Neo4jClient()
 turnover_history_store = TurnoverHistoryStore()
 
 
+_signals_mem_cache: dict[str, tuple[float, dict[str, dict]]] = {}  # market -> (mtime, data)
+
 def _load_signals_cache(market: str) -> dict[str, dict]:
-    """Load pre-computed signals indexed by code. Returns empty dict if cache missing."""
+    """Load pre-computed signals indexed by code, cached in memory until file changes."""
     path = _SIGNALS_DIR / f"{market.lower()}_signals.json"
     if not path.exists():
         return {}
+    try:
+        mtime = path.stat().st_mtime
+    except OSError:
+        return {}
+    cached = _signals_mem_cache.get(market)
+    if cached and cached[0] == mtime:
+        return cached[1]
     results = json.loads(path.read_text(encoding="utf-8"))
-    return {item["code"]: item for item in results}
+    data = {item["code"]: item for item in results}
+    _signals_mem_cache[market] = (mtime, data)
+    log.info("[signals_cache] loaded %d %s signals (%.1f MB)", len(data), market,
+             path.stat().st_size / 1_048_576)
+    return data
 
 
 def _get_signal_result(market: str, code: str, *, cache: dict[str, dict] | None = None) -> dict | None:
