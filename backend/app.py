@@ -61,6 +61,24 @@ turnover_history_store = TurnoverHistoryStore()
 
 
 _signals_mem_cache: dict[str, tuple[float, dict[str, dict]]] = {}  # market -> (mtime, data)
+_company_name_cache: dict[str, dict[str, str]] = {}  # market -> {code: name}
+
+def _get_company_names(market: str) -> dict[str, str]:
+    """Return {code: name} for entire market, loaded once and cached in memory."""
+    market = market.upper()
+    if market in _company_name_cache:
+        return _company_name_cache[market]
+    try:
+        rows = repository.master_store._fetch_all(
+            "SELECT code, name FROM company_master WHERE market = ?",
+            (market,),
+        )
+        mapping = {row["code"]: row["name"] for row in rows}
+    except Exception:
+        mapping = {}
+    _company_name_cache[market] = mapping
+    log.info("[company_names] cached %d %s company names", len(mapping), market)
+    return mapping
 
 def _load_signals_cache(market: str) -> dict[str, dict]:
     """Load pre-computed signals indexed by code, cached in memory until file changes."""
@@ -219,13 +237,13 @@ def _normalize_circ_mv_yi(value: object) -> float | None:
 
 def _build_candidates_from_history(trading_date: str) -> list[dict]:
     rows = turnover_history_store.list_rows_for_date("CN", trading_date)
+    names_map = _get_company_names("CN")  # single bulk load, cached in memory
     candidates: list[dict] = []
     for row in rows:
         code = str(row.get("code") or "").strip()
         if not code:
             continue
-        company = repository.get_company_profile("CN", code) or {}
-        name = str(company.get("name") or "")
+        name = names_map.get(code) or str(row.get("name") or "")
         circ_mv_yi = _normalize_circ_mv_yi(row.get("circ_mv"))
         rule_row = {
             "name": name,
