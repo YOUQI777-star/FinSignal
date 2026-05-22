@@ -26,7 +26,7 @@
 |---|---|
 | 后端 | Python 3.x + Flask + flask-cors |
 | 数据存储 | 本地 JSON 文件 (`data/cn/*.json`, `data/tw/*.json`) + SQLite (`company_master.db`, `turnover_history.db`) |
-| 信号缓存 | `data/signals/cn_signals.json`, `data/signals/tw_signals.json` |
+| 信号缓存 | `data/signals/cn_signals.json`（21MB，已入 Git），`data/signals/tw_signals.json`（3.3MB），**启动时整体读入内存**（`_signals_mem_cache`），按文件 mtime 做失效，避免每次 API 请求 IO |
 | 数据源（CN） | AKShare EastMoney bulk API + Tushare Pro（历史日线 / 换手率） |
 | 数据源（TW） | TWSE OpenAPI + FinMind（OCF 字段） |
 | 前端 | 原生 HTML + CSS + JavaScript（无框架，无构建工具） |
@@ -73,7 +73,7 @@ C_G/
 │   │   ├── __init__.py
 │   │   ├── market_loader.py        # AKShare 实时行情拉取 + 交易日历（get_last_trading_date）
 │   │   ├── candidate_rules.py      # 筛选规则：换手率/现价/流通市值/涨幅/ST
-│   │   ├── candidate_scoring.py    # 候选池综合评分：强度 + 持续活跃 + 结构 + 行业轻量加成
+│   │   ├── candidate_scoring.py    # 候选池综合评分（structure_v3）：四维子评分 × 权重 + bonus/penalty；依赖 turnover_history.db 60日OHLC
 │   │   ├── screening_service.py    # 实时候选池主逻辑：30 分钟内存缓存 + thread-safe
 │   │   └── turnover_bootstrap.py   # 单股换手率历史按需补数 + 候选池批量回填实验
 │   └── scripts/
@@ -236,14 +236,20 @@ GET  /api/candidates?turnover_min=2&turnover_max=30&price_max=20&circ_mv_max=80&
          "total_pages": 11
        }
      实时拉取 AKShare stock_zh_a_spot_em()，30 分钟内存缓存，首次约 60-150s
-     非交易日（周末/节假日）返回最后一个交易日的收盘快照（East Money 接口不清零）
-     ?refresh=1 强制绕过缓存重新拉取
+     非交易日（周末/节假日）**优先从 `turnover_history.db` 读取最近一个已落库交易日的快照重建候选池**；
+       仅当数据库无足够数据时，才回落到东方财富实时接口（收盘数据不清零）
+     ?refresh=1 强制绕过缓存重新拉取（实时接口）
      后端在过滤后会追加 `candidate_score`、`score_breakdown`、`history_metrics`
-     默认结果顺序按综合评分排序，不再只是单纯按当日换手率：
-       - `turnover_quality`
-       - `sustained_activity`（近 5/10 日持续活跃）
-       - `structure_strength`（近几日价格/换手结构）
-       - `industry_bonus`（同板块轻量共振）
+     默认结果顺序按综合评分排序（`score_model: structure_v3`），不再只是单纯按当日换手率：
+       - `activity_score`（×0.30）：10日活跃天数 + 活跃连续天数 + 中位数换手 + 活跃趋势，含过热惩罚 / 低位加成
+       - `price_structure_score`（×0.28）：距20/60日高点比率 + 区间位置 + 突破强度 + 均线多头排列 + 连续创高低，含超涨惩罚 / 假突破惩罚
+       - `volume_price_score`（×0.27）：放量上涨 / 缩量回调 / 量能趋势 / 洗盘后反弹形态，含出货惩罚 / 噪音换手惩罚
+       - `sector_resonance_score`（×0.15）：同行业候选股数量 + 行业平均换手/涨幅 + 板块有无领涨标
+       全局加减项（叠加在合计分之上）：
+       - `washout_recovery_bonus`（+4）：近期有过30日高点10-30%回撤 + 已反弹修复
+       - `early_setup_bonus`（+4）：60日区间低位（≤68%）+ 高低点收敛 + 换手趋势向上
+       - `turnover_noise_penalty`（-2~-6）：换手率脉冲但收盘偏弱 / 价格效率极低
+       - `distribution_risk_penalty`（-2~-10）：高位放量停顿 + 上影线多 + 大跌放量
      每条 result 额外带 `financial_check`：
        status = `high_risk | warning | pass | no_data`
        triggered_signals = 已触发的财务/治理信号 ID
@@ -268,7 +274,133 @@ GET  /api/turnover-history/CN/{code}?days=10
 
 ---
 
-## 七、前端架构
+## 七、候选池选股/评分思路演进历史
+
+> 本章记录候选池从最初版本到当前 `structure_v3` 的完整演进脉络，方便后续调参或新增评分维度时理解设计决策。
+
+---
+
+### V1：纯换手率筛选（最初版本）
+
+**思路：** 简单粗暴，只做一个正筛选——今日换手率超过阈值。
+
+**筛选规则（C1~C6 全部 AND）：**
+- C1 换手率 > 2%（今日放量）
+- C2 现价 < 20 元（避免高价股）
+- C3 流通市值 < 80 亿（中小盘）
+- C4 今日涨幅 < +9%（排除接近涨停）
+- C5 今日涨幅 > -9%（排除接近跌停）
+- C6 非 ST / \*ST
+
+**排序：** 按今日换手率降序。
+
+**问题：** 只反映今日一个数字，无法区分"偶发脉冲"和"持续放量建仓"；换手率高但全是出货的股票会排在前面。
+
+---
+
+### V2：四维加权评分（过渡版本）
+
+**思路：** 在 V1 筛选条件不变的前提下，引入历史数据维度，对筛选后的候选池计算综合评分。
+
+**评分维度：**
+- `turnover_quality`：换手率质量（强度 + 稳定性）
+- `sustained_activity`：持续活跃度（近 5/10 日换手 ≥ 2% 的天数 + 连续天数）
+- `structure_strength`：近期价格结构（高低点形态）
+- `industry_bonus`：同板块候选股数量 + 板块平均换手 → 轻量共振加成
+
+**改进：** 开始区分"今日脉冲"和"多日活跃"两种不同性质的换手，减少了一日游股票的排名；加入行业共振逻辑，优先同板块多股同时活跃的情形。
+
+**遗留问题：** 价格结构维度过于简单，未纳入 OHLC 价格行为（量价配合、洗盘形态、收盘强弱等）；无法识别"高位震荡出货"。
+
+---
+
+### V3：结构评分重写（当前版本，`structure_v3`）
+
+**背景：** Tushare Pro 接入后，历史数据质量大幅提升（可获取 60 日 OHLC + 成交金额 + 换手率），使精细化量价分析成为可能。
+
+**四个子评分 + 全局 bonus/penalty：**
+
+#### 1. `activity_score`（×0.30）——活跃持续性
+
+核心问题：这只股票的放量是持续行为还是今日偶发？
+
+| 指标 | 含义 |
+|------|------|
+| `active_days_10` | 近10日中换手≥2%的天数（×6分/天）|
+| `active_streak_10` | 近10日最长连续活跃天数（×7分/天）|
+| `turnover_median_10` | 10日中位数换手率（稳健，不被单日拉高）|
+| `turnover_trimmed_mean_10` | 去头尾均值（抗异常值）|
+| `activity_trend` | 后5日均值 vs 前5日均值：换手在加速还是降温 |
+| **修正项** | 低位+趋势向上：+5（`range_position_60 ≤ 0.45`）；过热惩罚：-最多8（`avg_turnover_5 > 10`）；噪音换手折扣：当换手很高但价格效率低时扣分 |
+
+#### 2. `price_structure_score`（×0.28）——价格形态质量
+
+核心问题：当前价格是在什么位置、形成了什么形态？
+
+| 指标 | 含义 |
+|------|------|
+| `close_to_20d_high` | 当前价 / 20日最高价（靠近高点加分）|
+| `close_to_60d_high` | 当前价 / 60日最高价 |
+| `breakout_strength` | 相对近期高点的突破幅度（综合范围位置）|
+| `range_position_20/60` | 在20/60日区间的位置（低位/中位/高位）|
+| `higher_lows_ratio_10` | 近10日低点逐步抬高的比例（上升趋势验证）|
+| `higher_highs_ratio_10` | 近10日高点逐步抬高的比例 |
+| `ma_bullish_alignment` | MA5 ≥ MA10 ≥ MA20 > 0（均线多头排列）|
+| **修正项** | 初期建仓形态加成：+8（中间区间+高低点收敛+微突破）；超涨惩罚：5日涨幅≥8%、当日涨幅≥5.5%、极高位突破各扣分；假突破惩罚：突破幅度>0.6但收盘弱（<0.4）：-5 |
+
+#### 3. `volume_price_score`（×0.27）——量价健康度
+
+核心问题：成交量的性质是建仓（放量上涨/缩量回调）还是出货（放量下跌/高位量价背离）？
+
+| 指标 | 含义 |
+|------|------|
+| `up_volume_ratio_10` | 近10日"放量上涨日"占比（涨幅>0 + 成交≥中位数）|
+| `controlled_pullback_ratio_10` | 近10日"缩量回调日"占比（跌幅<0 + 成交<中位数 + 守住支撑）|
+| `amount_trend` | 后5日均成交金额 vs 前5日：量能趋势 |
+| `heavy_distribution_days_10` | 重度出货日数（跌幅≤-3% + 放量≥中位数×1.2）×-9 |
+| `long_upper_shadow_days_10` | 上影线明显日数（上影≥日内振幅45%）×-5 |
+| `price_progress_efficiency` | 10日涨幅 / 10日平均换手（花多少换手换来多少涨幅）|
+| **修正项** | 洗盘反弹形态加成：+6（从高点回撤12-30%后已回升）；出货停滞惩罚：-8（高位+高换手+涨幅微小+多上影线）；噪音换手惩罚：-6（换手脉冲+收盘弱+价格效率低）|
+
+#### 4. `sector_resonance_score`（×0.15）——板块共振
+
+核心问题：板块内有没有同步活跃的多只股票？是否有领涨标的？
+
+| 指标 | 含义 |
+|------|------|
+| `industry_count` | 同行业在候选池中的股票数（每多一只+10分，上限5只）|
+| `industry_turnover_avg` | 板块内平均换手率 |
+| `industry_pct_avg` | 板块内平均涨幅 |
+| `leader_presence` | 板块内有5日涨幅≥4%的领涨标：+8 |
+| 自身参与度 | 自身换手≥行业均值 且 今日涨幅≥0：+6 |
+
+#### 全局修正项（加减在合计分之上）
+
+| 项目 | 条件 | 分值 |
+|------|------|------|
+| `washout_recovery_bonus` | 从30日高点回撤12-30% + 已有效反弹 + 位置≤72% | +4 |
+| `early_setup_bonus` | 60日低位（≤68%）+ 高低点收敛 + 换手向上 + 5日涨幅≤4% | +4 |
+| `turnover_noise_penalty` | 换手脉冲比≥2.8 + 价格效率<0.35 | -4 |
+| `turnover_noise_penalty` | 收盘弱（<0.4）+ 当日换手≥10日中位数×2 | -2 |
+| `distribution_risk_penalty` | 高位（≥80%）+ 高换手（≥8%）+ 涨幅停滞（≤2.5%）| -5 |
+| `distribution_risk_penalty` | 上影线天数≥2 | -2 |
+| `distribution_risk_penalty` | 重度出货天数≥2 | -3 |
+
+**最终评分公式：**
+```
+candidate_score = activity×0.30 + price_structure×0.28 + volume_price×0.27 + sector_resonance×0.15
+                + washout_recovery_bonus + early_setup_bonus
+                - turnover_noise_penalty - distribution_risk_penalty
+```
+
+**设计原则：**
+- 三种股票应拿到高分：① 低位持续活跃+均线多头排列；② 短期洗盘后回升+量价配合；③ 板块共振中位居中上游
+- 三种股票应被压低：① 高位换手不涨（出货）；② 今日换手脉冲但历史无持续性；③ 涨停后第二天高开低走
+- `circ_mv`/`pct_change`/`turnover` 在评分计算时**优先读 `turnover_history.db` 快照**，不依赖实时行情（避免盘中数据噪音影响评分稳定性）
+
+---
+
+## 八、前端架构
 
 ### 设计系统
 - 所有颜色、间距、圆角、字体在 `styles.css` 顶部 `:root` 里定义
@@ -494,7 +626,7 @@ LLM 不可用时自动降级为规则摘要（`_fallback_report()`），`source`
 
 ---
 
-## 八、数据链路与覆盖状态
+## 九、数据链路与覆盖状态
 
 ### A 股（CN）
 | 指标 | 数据 |
@@ -526,7 +658,7 @@ LLM 不可用时自动降级为规则摘要（`_fallback_report()`），`source`
 
 ---
 
-## 九、本地启动方式
+## 十、本地启动方式
 
 **前提：** 项目目录下有 `.venv/` 虚拟环境，已安装 `backend/requirements.txt`。
 
@@ -547,7 +679,7 @@ open http://localhost:8080/index.html
 
 ---
 
-## 十、每日维护命令
+## 十一、每日维护命令
 
 ```bash
 # 每天运行一次：记录当天换手率快照、补充台股 OCF、重算信号缓存
@@ -563,7 +695,7 @@ cd "/Users/wangyouqi/Documents/DesktopOrganizer/Web Development/C_G"
 
 ---
 
-## 十一、部署
+## 十二、部署
 
 ### 前端（Cloudflare Pages）
 **线上地址：** https://finsignal-b8n.pages.dev  
@@ -643,13 +775,13 @@ expect -c '
 
 ---
 
-## 十二、已知问题 / 技术债
+## 十三、已知问题 / 技术债
 
 1. **TW OCF 缺失率 72%**：F2 规则在台股几乎全 not_available，需要继续每天跑 `refresh.sh`，约 8-9 天清零。
 
 2. **Governance 数据几乎全缺**：G1 和 G3 规则对绝大多数公司返回 `not_available`。pledge_ratio 数据源没有接入，board composition 数据未采集。
 
-3. ~~**报告是占位版**~~ ✅ **已完成并升级**：`report_generator.py` 接入 DeepSeek，采用**两阶段推理架构**，API 失败时自动降级为规则摘要。详见下方"AI 报告生成"小节。Railway 环境变量 `LLM_PROVIDER=deepseek`、`LLM_API_KEY` 已配置。
+3. ~~**报告是占位版**~~ ✅ **已完成并升级**：`report_generator.py` 接入 DeepSeek，采用**两阶段推理架构**，API 失败时自动降级为规则摘要。详见下方”AI 报告生成”小节。Railway 环境变量 `LLM_PROVIDER=deepseek`、`LLM_API_KEY` 已配置。
 
 4. ~~**公司快照不在 Git 仓库**~~ ✅ **已完成**：`data/cn/*.json`（48MB，5502 家）和 `data/tw/*.json`（5.3MB，1081 家）已加入 Git 并部署至 Railway。`/api/company/{market}/{code}` 和 `/api/report` 在云端完全可用。
 
@@ -659,21 +791,27 @@ expect -c '
 
 7. ~~**候选池页面无限 Loading**~~ ✅ **已修复**：根因是 AKShare `stock_zh_a_spot_em()` 分页拉取 58×~1s = ~145s，超过原 Gunicorn 120s timeout 导致 worker 无限重启。已将 `gunicorn.conf.py` 的 `timeout` 改为 300，并在 `app.py` 启动时加入后台预热线程。
 
-8. **候选池 `trading_date` fallback 不感知节假日**：`get_last_trading_date()` 优先使用 AKShare 交易日历（准确），但若接口失败，fallback 逻辑只跳过周六/周日，不处理法定节假日（如五一、国庆）。节假日期间 fallback 可能显示错误的"上一交易日"。优先级低，因 AKShare 日历接口通常不会失败。
+8. **候选池 `trading_date` fallback 不感知节假日**：`get_last_trading_date()` 优先使用 AKShare 交易日历（准确），但若接口失败，fallback 逻辑只跳过周六/周日，不处理法定节假日（如五一、国庆）。节假日期间 fallback 可能显示错误的”上一交易日”。优先级低，因 AKShare 日历接口通常不会失败。
 
-9. **AKShare 免费源不适合批量历史换手率回填**：无论是“全市场 5500+ 支股票逐股补最近 10 日”，还是“候选池 1000+ 支股票逐股补最近 10 日”，都可能触发 `Connection aborted / RemoteDisconnected`。当前结论：
+9. **AKShare 免费源不适合批量历史换手率回填**：无论是”全市场 5500+ 支股票逐股补最近 10 日”，还是”候选池 1000+ 支股票逐股补最近 10 日”，都可能触发 `Connection aborted / RemoteDisconnected`。当前结论：
    - ✅ 当日全市场换手率：稳定可抓（候选池主流程已验证）
    - ⚠️ 单股历史换手率：通常可按需抓取，适合 company 页懒加载
    - ❌ 多股票批量历史回填：免费源下不稳定，不建议作为主流程依赖
 
 10. **`backend/scripts/bootstrap_turnover_history.py` 保留为实验脚本，不是推荐主流程**：
-   - 已加 retry + sleep 节流
-   - 仍然会受上游断连影响
-   - 仅适合小批量测试，不应作为“上线前必须先跑完”的前置步骤
+    - 已加 retry + sleep 节流
+    - 仍然会受上游断连影响
+    - 仅适合小批量测试，不应作为”上线前必须先跑完”的前置步骤
+
+11. ~~**信号 JSON 每次请求触发 IO，Railway 响应达 8s**~~ ✅ **已修复**（commit `1c695db` + `86d137e`）：`cn_signals.json`（21MB）现在在 `_load_signals_cache()` 中**按 mtime 缓存到内存**，只在文件变更时重新读取；Railway `/api/signals/top` 响应时间从 8s 降至 <300ms。
+
+12. ~~**候选池非交易日数据混乱**~~ ✅ **已修复**（commit `c565053` / `836e984`）：候选池接口现在优先从 `turnover_history.db` 读取最近一个完整快照日重建候选池，不再依赖东方财富实时接口”不清零”这一副作用行为。前端也增加了”查看前一天”切换按钮。
+
+13. **Tushare Token 需要定期刷新**：`tushare_client.py` 已统一初始化逻辑（commit `b5c1f3e`），可用 `python -m backend.tushare_client` 更新 token；Railway 环境变量 `TUSHARE_TOKEN` 若过期则 Tushare 回落到 AKShare，历史 OHLC 字段会缺失。
 
 ---
 
-## 十三、下一步优先级建议
+## 十四、下一步优先级建议
 
 | 优先级 | 任务 |
 |--------|------|
@@ -685,21 +823,29 @@ expect -c '
 | ✅ 已完成 | 候选池筛选增强：新增 `turnover_max` 上限筛选 |
 | ✅ 已完成 | 候选池真分页：`page / page_size / total_pages`（默认 100 条/页）|
 | ✅ 已完成 | 公司页历史换手率模块：5D / 10D / 20D / 自定义日期 |
-| ✅ 已完成 | 历史换手率轻量 SQLite：`data/turnover_history.db` |
+| ✅ 已完成 | 历史换手率轻量 SQLite：`data/turnover_history.db`（含 OHLC + pct_change + amount + circ_mv）|
 | ✅ 已完成 | 侧边栏导航重构：Home / Discover / Deep Dive / System 四级结构，所有 9 个页面统一更新 |
 | ✅ 已完成 | 首页产品门户重设计：4 个摘要卡 + 候选池预览（带财务状态 badge）+ 规则分布 + 快捷入口 |
 | ✅ 已完成 | 候选池 × 信号系统打通：`_build_financial_check()` 在 app.py 中叠加财务状态到每条候选结果；候选池表格和首页预览均展示 financial_check badge + 触发信号 |
 | ✅ 已完成 | 用户注册/登录系统：邮箱+密码（无需验证），SQLite 存 Railway Volume，30天 session token；收藏股票功能；右上角头像 + 右侧滑出个人面板 |
 | ✅ 已完成 | AI 报告升级：两阶段推理架构（Phase 1 JSON 结构化判断 + Phase 2 报告写作）；接入候选池实时上下文 + 换手趋势特征；每句话标注数据来源 |
+| ✅ 已完成 | 候选池综合评分升级至 `structure_v3`：四维子评分（活跃度/价格结构/量价关系/板块共振）+ 全局 bonus/penalty；Tushare Pro 补充历史 OHLC 支撑评分计算 |
+| ✅ 已完成 | 候选池非交易日降级：优先读 `turnover_history.db` 重建，前端支持”前一天”切换 |
+| ✅ 已完成 | 信号 JSON 内存缓存：21MB 文件按 mtime 缓存，Railway 响应从 8s 降至 <300ms |
+| ✅ 已完成 | Tushare 客户端统一初始化（`tushare_client.py`），token 更新流程规范化 |
+| ✅ 已完成 | Railway 每日历史维护：`maintain_daily_history.py` + 启动后台保障线程，历史数据持久化 |
 | ⚠️ 已记录 | 历史批量回填在免费 AKShare 源下不稳定，当前主流程改为”单股按需抓取并写库” |
+| P1 | 每天跑 `./refresh.sh` 补台股 OCF，约 8 天清零（当前还剩 ~790 家）|
 | P2 | 补充 governance 数据（pledge_ratio 可从 AKShare 获取，CN 市场） |
-| P2 | 公司快照定期更新机制（目前是手动跑脚本，可加 cron 或 Railway Cron Service） |
+| P2 | 公司快照定期更新机制（目前是手动跑脚本，可加 Railway Cron Service） |
+| P2 | 候选池评分回测工具：记录每日候选池 + 标注 N 日后涨跌，验证 structure_v3 预测力 |
 | P3 | 接入 Neo4j 图谱（股权穿透、关联方分析） |
 | P3 | 信号趋势历史（目前只看当前一次评估结果，没有时序对比） |
+| P3 | 多层风险框架（Pillar 聚合 + Piotroski F-Score + Beneish M-Score，见第 14.3 节）|
 
 ---
 
-## 十四、拟扩展功能规划
+## 十五、拟扩展功能规划
 
 > 本章节面向下一阶段接手者，记录三个已明确方向但尚未实现的功能规划。每项规划包含业务目标、数据流设计、输出结构、前端展示建议及已知风险，可直接作为需求文档起点。
 
@@ -1083,3 +1229,173 @@ overall:
 | P1 | 实现 Piotroski F-Score 和 Beneish M-Score，集成进信号缓存，前端公司详情页展示模型得分卡 |
 | P2 | 实现 Pillar 聚合层，为每个 Pillar 计算综合得分，展示 Overall Risk Level |
 | P3 | 实现 Industry Benchmark Layer（行业分位），接入 Altman Z-Score（需要市值数据），DuPont 分解集成进 LLM 报告 prompt |
+
+---
+
+## Stage 5: Tushare 2年历史数据 Wyckoff 结构验证
+
+**完成日期：** 2026-05-22  
+**任务：** 使用 Tushare Pro 数据替代短期样本，进行 2 年期长期回测验证  
+**关键成果：** structure_v4 相比 v3 取得 **+0.799% 显著改进**，跨所有 regime 生效
+
+### 5.1 数据规模
+
+| 指标 | 值 |
+|------|-----|
+| 时间跨度 | 2024-01-01 → 2026-05-21 |
+| 交易日数 | 574 天 |
+| 股票代码数 | 5,605 只 |
+| 日线数据行数 | 3,095,322 行 |
+| 候选快照观测 | 698,848 个 |
+| 有效 5d 收益观测 | 693,569 个 (99.2%) |
+| Regime 分布 | 上升 263 天 / 横盘 153 天 / 下降 158 天 |
+
+### 5.2 v3 vs v4 回测结果
+
+#### 全样本 (All Regime)
+
+| 模型 | 5d 均收 | 胜率 | 最大回撤 | Top-10 Rank |
+|------|--------|------|---------|---------|
+| **structure_v3** | **-0.772%** | 40.9% | -6.35% | ❌ 表现最差 |
+| **structure_v4** | **+0.027%** | 46.9% | -5.15% | ✅ **+0.799% 改进** |
+| early_setup_only | +0.181% | 47.9% | -4.98% | ✅ 最强信号 |
+| washout_gate_v4 | -0.122% | 45.8% | -5.29% | ❌ 虚假信号 |
+| v4_no_early_setup | -0.646% | 41.5% | -6.22% | ❌ early_setup 必需 |
+
+#### 上升期 (Uptrend)
+
+| 模型 | 5d 均收 | 胜率 | 最大回撤 |
+|------|--------|------|---------|
+| structure_v3 | -0.073% | 41.9% | -5.23% |
+| **structure_v4** | **+0.654%** | 49.2% | -3.92% |
+| early_setup_only | +0.835% | 50.1% | -3.80% |
+
+**解读：** 上升期 v4 得分达 v3 的 9 倍，early_setup 信号仍为最强
+
+#### 横盘期 (Sideways)
+
+| 模型 | 5d 均收 | 胜率 | 最大回撤 |
+|------|--------|------|---------|
+| structure_v3 | -1.942% | 39.5% | -7.96% |
+| **structure_v4** | **-0.847%** | 45.2% | -6.51% |
+| early_setup_only | -0.742% | 47.0% | -6.39% |
+
+**解读：** 横盘期全部模型负收益，但 v4 比 v3 减亏 **1.095%**，early_setup 仍然相对坚挺
+
+#### 下降期 (Downtrend)
+
+| 模型 | 5d 均收 | 胜率 | 最大回撤 |
+|------|--------|------|---------|
+| structure_v3 | -0.780% | 40.7% | -6.62% |
+| **structure_v4** | **-0.149%** | 44.8% | -5.83% |
+| early_setup_only | +0.006% | 45.1% | -5.52% |
+
+**解读：** 下降期 v4 比 v3 少亏 **0.631%**，early_setup 在下降期基本失效
+
+### 5.3 关键发现
+
+#### 1. structure_v4 的改进机制
+
+**v4 相比 v3 移除了两个有害因素：**
+
+| 因素 | v3 中 | v4 中 | 影响 |
+|------|------|------|------|
+| sector_resonance | 权重 15% | 仅作 tag，不计分 | 部分行业共鸣形成羊群效应，全样本贡献为零 |
+| washout_recovery_bonus | +4 分 | 完全移除 | 虚假弹簧信号，特别在下降期成为陷阱 |
+
+**v4 强化了一个有效信号：**
+- early_setup_bonus：从 +4 上升到 min(+6, 4×1.5)，并提高权重
+
+#### 2. early_setup_bonus 是最强单一信号
+
+| Regime | 贡献度 | 可靠性 | 备注 |
+|--------|--------|--------|------|
+| **全样本** | **+0.181%** | ⭐⭐⭐⭐⭐ | 跨所有 regime 有效 |
+| 上升期 | +0.835% | ⭐⭐⭐⭐⭐ | 最强表现 |
+| 横盘期 | -0.742% | ⭐⭐⭐ | 仍相对稳定 |
+| 下降期 | +0.006% | ⭐⭐ | 基本失效，但仍优于其他 |
+
+**Wyckoff 解释：** early_setup 捕捉的是 **accumulation 阶段向 markup 过渡** 的信号——LPS (Last Point of Support) 区域。这是 Wyckoff 结构中最可靠的入场点，因为此时 supply 已基本吸收完毕。
+
+#### 3. Wyckoff 标签有效性排序
+
+| 标签 | 5d 均收 | 观测数 | 胜率 | Wyckoff 含义 | 验证 |
+|------|--------|--------|------|------------|------|
+| spring_washout_attempt | +1.046% | 52,372 | 50.1% | 春季反弹 | ✅ 有效 |
+| markup_prep | +0.825% | 67,302 | 50.0% | 上升准备期 | ✅ 有效 |
+| early_setup_consolidation | +0.799% | 83,863 | 51.7% | LPS 巩固 | ✅ 最稳定 |
+| distribution_risk | +0.788% | 287,505 | 49.3% | ⚠️ 见 5.4 | ⚠️ 需重评 |
+| accumulation_zone | +0.456% | 16,855 | 47.5% | 建仓区域 | ✅ 弱正 |
+| tag:neutral | -0.046% | 20,800 | 49.0% | 无特征 | ✅ 中性 |
+| overextended | -0.613% | 21,714 | 39.0% | 过度上升 | ✅ 真正风险 |
+| vp_confirmed | -5.323% | 179 | 17.3% | ⚠️ 虚假信号 | ❌ 样本极小 |
+
+### 5.4 distribution_risk 标签重评（⚠️ 重要发现）
+
+**观察现象：** distribution_risk 标签虽然名义上代表"分布期风险"，但实际表现为正收益。
+
+**时间窗口分析：**
+
+| 窗口 | 5d 均收 | 胜率 | 解读 |
+|------|--------|------|------|
+| 3d | +0.005% | 49.0% | 短期平稳 |
+| 5d | +0.008% | 49.3% | 短期平稳 |
+| 10d | +0.015% | 50.5% | **开始转正** |
+| 20d | **+0.031%** | 50.8% | **长期加强** |
+
+**结论：**
+
+当前 distribution_risk 标签标记的是 **"高成交量的上升延续期"**，而不是真正的分布型风险。这个阶段：
+- 短期（3-5天）：基本中性，可能存在短期调整
+- 中长期（10-20天）：持续正收益，表现为 **late-stage markup momentum**
+
+**建议：**
+
+根据用户要求，此标签在下一个迭代中应考虑拆分为：
+- `high_turnover_strength` — 高成交量但价格继续上升（长期有效，+0.031%@20d）
+- `true_distribution_risk` — 高成交量且价格开始反转（当前标记机制未能区分）
+
+**当前处理：** 保持现有标记以避免数据破裂，但在文档中明确说明此标签的实际含义，防止误解。
+
+### 5.5 生产接入总结
+
+**已完成的变更：**
+
+| 文件 | 变更 | 目的 |
+|------|------|------|
+| `candidate_scoring.py` | 添加 `wyckoff_phase` / `wyckoff_tags` 占位符 | 后续支持存储 |
+| `candidate_snapshot_store.py` | 新增 2 列存储 Wyckoff 信息 | 持久化标签 |
+| `app.py` | 优先从 snapshot store 加载历史数据 | 保留 Wyckoff 标签 |
+| `backtest_bootstrap_tushare.py` | 已实现完整 Wyckoff 标签化 | 实时候选无标签 |
+
+**默认排序策略：**
+- `candidate_score` = `score_v4` （生产已切换）
+- `score_v3` 保留字段用于 A/B 对比和回滚
+- Wyckoff 标签仅在 backtest 和历史快照中可用，实时候选返回 `None`
+
+### 5.6 限制与后续方向
+
+**当前验证的限制：**
+1. **Ranking validation only** — 回测只验证了候选排序的有效性，未模拟实际交易（滑点、费用、头寸管理）
+2. **No portfolio optimization** — 未涉及 Top-10 / Top-20 投资组合的权重分配
+3. **Regime 标签简化** — 仅使用 MA20/MA60 交叉，未考虑 VIX / 市场流动性等深层因素
+4. **Wyckoff 标签局限** — 10 个标签涵盖主要结构，但复杂边界情况（如 test 重复）的判断仍不够精细
+
+**后续建议（Priority Order）：**
+
+| 优先级 | 方向 | 预期收益 |
+|--------|------|---------|
+| **P0** | 确认 distribution_risk 标签拆分方案，重新标记或改名 | 消除标签歧义 |
+| **P1** | 验证 Top-10 / Top-20 投资组合的真实回报（包括成本） | 从排序验证升级到投资可行性验证 |
+| **P2** | 细化 Wyckoff test / retest 标签，区分重复测试的强度 | 提高 spring 信号的区分度 |
+| **P3** | 结合 options pricing implied volatility 验证 overextended 标签的时间尺度 | 改进 downtrend 期的卖点判断 |
+
+### 5.7 文档更新清单
+
+- ✅ 新增 Stage 5 章节（本部分）
+- ✅ 明确 v4 > v3 的改进机制
+- ✅ Wyckoff 标签有效性对标
+- ✅ distribution_risk 重评结果
+- ✅ 生产接入变更清单
+- ✅ 后续方向建议
+

@@ -244,9 +244,21 @@ def _score_sector_resonance(
     return round(_clamp(score), 2)
 
 
-def build_candidate_metrics(candidate: dict[str, Any], *, history_days: int = 60) -> dict[str, Any]:
+def build_candidate_metrics(
+    candidate: dict[str, Any],
+    *,
+    history_days: int = 60,
+    preloaded_history: list | None = None,
+) -> dict[str, Any]:
+    """
+    Compute structure_v3 metrics for a single candidate.
+
+    preloaded_history: if provided, use this list instead of querying the DB.
+    This is used by the backtest bootstrap to pass date-bounded history
+    (rows with date <= scoring_date only) so there is no look-ahead bias.
+    """
     code = str(candidate.get("code") or "").strip()
-    history = list(_cached_history(code, history_days))
+    history = list(preloaded_history) if preloaded_history is not None else list(_cached_history(code, history_days))
     company = _cached_company(code)
 
     turnover_rates = [_safe_float(row.get("turnover_rate")) for row in history]
@@ -437,14 +449,26 @@ def build_candidate_metrics(candidate: dict[str, Any], *, history_days: int = 60
     }
 
 
-def attach_candidate_scores(candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def attach_candidate_scores(
+    candidates: list[dict[str, Any]],
+    *,
+    preloaded_histories: dict[str, list] | None = None,
+) -> list[dict[str, Any]]:
+    """
+    Score and sort a list of pre-filtered candidates.
+
+    preloaded_histories: optional {code: history_rows} mapping used by the
+    backtest bootstrap to pass date-bounded history per stock so there is
+    no look-ahead bias in the metrics computation.
+    """
     metrics_by_code: dict[str, dict[str, Any]] = {}
     industry_stats: dict[str, dict[str, float]] = {}
 
     industry_bucket: dict[str, list[dict[str, Any]]] = {}
     for candidate in candidates:
-        metrics = build_candidate_metrics(candidate)
         code = str(candidate.get("code") or "")
+        ph = (preloaded_histories or {}).get(code)
+        metrics = build_candidate_metrics(candidate, preloaded_history=ph)
         metrics_by_code[code] = metrics
         industry = str(metrics.get("industry") or "").strip()
         if industry:
@@ -518,21 +542,32 @@ def attach_candidate_scores(candidates: list[dict[str, Any]]) -> list[dict[str, 
         if (metrics.get("heavy_distribution_days_10") or 0) >= 2:
             distribution_risk_penalty += 3
 
-        candidate_score = round(
+        score_v3 = round(
             activity_score * 0.30
             + price_structure_score * 0.28
             + volume_price_score * 0.27
-            + sector_resonance_score * 0.15,
-            2,
-        )
-        candidate_score = round(
-            candidate_score
+            + sector_resonance_score * 0.15
             + washout_recovery_bonus
             + early_setup_bonus
             - turnover_noise_penalty
             - distribution_risk_penalty,
             2,
         )
+        # structure_v4: sector_resonance and washout_recovery removed from score;
+        # early_setup amplified (×1.5, cap 6); price_structure weight raised.
+        clipped_early = min(early_setup_bonus * 1.5, 6.0)
+        score_v4 = round(
+            price_structure_score * 0.40
+            + activity_score * 0.27
+            + volume_price_score * 0.18
+            + clipped_early
+            - turnover_noise_penalty
+            - distribution_risk_penalty,
+            2,
+        )
+        candidate_score = score_v4  # default ranking uses v4
+        sector_hot_flag = sector_resonance_score >= 50.0   # tag only, not in v4 score
+        reversal_risk_flag = washout_recovery_bonus > 0    # tag only, not in v4 score
 
         enriched.append(
             {
@@ -541,10 +576,30 @@ def attach_candidate_scores(candidates: list[dict[str, Any]]) -> list[dict[str, 
                 "turnover": candidate.get("turnover") if candidate.get("turnover") is not None else metrics.get("latest_turnover"),
                 "pct_change": candidate.get("pct_change") if candidate.get("pct_change") is not None else metrics.get("latest_pct_change"),
                 "circ_mv": candidate.get("circ_mv") if candidate.get("circ_mv") is not None else metrics.get("latest_circ_mv"),
-                "candidate_score": candidate_score,
-                "score_model": "structure_v3",
+                # score == score_v4 for backward compat (frontend reads `candidate_score`)
+                "score": candidate_score,                # alias for API/frontend
+                "candidate_score": candidate_score,      # internal use
+                "score_v3": score_v3,
+                "score_v4": score_v4,
+                "score_version": "structure_v4",
+                "score_model": "structure_v4",
+                # tags: not part of score, surface for UI/filtering
+                "sector_hot_flag": sector_hot_flag,
+                "reversal_risk_flag": reversal_risk_flag,
+                # Wyckoff structure (set by backtest, None for realtime)
+                "wyckoff_phase": None,
+                "wyckoff_tags": None,
                 "score_formula": (
-                    f"{candidate_score:.2f} = "
+                    f"{score_v4:.2f} = "
+                    f"{price_structure_score:.1f}×0.40 + "
+                    f"{activity_score:.1f}×0.27 + "
+                    f"{volume_price_score:.1f}×0.18 + "
+                    f"min({early_setup_bonus:.1f}×1.5,6) - "
+                    f"{turnover_noise_penalty:.1f} - "
+                    f"{distribution_risk_penalty:.1f}"
+                ),
+                "score_formula_v3": (
+                    f"{score_v3:.2f} = "
                     f"{activity_score:.1f}×0.30 + "
                     f"{price_structure_score:.1f}×0.28 + "
                     f"{volume_price_score:.1f}×0.27 + "
@@ -555,14 +610,23 @@ def attach_candidate_scores(candidates: list[dict[str, Any]]) -> list[dict[str, 
                     f"{distribution_risk_penalty:.1f}"
                 ),
                 "score_breakdown": {
+                    # sub-scores (shared between v3 and v4)
                     "activity_base": round(activity_score, 2),
                     "price_structure": round(price_structure_score, 2),
                     "volume_price": round(volume_price_score, 2),
                     "sector_resonance": round(sector_resonance_score, 2),
+                    # bonuses/penalties
                     "washout_recovery_bonus": round(float(washout_recovery_bonus), 2),
                     "early_setup_bonus": round(float(early_setup_bonus), 2),
+                    "clipped_early_v4": round(clipped_early, 2),
                     "turnover_noise_penalty": round(float(turnover_noise_penalty), 2),
                     "distribution_risk_penalty": round(float(distribution_risk_penalty), 2),
+                    # both scores for comparison
+                    "score_v3": score_v3,
+                    "score_v4": score_v4,
+                    # tags
+                    "sector_hot_flag": sector_hot_flag,
+                    "reversal_risk_flag": reversal_risk_flag,
                 },
                 "history_metrics": {
                     **metrics,

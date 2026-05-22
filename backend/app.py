@@ -59,6 +59,9 @@ rule_engine = RuleEngine()
 graph_client = Neo4jClient()
 turnover_history_store = TurnoverHistoryStore()
 
+from backend.data_access.candidate_snapshot_store import CandidateSnapshotStore
+candidate_snapshot_store = CandidateSnapshotStore()
+
 
 _signals_mem_cache: dict[str, tuple[float, dict[str, dict]]] = {}  # market -> (mtime, data)
 _company_name_cache: dict[str, dict[str, str]] = {}  # market -> {code: name}
@@ -236,6 +239,17 @@ def _normalize_circ_mv_yi(value: object) -> float | None:
 
 
 def _build_candidates_from_history(trading_date: str) -> list[dict]:
+    # Try loading from snapshot store first (has wyckoff tags if from backtest)
+    try:
+        snapshot_rows = candidate_snapshot_store.load_snapshots(
+            start_date=trading_date, end_date=trading_date
+        )
+        if snapshot_rows:
+            return snapshot_rows
+    except Exception as e:
+        log.debug("Failed to load from snapshot store for %s: %s", trading_date, e)
+
+    # Fallback: rebuild from turnover_history_store
     rows = turnover_history_store.list_rows_for_date("CN", trading_date)
     names_map = _get_company_names("CN")  # single bulk load, cached in memory
     candidates: list[dict] = []
@@ -458,7 +472,7 @@ def get_top_signals():
         "total": len(enriched_results),
         "results": enriched_results[:limit],
         "source": "signals_cache",
-        "score_model": "structure_v3",
+        "score_model": "structure_v4",
         "sort_mode": "triggered_then_structure_score",
     }), 200
 
@@ -749,6 +763,17 @@ def api_get_candidates():
 
     candidates = attach_candidate_scores(data.get("candidates", []))
     trading_date = str(data.get("trading_date") or "")
+
+    # Persist snapshot for backtest — non-blocking; failure must not break the API
+    if candidates and trading_date:
+        try:
+            saved = candidate_snapshot_store.save_snapshot(
+                candidates, trading_date, source="realtime"
+            )
+            if saved:
+                log.info("Saved candidate snapshot: %d rows for %s", saved, trading_date)
+        except Exception as _snap_exc:
+            log.warning("Candidate snapshot save failed (%s): %s", trading_date, _snap_exc)
     if not candidates:
         previous_date = turnover_history_store.previous_date("CN", trading_date) or turnover_history_store.latest_date("CN")
         if previous_date and previous_date != trading_date:
