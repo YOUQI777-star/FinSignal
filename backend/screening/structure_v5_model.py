@@ -133,7 +133,65 @@ def calculate_structure_v5_score(
 
     score = 0.0
     tags = []
-    components = {}
+    components = {"base_quality": 0.0, "inflection": 0.0, "valuation": 0.0, "extension": 0.0, "alignment": 0.0}
+
+    # ===== HARD GATES (Conservative_PE50 hard conditions, fail = score 0) =====
+    # v5 is designed for "low baseline → rising turnover" early accumulation.
+    # If any hard condition is violated, this stock is not a v5 candidate at all.
+    hard_fail_reason = None
+
+    today_turnover = metrics.get("latest_turnover")
+    avg_turnover_20 = metrics.get("avg_turnover_20")
+    pct_change = metrics.get("latest_pct_change")
+
+    # Gate 1: today's turnover must be ≤ 8% (cap, avoid blowoff days)
+    if today_turnover is not None and today_turnover > STRUCTURE_V5_PARAMS["today_turnover_max"]:
+        hard_fail_reason = f"today_turnover={today_turnover:.1f}% > {STRUCTURE_V5_PARAMS['today_turnover_max']}%"
+
+    # Gate 2: 20-day average turnover must be < 3% (low baseline requirement)
+    elif avg_turnover_20 is not None and avg_turnover_20 >= STRUCTURE_V5_PARAMS["avg_turnover_20d_max"]:
+        hard_fail_reason = f"avg_turnover_20={avg_turnover_20:.1f}% >= {STRUCTURE_V5_PARAMS['avg_turnover_20d_max']}%"
+
+    # Gate 3: PE constraint
+    elif pe is None or pe <= 0:
+        hard_fail_reason = "pe missing or non-positive (cannot evaluate value)"
+    elif pe >= STRUCTURE_V5_PARAMS["pe_max"]:
+        hard_fail_reason = f"pe={pe:.1f} >= {STRUCTURE_V5_PARAMS['pe_max']}"
+
+    # Gate 4: PB constraint
+    elif pb is None or pb <= 0:
+        hard_fail_reason = "pb missing or non-positive"
+    elif pb >= STRUCTURE_V5_PARAMS["pb_max"]:
+        hard_fail_reason = f"pb={pb:.1f} >= {STRUCTURE_V5_PARAMS['pb_max']}"
+
+    # Gate 5: market cap constraint
+    elif circ_mv is None:
+        hard_fail_reason = "circ_mv missing"
+    elif (circ_mv / 10000.0) >= STRUCTURE_V5_PARAMS["circ_mv_max_yi"]:
+        hard_fail_reason = f"circ_mv={circ_mv/10000.0:.1f}亿 >= {STRUCTURE_V5_PARAMS['circ_mv_max_yi']}亿"
+
+    # Gate 6: position in 60d range — must be in lower half (≤ 70%)
+    elif position_60d is not None and position_60d > STRUCTURE_V5_PARAMS["position_60d_max"]:
+        hard_fail_reason = f"position_60d={position_60d:.2f} > {STRUCTURE_V5_PARAMS['position_60d_max']}"
+
+    # Gate 7: turnover inflection ratio — today must be ≥ 1.5× 20d avg
+    elif (
+        today_turnover is not None and avg_turnover_20 is not None
+        and avg_turnover_20 > 0
+        and today_turnover < avg_turnover_20 * STRUCTURE_V5_PARAMS["turnover_ratio_threshold"]
+    ):
+        hard_fail_reason = (
+            f"turnover_ratio={today_turnover/avg_turnover_20:.2f}× < "
+            f"{STRUCTURE_V5_PARAMS['turnover_ratio_threshold']}× (no inflection)"
+        )
+
+    # Gate 8: extreme single-day move filter — v5 wants accumulation, not blowoffs/crashes
+    elif pct_change is not None and abs(pct_change) >= 7.0:
+        hard_fail_reason = f"pct_change={pct_change:+.1f}% (|move| ≥ 7%, not accumulation)"
+
+    if hard_fail_reason:
+        tags.append("v5_fail")
+        return 0.0, "D", tags, f"REJECTED: {hard_fail_reason}", components
 
     # ===== COMPONENT 1: Base Quality (0-25) =====
     base_quality = 0.0
