@@ -1,0 +1,29 @@
+# Large data files — excluding prevents upload timeouts on `railway up`
+# data/signals/ is intentionally kept (needed for /api/signals on Railway)
+data/cn/
+data/tw/
+data/chain_kg/
+data/turnover_history.db
+data/users.db
+data/screening/
+data/sync_reports/
+userdata/
+.venv/
+__pycache__/
+*.pyc
+.wrangler/
+frontend/
+# Backtest research outputs — not needed in production
+backend/backtest_outputs/
+backend/data/
+# Local dev/research scripts — keep production lean
+backend/backtest_*.py
+backend/diagnostic_*.py
+backend/sensitivity_analysis*.py
+backend/pre_production_validation.py
+backend/validate_6_candidates.py
+backend/verify_optimal_params.py
+backend/test_structure_v5_integration.py
+.claude/
+*.db-wal
+*.db-shm

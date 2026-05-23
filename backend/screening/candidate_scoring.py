@@ -584,7 +584,7 @@ def attach_candidate_scores(
         circ_mv = _safe_float(candidate.get("circ_mv"))
 
         score_v5, v5_tier, v5_tags, v5_reason = calculate_structure_v5_score(
-            metrics=all_metrics,
+            metrics=metrics,
             pe=pe,
             pb=pb,
             circ_mv=circ_mv,
