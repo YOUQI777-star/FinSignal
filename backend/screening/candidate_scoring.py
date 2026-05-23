@@ -583,7 +583,7 @@ def attach_candidate_scores(
         pb = _safe_float(candidate.get("pb"))
         circ_mv = _safe_float(candidate.get("circ_mv"))
 
-        score_v5, v5_tier, v5_tags, v5_reason = calculate_structure_v5_score(
+        score_v5, v5_tier, v5_tags, v5_reason, v5_components = calculate_structure_v5_score(
             metrics=metrics,
             pe=pe,
             pb=pb,
@@ -631,7 +631,19 @@ def attach_candidate_scores(
                 # Wyckoff structure (set by backtest, None for realtime)
                 "wyckoff_phase": None,
                 "wyckoff_tags": None,
+                # Default score_formula shows v5 (since score == score_v5)
                 "score_formula": (
+                    f"{score_v5:.2f} = "
+                    f"base_quality({v5_components.get('base_quality', 0):.1f}) + "
+                    f"inflection({v5_components.get('inflection', 0):.1f}) + "
+                    f"valuation({v5_components.get('valuation', 0):.1f}) + "
+                    f"extension({v5_components.get('extension', 0):.1f}) + "
+                    f"alignment({v5_components.get('alignment', 0):.1f}) "
+                    f"× regime_weight({metrics.get('regime_weight') or 0.5:.2f}) "
+                    f"= structure_v5_score({structure_v5_score:.2f})"
+                ),
+                # Legacy v4 formula preserved for ?mode=structure_v4
+                "score_formula_v4": (
                     f"{score_v4:.2f} = "
                     f"{price_structure_score:.1f}×0.40 + "
                     f"{activity_score:.1f}×0.27 + "
@@ -652,23 +664,29 @@ def attach_candidate_scores(
                     f"{distribution_risk_penalty:.1f}"
                 ),
                 "score_breakdown": {
-                    # sub-scores (shared between v3 and v4)
+                    # structure_v5 sub-components (NEW DEFAULT — frontend reads these for v5 display)
+                    "base_quality": round(float(v5_components.get("base_quality", 0)), 2),
+                    "inflection": round(float(v5_components.get("inflection", 0)), 2),
+                    "valuation": round(float(v5_components.get("valuation", 0)), 2),
+                    "extension": round(float(v5_components.get("extension", 0)), 2),
+                    "alignment": round(float(v5_components.get("alignment", 0)), 2),
+                    # v3/v4 sub-scores preserved for ?mode=structure_v4 backward compat
                     "activity_base": round(activity_score, 2),
                     "price_structure": round(price_structure_score, 2),
                     "volume_price": round(volume_price_score, 2),
                     "sector_resonance": round(sector_resonance_score, 2),
-                    # bonuses/penalties
+                    # bonuses/penalties (v3/v4)
                     "washout_recovery_bonus": round(float(washout_recovery_bonus), 2),
                     "early_setup_bonus": round(float(early_setup_bonus), 2),
                     "clipped_early_v4": round(clipped_early, 2),
                     "turnover_noise_penalty": round(float(turnover_noise_penalty), 2),
                     "distribution_risk_penalty": round(float(distribution_risk_penalty), 2),
-                    # both scores for comparison
+                    # all three scores for comparison
                     "score_v3": score_v3,
                     "score_v4": score_v4,
-                    "score_v5": score_v5,               # NEW
-                    "structure_v5_score": structure_v5_score,  # NEW (after regime gating)
-                    "structure_v5_tier": v5_tier,       # NEW
+                    "score_v5": score_v5,
+                    "structure_v5_score": structure_v5_score,
+                    "structure_v5_tier": v5_tier,
                     # tags
                     "sector_hot_flag": sector_hot_flag,
                     "reversal_risk_flag": reversal_risk_flag,

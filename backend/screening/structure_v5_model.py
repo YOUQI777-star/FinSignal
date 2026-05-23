@@ -103,7 +103,7 @@ def calculate_structure_v5_score(
     position_60d: float,
     market_regime: str,
     regime_weight: float
-) -> Tuple[float, str, List[str], str]:
+) -> Tuple[float, str, List[str], str, Dict[str, float]]:
     """
     Calculate structure_v5 score using 5-component system.
 
@@ -181,19 +181,22 @@ def calculate_structure_v5_score(
     # ===== COMPONENT 2: Inflection Detection (0-25) =====
     inflection = 0.0
 
-    # Turnover inflection detection
-    if "turnover_trend" in metrics:
-        tr_trend = metrics["turnover_trend"]
-        if isinstance(tr_trend, (int, float)) and tr_trend > 0:
-            # Positive trend means rising turnover
-            inflection += min(tr_trend * 5, 15.0)  # Max 15 points
+    # Turnover inflection: today's turnover vs 10d median (turnover_spike_ratio)
+    # This is the v5 core signal: low baseline → rising turnover
+    spike_ratio = metrics.get("turnover_spike_ratio") or 0.0
+    if isinstance(spike_ratio, (int, float)) and spike_ratio > 1.0:
+        # 1.0×=平价, 1.5×=拐点起步, 3×=明显放量
+        # 给分: spike=1.0→0, 1.5→7.5, 2.0→15 (cap)
+        inflection += min((spike_ratio - 1.0) * 15.0, 15.0)
+        if spike_ratio >= 1.5:
             tags.append("turnover_rising")
 
-    # Momentum inflection
-    if "active_days_20" in metrics:
-        active_days = metrics["active_days_20"]
-        if isinstance(active_days, (int, float)) and active_days > 10:
-            inflection += min((active_days - 10) * 1.5, 10.0)
+    # Activity trend: 后5日均值 vs 前5日均值 (range typically -1 to +3)
+    activity_trend = metrics.get("activity_trend") or 0.0
+    if isinstance(activity_trend, (int, float)) and activity_trend > 0:
+        # Positive trend means activity accelerating
+        inflection += min(activity_trend * 5.0, 10.0)  # Max 10 points
+        if activity_trend > 0.3:
             tags.append("momentum_building")
 
     components["inflection"] = inflection
@@ -281,7 +284,7 @@ def calculate_structure_v5_score(
     else:
         reason += "(generic early accumulation signal)"
 
-    return score, tier, tags, reason
+    return score, tier, tags, reason, components
 
 
 def check_structure_v5_conditions(
