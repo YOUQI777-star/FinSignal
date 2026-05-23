@@ -7,6 +7,11 @@ from typing import Any
 
 from backend.data_access.master_store import MasterDataStore
 from backend.data_access.turnover_history_store import TurnoverHistoryStore
+from backend.screening.structure_v5_model import (
+    classify_market_regime,
+    calculate_structure_v5_score,
+    check_structure_v5_conditions,
+)
 
 history_store = TurnoverHistoryStore()
 master_store = MasterDataStore()
@@ -411,6 +416,9 @@ def build_candidate_metrics(
         + 0.2 * max(breakout_strength, 0)
     )
 
+    # Detect current market regime (for structure_v5 gating)
+    market_regime, regime_status, regime_weight = classify_market_regime(closes)
+
     return {
         "history_days": len(history),
         "industry": company.get("industry"),
@@ -446,6 +454,10 @@ def build_candidate_metrics(
         "close_strength": round(close_strength, 4),
         "drawdown_from_30d_high": round(drawdown_from_30d_high, 4),
         "recovery_strength_after_drawdown": round(recovery_strength_after_drawdown, 4),
+        # Market regime (for structure_v5 gating)
+        "market_regime": market_regime,
+        "regime_status": regime_status,
+        "regime_weight": round(regime_weight, 2),
     }
 
 
@@ -565,7 +577,28 @@ def attach_candidate_scores(
             - distribution_risk_penalty,
             2,
         )
-        candidate_score = score_v4  # default ranking uses v4
+
+        # structure_v5: Early accumulation model with 5-component scoring
+        pe = _safe_float(candidate.get("pe"))
+        pb = _safe_float(candidate.get("pb"))
+        circ_mv = _safe_float(candidate.get("circ_mv"))
+
+        score_v5, v5_tier, v5_tags, v5_reason = calculate_structure_v5_score(
+            metrics=all_metrics,
+            pe=pe,
+            pb=pb,
+            circ_mv=circ_mv,
+            position_60d=metrics.get("range_position_60") or 0.5,
+            market_regime=metrics.get("market_regime") or "unknown",
+            regime_weight=metrics.get("regime_weight") or 0.5,
+        )
+
+        # Apply market regime gate for structure_v5
+        market_regime = metrics.get("market_regime") or "unknown"
+        regime_weight_v5 = 0.0 if market_regime == "downtrend" else (metrics.get("regime_weight") or 0.5)
+        structure_v5_score = score_v5 * regime_weight_v5
+
+        candidate_score = score_v5  # DEFAULT: use structure_v5
         sector_hot_flag = sector_resonance_score >= 50.0   # tag only, not in v4 score
         reversal_risk_flag = washout_recovery_bonus > 0    # tag only, not in v4 score
 
@@ -576,13 +609,22 @@ def attach_candidate_scores(
                 "turnover": candidate.get("turnover") if candidate.get("turnover") is not None else metrics.get("latest_turnover"),
                 "pct_change": candidate.get("pct_change") if candidate.get("pct_change") is not None else metrics.get("latest_pct_change"),
                 "circ_mv": candidate.get("circ_mv") if candidate.get("circ_mv") is not None else metrics.get("latest_circ_mv"),
-                # score == score_v4 for backward compat (frontend reads `candidate_score`)
+                # score == score_v5 (new default)
                 "score": candidate_score,                # alias for API/frontend
                 "candidate_score": candidate_score,      # internal use
                 "score_v3": score_v3,
                 "score_v4": score_v4,
-                "score_version": "structure_v4",
-                "score_model": "structure_v4",
+                "score_v5": score_v5,                   # NEW
+                "structure_v5_score": structure_v5_score,  # NEW (after regime gating)
+                "structure_v5_tier": v5_tier,           # NEW
+                "structure_v5_tags": v5_tags,           # NEW
+                "structure_v5_reason": v5_reason,       # NEW
+                "score_version": "structure_v5",        # CHANGED: now defaults to v5
+                "score_model": "structure_v5",          # CHANGED: now defaults to v5
+                # Market regime fields (NEW)
+                "market_regime": metrics.get("market_regime"),
+                "regime_status": metrics.get("regime_status"),
+                "regime_weight": metrics.get("regime_weight"),
                 # tags: not part of score, surface for UI/filtering
                 "sector_hot_flag": sector_hot_flag,
                 "reversal_risk_flag": reversal_risk_flag,
@@ -624,6 +666,9 @@ def attach_candidate_scores(
                     # both scores for comparison
                     "score_v3": score_v3,
                     "score_v4": score_v4,
+                    "score_v5": score_v5,               # NEW
+                    "structure_v5_score": structure_v5_score,  # NEW (after regime gating)
+                    "structure_v5_tier": v5_tier,       # NEW
                     # tags
                     "sector_hot_flag": sector_hot_flag,
                     "reversal_risk_flag": reversal_risk_flag,

@@ -84,6 +84,15 @@ class CandidateSnapshotStore:
                 ("reversal_risk_flag", "INTEGER"),
                 ("wyckoff_phase",      "TEXT"),
                 ("wyckoff_tags",       "TEXT"),
+                # structure_v5 fields (NEW)
+                ("score_v5",           "REAL"),
+                ("structure_v5_score", "REAL"),
+                ("structure_v5_tier",  "TEXT"),
+                ("structure_v5_tags",  "TEXT"),
+                ("structure_v5_reason","TEXT"),
+                ("market_regime",      "TEXT"),
+                ("regime_status",      "TEXT"),
+                ("regime_weight",      "REAL"),
             ]
             for col, col_def in migrations:
                 if col not in existing:
@@ -147,7 +156,7 @@ class CandidateSnapshotStore:
                 rank,
                 source,
                 created_at,
-                # v4 fields
+                # v3/v4 fields
                 c.get("score_v3"),
                 c.get("score_v4"),
                 c.get("score_version"),
@@ -156,6 +165,15 @@ class CandidateSnapshotStore:
                 # Wyckoff structure
                 c.get("wyckoff_phase"),
                 c.get("wyckoff_tags"),
+                # structure_v5 fields (NEW)
+                c.get("score_v5"),
+                c.get("structure_v5_score"),
+                c.get("structure_v5_tier"),
+                ",".join(c.get("structure_v5_tags", [])) if c.get("structure_v5_tags") else None,
+                c.get("structure_v5_reason"),
+                c.get("market_regime"),
+                c.get("regime_status"),
+                c.get("regime_weight"),
             ))
 
         if not payload:
@@ -174,9 +192,12 @@ class CandidateSnapshotStore:
                         close, turnover, pct_chg, circ_mv, rank, source, created_at,
                         score_v3, score_v4, score_version,
                         sector_hot_flag, reversal_risk_flag,
-                        wyckoff_phase, wyckoff_tags
+                        wyckoff_phase, wyckoff_tags,
+                        score_v5, structure_v5_score, structure_v5_tier,
+                        structure_v5_tags, structure_v5_reason,
+                        market_regime, regime_status, regime_weight
                     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-                              ?, ?, ?, ?, ?, ?, ?)
+                              ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     payload,
                 )

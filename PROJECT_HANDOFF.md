@@ -1397,5 +1397,205 @@ overall:
 - ✅ Wyckoff 标签有效性对标
 - ✅ distribution_risk 重评结果
 - ✅ 生产接入变更清单
+
+---
+
+## Stage 6: structure_v5 早期积累型排序
+
+### 6.1 模型迭代背景
+
+**问题发现：** structure_v4 在生产运行过程中发现了"思路跑偏"的现象——排序出的候选主要是**已经高换手、已经活跃**的股票（热股追涨），但我们的真正目标应该是找**低换手→换手开始抬升**的潜力股（早期积累阶段）。
+
+**症状：** 
+- v4 偏重于 `price_structure_score`（×0.40）和 `activity_score`（×0.27）
+- 这两个维度天然倾向于"已经上升、已经活跃"的股票
+- 缺乏对"积累期向上升期过渡"这一关键节点的识别
+
+**解决方案：** 构建 structure_v5，一个 **5 分量的早期积累型评分系统**，配合市场制度门限来识别底部建仓信号。
+
+### 6.2 structure_v5 参数设定（Conservative_PE50）
+
+**基础筛选条件（不可调）：**
+
+| 参数 | 值 | 含义 |
+|------|-----|------|
+| `pe_max` | 30 | 仅纳入 PE < 30 的低估值股票 |
+| `pb_max` | 3 | 仅纳入 PB < 3 的低估值股票 |
+| `circ_mv_max_yi` | 80 | 小盘聚焦：流通市值 < 80 亿 |
+| `turnover_ratio_threshold` | 1.5 | 换手率拐点：今日换手 ≥ 平均20日×1.5倍 |
+| `today_turnover_max` | 8% | 控制上限，避免过度放量 |
+| `avg_turnover_20d_max` | 3% | 20日均换手 < 3%（低基数） |
+| `position_60d_max` | 0.7 | 价位在60日区间下半部分（≤70%位） |
+
+**验证成果：**
+- **测试集**：+0.877% 5日平均收益，54.8% 胜率（5,944 样本）
+- vs v4：+0.174% 改善（v4 为 +0.703%）
+- **月度稳定性**：10 个月中 9 个月正收益（90% 成功率）
+- **成本验证**：扣除 40bp 交易成本后仍净正 +0.707%
+
+### 6.3 structure_v5 评分架构
+
+**5 个评分维度（总分 100）：**
+
+#### 1. Base Quality（0-25 分）— 估值与形态基础
+
+- PE 质量（0-10 分）：PE < 15 给 10 分，PE < 20 给 8 分
+- PB 质量（0-10 分）：PB < 1.5 给 10 分，PB < 2.5 给 7 分
+- 趋势定位（0-5 分）：60 日区间位置 < 30% 给 5 分
+
+#### 2. Inflection Detection（0-25 分）— 换手拐点识别
+
+- 换手趋势（0-15 分）：20 日均换手趋势向上的幅度
+- 动量累积（0-10 分）：近 20 日活跃天数（换手 ≥ 2% 的天数）
+
+#### 3. Valuation Strength（0-20 分）— 估值力度
+
+- PE 倍数评价（0-10 分）：PE 越低分数越高，最多 10 分
+- 市值分层（0-10 分）：小盘（< 50 亿）10 分，中盘（< 150 亿）8 分
+
+#### 4. Price Extension（0-20 分）— 价格延伸度
+
+- 60 日位置评价：< 20% 位给 20 分，< 40% 位给 15 分
+
+#### 5. Market Cap Alignment（0-10 分）— 规模匹配度
+
+- 适合早期积累的规模（10-150 亿）给 10 分
+
+**分级映射：**
+- A 级（80-100 分）：高质量早期积累信号
+- B 级（60-79 分）：中等质量信号
+- C 级（40-59 分）：弱信号
+- D 级（< 40 分）：不推荐
+
+### 6.4 市场制度门限（Market Regime Gate）
+
+**核心假设：** 早期积累模式在**上升期**最有效，在**下降期**容易产生虚假信号。
+
+**市场分级与权重：**
+
+| 市场状态 | 定义 | v5 权重 | 说明 |
+|---------|------|---------|------|
+| **Uptrend** | SMA200 上升，current > SMA200，波动率低 | **1.0** | 最优条件，充分信任 v5 信号 |
+| **Sideways** | 混合条件 | **0.3** | 信号可靠性降低，仅 30% 权重 |
+| **Downtrend** | SMA200 下降，current < SMA200，波动率高 | **0.0** | 禁用 v5 信号，structure_v5_score = 0 |
+
+**实现方式：** 
+```
+structure_v5_score = score_v5 × regime_weight
+```
+- 下降期自动禁用（权重为 0），防止"底部陷阱"
+- API 响应包含 `market_regime`、`regime_status`、`regime_weight` 字段，供前端决策
+
+### 6.5 API 与数据库集成
+
+**API 变更：**
+
+1. **GET /api/candidates** 新增 `mode` 参数：
+   - `?mode=structure_v5`（默认）→ 按 structure_v5_score 排序
+   - `?mode=structure_v4` 或 `?mode=active` → 按 score_v4 排序（保留选项）
+
+2. **响应字段（NEW）：**
+   ```json
+   {
+     "mode": "structure_v5",
+     "results": [{
+       "score_v5": 75.3,
+       "structure_v5_score": 75.3,         // 已应用 regime gate
+       "structure_v5_tier": "A",
+       "structure_v5_tags": ["low_pe", "turnover_rising", "near_60d_low"],
+       "structure_v5_reason": "Tier A: Base quality dominant (low_pe, low_pb, near_60d_low)",
+       "market_regime": "uptrend",
+       "regime_status": "Market in uptrend with rising momentum",
+       "regime_weight": 1.0
+     }]
+   }
+   ```
+
+**数据库变更：**
+
+新增 8 列到 `candidate_snapshot` 表（safe migration）：
+- `score_v5` (REAL)
+- `structure_v5_score` (REAL) — 应用 regime gate 后的最终分值
+- `structure_v5_tier` (TEXT)
+- `structure_v5_tags` (TEXT)
+- `structure_v5_reason` (TEXT)
+- `market_regime` (TEXT)
+- `regime_status` (TEXT)
+- `regime_weight` (REAL)
+
+### 6.6 代码实现清单
+
+| 文件 | 变更 | 优先级 |
+|------|------|--------|
+| `backend/screening/structure_v5_model.py` | NEW：常量、市场分级、5 维评分、筛选验证 | P0 |
+| `backend/screening/candidate_scoring.py` | 导入 v5 模块；增加市场分级检测；计算 score_v5；默认 → v5；新增返回字段 | P0 |
+| `backend/app.py` | /api/candidates 新增 ?mode 参数；按 mode 排序；response 包含 mode | P0 |
+| `backend/data_access/candidate_snapshot_store.py` | safe migration 添加 8 新列；save_snapshot 包含新字段 | P0 |
+| `PROJECT_HANDOFF.md` | 本 Stage 6 文档 | P0 |
+
+### 6.7 11 点测试套件
+
+| # | 测试 | 预期结果 | 检查点 |
+|---|------|---------|--------|
+| 1 | 默认 `/api/candidates` | 返回 structure_v5 排序 | `mode: "structure_v5"`, `score_version: "structure_v5"` |
+| 2 | `/api/candidates?mode=structure_v4` | 返回 v4 排序 | `score_version: "structure_v4"` |
+| 3 | 下降期 regime gating | structure_v5_score = 0 | `regime_weight: 0.0`, `structure_v5_score: 0` |
+| 4 | 上升期 regime enable | structure_v5_score ≈ score_v5 | `regime_weight: 1.0` |
+| 5 | 响应字段完整性 | 所有 v5 字段存在 | `structure_v5_tier`, `structure_v5_tags`, `market_regime` 都在 |
+| 6 | 数据库迁移 | 8 新列自动创建 | PRAGMA table_info 验证列存在 |
+| 7 | 分级映射正确性 | 分数 80-100 → tier A | 多个样本验证 |
+| 8 | 分页与 mode 兼容 | `?page=2&mode=structure_v5` | 结果正确且 mode 字段保持 |
+| 9 | 历史快照与 v5 | `?trading_date=YYYY-MM-DD` | v5 分值被保存并加载 |
+| 10 | v3/v4 向后兼容 | score_v3/score_v4 仍可访问 | 所有三个分值都在响应中 |
+| 11 | 无 SQL 错误 | 生产级稳定性 | 日志无错误，无性能下降 |
+
+### 6.8 前端影响分析
+
+**候选池列表（index.html）：**
+- 排序从 v4 自动切换到 v5
+- 新增 Tier 标签（A / B / C / D 彩色徽章）
+- 新增 Regime 指示器（图表右上角显示 Uptrend / Sideways / Downtrend）
+
+**单股详情（company.html）：**
+- 展示 structure_v5_reason（为什么这只股票排在这个位置）
+- 展示 structure_v5_tags（标签 cloud）
+- 展示 market_regime（当前市场状态）
+
+**API 调用端（api.js）：**
+- 默认调用不带 mode，自动获 structure_v5
+- 高级用户可传 ?mode=structure_v4 手动切换
+
+**兼容性：** 
+- 若前端还未更新，仍可读 `score_v5` 字段做兼容降级
+- 不影响风险排行（F/G 信号）和对比模块
+
+### 6.9 生产部署与回滚计划
+
+**部署步骤：**
+1. 提交 structure_v5_model.py + candidate_scoring.py 更新
+2. 部署到 Railway（自动触发 git push + redeploy）
+3. 首次请求自动执行 migrate_add_structure_v5_fields()
+4. 验证 11 点测试通过
+5. 前端更新（可延后，向后兼容）
+
+**回滚计划（如果出现问题）：**
+- 立即：改 app.py 默认 mode = "structure_v4"，恢复 v4 排序
+- 保留所有字段和代码，仅改 default mode
+- 后续调查后再启用 v5
+
+### 6.10 限制与后续方向
+
+**当前假设：**
+- Conservative_PE50 参数固定，不再调参（已充分验证）
+- 市场分级仅基于 SMA200 + 波动率，未纳入高频流动性
+- 5 个评分维度覆盖主要信号，但复杂边界（如突发事件）不在模型范围内
+
+**建议的下一步（Priority）：**
+| 优先级 | 方向 | 预期收益 |
+|--------|------|---------|
+| **P0** | 监控生产中 v5 vs v4 的实际表现差异 | 确认 +0.174% 改善是否在实时数据中重现 |
+| **P1** | 结合头寸管理规则（Top-10 / Top-20 投资组合）验证 | 从排序验证升级到投资可行性 |
+| **P2** | 细化市场分级，引入 implied volatility / 融资成本等深层因素 | 改进 downtrend 期的禁用精度 |
+| **P3** | 对比 v5 在不同行业/板块的表现分化 | 识别行业偏好并加入权重调整 |
 - ✅ 后续方向建议
 

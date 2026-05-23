@@ -638,6 +638,7 @@ def api_get_candidates():
         pct_max       float  today gain < N%         (default 9)
         pct_min       float  today drop > N%         (default -9)
         exclude_st    0|1    exclude ST              (default 1)
+        mode          str     ranking mode            (default structure_v5)
         page         int     page number             (default 1)
         page_size    int     rows per page           (default 100)
         limit        int     legacy alias for page_size
@@ -646,6 +647,10 @@ def api_get_candidates():
     exclude_st    = request.args.get("exclude_st", "1") not in ("0", "false")
     force_refresh = request.args.get("refresh", "0") in ("1", "true")
     requested_trading_date = (request.args.get("trading_date") or "").strip()
+    # NEW: mode parameter for ranking strategy (default to structure_v5)
+    mode = request.args.get("mode", "structure_v5").lower().strip()
+    if mode not in ["structure_v5", "structure_v4", "active"]:
+        mode = "structure_v5"
 
     def _respond_with_candidates(
         base_candidates: list[dict],
@@ -653,6 +658,7 @@ def api_get_candidates():
         generated_at: str | None,
         trading_date: str,
         source: str,
+        mode: str,
         source_note: str | None = None,
         fallback_used: bool = False,
         fallback_from: str | None = None,
@@ -668,6 +674,20 @@ def api_get_candidates():
             pct_min      = _float_param("pct_min"),
             exclude_st   = exclude_st,
         )
+
+        # NEW: Sort by appropriate score based on mode
+        if mode == "structure_v4" or mode == "active":
+            filtered.sort(key=lambda x: (
+                -(x.get("score_v4") or 0),
+                -(x.get("turnover") or 0),
+                x.get("code") or "",
+            ))
+        else:  # structure_v5 (default)
+            filtered.sort(key=lambda x: (
+                -(x.get("structure_v5_score") or x.get("score_v5") or 0),
+                -(x.get("turnover") or 0),
+                x.get("code") or "",
+            ))
 
         page = _int_param("page", 1, minimum=1)
         page_size_default = _int_param("limit", 100, minimum=1, maximum=500)
@@ -690,6 +710,7 @@ def api_get_candidates():
         return jsonify({
             "generated_at": generated_at,
             "trading_date": trading_date,
+            "mode": mode,                          # NEW: include mode in response
             "source": source,
             "source_note": source_note,
             "fallback_used": fallback_used,
@@ -718,6 +739,7 @@ def api_get_candidates():
             history_candidates,
             generated_at=None,
             trading_date=requested_trading_date,
+            mode=mode,                             # NEW
             source="history",
             source_note="manual_previous_day",
         )
@@ -731,6 +753,7 @@ def api_get_candidates():
                     snapshot_candidates,
                     generated_at=turnover_history_store.get_meta("cn_latest_snapshot_generated_at"),
                     trading_date=snapshot_date,
+                    mode=mode,                     # NEW
                     source="snapshot",
                     source_note="latest_cached_snapshot",
                 )
@@ -742,6 +765,7 @@ def api_get_candidates():
                         previous_snapshot_candidates,
                         generated_at=turnover_history_store.get_meta("cn_latest_snapshot_generated_at"),
                         trading_date=previous_snapshot_date,
+                        mode=mode,                 # NEW
                         source="snapshot",
                         source_note="latest_cached_snapshot_previous_day",
                         fallback_used=True,
@@ -783,6 +807,7 @@ def api_get_candidates():
                     history_candidates,
                     generated_at=data.get("generated_at"),
                     trading_date=previous_date,
+                    mode=mode,                     # NEW
                     source="history_fallback",
                     source_note="realtime_empty_auto_previous_day",
                     fallback_used=True,
@@ -793,6 +818,7 @@ def api_get_candidates():
         candidates,
         generated_at=data.get("generated_at"),
         trading_date=trading_date,
+        mode=mode,                                 # NEW
         source=data.get("source", "realtime"),
     )
 
