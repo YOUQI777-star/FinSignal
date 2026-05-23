@@ -11,6 +11,7 @@ Primary key: (trade_date, code)
 """
 from __future__ import annotations
 
+import json
 import logging
 import sqlite3
 from datetime import datetime, timezone
@@ -20,6 +21,28 @@ from typing import Any
 from backend.config import DATA_DIR
 
 log = logging.getLogger(__name__)
+
+
+_V5_BREAKDOWN_KEYS = ("base_quality", "inflection", "valuation", "extension", "alignment")
+
+
+def _serialize_v5_breakdown(breakdown: dict[str, Any]) -> str | None:
+    """Pull the 5 v5 components from a score_breakdown dict and JSON-serialize."""
+    if not breakdown:
+        return None
+    subset = {k: breakdown.get(k) for k in _V5_BREAKDOWN_KEYS if k in breakdown}
+    if not subset:
+        return None
+    return json.dumps(subset)
+
+
+def _deserialize_v5_breakdown(raw: str | None) -> dict[str, float]:
+    if not raw:
+        return {}
+    try:
+        return json.loads(raw)
+    except (ValueError, TypeError):
+        return {}
 
 
 class CandidateSnapshotStore:
@@ -90,6 +113,7 @@ class CandidateSnapshotStore:
                 ("structure_v5_tier",  "TEXT"),
                 ("structure_v5_tags",  "TEXT"),
                 ("structure_v5_reason","TEXT"),
+                ("structure_v5_breakdown", "TEXT"),  # JSON-serialized 5 components
                 ("market_regime",      "TEXT"),
                 ("regime_status",      "TEXT"),
                 ("regime_weight",      "REAL"),
@@ -171,6 +195,8 @@ class CandidateSnapshotStore:
                 c.get("structure_v5_tier"),
                 ",".join(c.get("structure_v5_tags", [])) if c.get("structure_v5_tags") else None,
                 c.get("structure_v5_reason"),
+                # serialize the 5 v5 components from score_breakdown as JSON
+                _serialize_v5_breakdown(c.get("score_breakdown") or {}),
                 c.get("market_regime"),
                 c.get("regime_status"),
                 c.get("regime_weight"),
@@ -195,9 +221,10 @@ class CandidateSnapshotStore:
                         wyckoff_phase, wyckoff_tags,
                         score_v5, structure_v5_score, structure_v5_tier,
                         structure_v5_tags, structure_v5_reason,
+                        structure_v5_breakdown,
                         market_regime, regime_status, regime_weight
                     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-                              ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                              ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     payload,
                 )
@@ -235,13 +262,73 @@ class CandidateSnapshotStore:
                     close, turnover, pct_chg, circ_mv, rank, source,
                     score_v3, score_v4, score_version,
                     sector_hot_flag, reversal_risk_flag,
-                    wyckoff_phase, wyckoff_tags
+                    wyckoff_phase, wyckoff_tags,
+                    score_v5, structure_v5_score, structure_v5_tier,
+                    structure_v5_tags, structure_v5_reason,
+                    structure_v5_breakdown,
+                    market_regime, regime_status, regime_weight
                 FROM candidate_snapshot{where}
                 ORDER BY trade_date ASC, rank ASC
                 """,
                 params,
             ).fetchall()
-        return [dict(r) for r in rows]
+
+        # Post-process: rehydrate v5 breakdown JSON, split tags, reconstruct
+        # score_breakdown dict so frontend sees the same shape as realtime path.
+        result: list[dict[str, Any]] = []
+        for r in rows:
+            d = dict(r)
+            # map DB "pct_chg" → API "pct_change"
+            if "pct_chg" in d and d.get("pct_change") is None:
+                d["pct_change"] = d.pop("pct_chg")
+            # parse comma-separated tags back to list
+            tags_raw = d.get("structure_v5_tags")
+            if isinstance(tags_raw, str):
+                d["structure_v5_tags"] = [t for t in tags_raw.split(",") if t]
+            # parse JSON v5 breakdown
+            v5_components = _deserialize_v5_breakdown(d.pop("structure_v5_breakdown", None))
+            # reconstruct score_breakdown dict (frontend reads this)
+            breakdown = {
+                # v5 5 components (may be empty if old snapshot pre-breakdown-column)
+                **v5_components,
+                # v3/v4 sub-scores
+                "activity_base": d.get("activity_score"),
+                "price_structure": d.get("price_structure_score"),
+                "volume_price": d.get("volume_price_score"),
+                "sector_resonance": d.get("sector_resonance_score"),
+                "washout_recovery_bonus": d.get("washout_recovery_bonus"),
+                "early_setup_bonus": d.get("early_setup_bonus"),
+                "turnover_noise_penalty": d.get("turnover_noise_penalty"),
+                "distribution_risk_penalty": d.get("distribution_risk_penalty"),
+                # scores for comparison
+                "score_v3": d.get("score_v3"),
+                "score_v4": d.get("score_v4"),
+                "score_v5": d.get("score_v5"),
+                "structure_v5_score": d.get("structure_v5_score"),
+                "structure_v5_tier": d.get("structure_v5_tier"),
+                # tags
+                "sector_hot_flag": bool(d.get("sector_hot_flag")) if d.get("sector_hot_flag") is not None else None,
+                "reversal_risk_flag": bool(d.get("reversal_risk_flag")) if d.get("reversal_risk_flag") is not None else None,
+            }
+            d["score_breakdown"] = breakdown
+            # candidate_score alias matches API contract
+            if d.get("candidate_score") is None:
+                d["candidate_score"] = d.get("score")
+            # rebuild score_formula for v5 if we have components
+            if v5_components and d.get("score_v5") is not None:
+                rw = d.get("regime_weight") or 0.5
+                v5s = d.get("structure_v5_score") or 0.0
+                d["score_formula"] = (
+                    f"{d['score_v5']:.2f} = "
+                    f"base_quality({v5_components.get('base_quality', 0):.1f}) + "
+                    f"inflection({v5_components.get('inflection', 0):.1f}) + "
+                    f"valuation({v5_components.get('valuation', 0):.1f}) + "
+                    f"extension({v5_components.get('extension', 0):.1f}) + "
+                    f"alignment({v5_components.get('alignment', 0):.1f}) "
+                    f"× regime_weight({rw:.2f}) = structure_v5_score({v5s:.2f})"
+                )
+            result.append(d)
+        return result
 
     def list_snapshot_dates(self) -> list[tuple[str, int]]:
         """Return [(trade_date, candidate_count)] for all saved dates."""
