@@ -62,6 +62,15 @@ turnover_history_store = TurnoverHistoryStore()
 from backend.data_access.candidate_snapshot_store import CandidateSnapshotStore
 candidate_snapshot_store = CandidateSnapshotStore()
 
+# ── Railway data bootstrap (one-time seed on cold start) ──────────────────────
+try:
+    from backend.data.railway_data_sync import seed_volume_from_bootstrap
+    from backend.config import DATA_DIR as _DATA_DIR
+    _seed_result = seed_volume_from_bootstrap(_DATA_DIR / "turnover_history.db")
+    log.info("Bootstrap seed result: %s", _seed_result)
+except Exception as _seed_err:
+    log.warning("Bootstrap seed skipped/failed: %s", _seed_err)
+
 
 _signals_mem_cache: dict[str, tuple[float, dict[str, dict]]] = {}  # market -> (mtime, data)
 _company_name_cache: dict[str, dict[str, str]] = {}  # market -> {code: name}
@@ -396,6 +405,45 @@ def _merge_turnover_rows_with_expected_dates(rows: list[dict], expected_dates: l
 @app.route("/api/health")
 def health() -> tuple[dict, int]:
     return jsonify({"status": "ok"}), 200
+
+
+@app.route("/api/admin/sync_today", methods=["POST"])
+def admin_sync_today():
+    """
+    每日 ETL 触发端点。
+    需要 Bearer token 鉴权（来自 SYNC_TOKEN 环境变量）。
+
+    用法（GitHub Actions / cron 触发）:
+      curl -X POST https://your-railway.app/api/admin/sync_today \\
+           -H "Authorization: Bearer $SYNC_TOKEN"
+    """
+    import os
+    expected = os.getenv("SYNC_TOKEN")
+    if not expected:
+        return jsonify({"ok": False, "error": "SYNC_TOKEN not configured on server"}), 500
+
+    auth = request.headers.get("Authorization", "")
+    if not auth.startswith("Bearer ") or auth.removeprefix("Bearer ").strip() != expected:
+        return jsonify({"ok": False, "error": "unauthorized"}), 401
+
+    try:
+        from backend.data.railway_data_sync import sync_today_from_tushare
+        from backend.config import DATA_DIR
+        result = sync_today_from_tushare(DATA_DIR / "turnover_history.db")
+        # 同步后清掉评分缓存（30 分钟内存缓存 + LRU cache），下次请求会用新数据重算
+        try:
+            from backend.screening import screening_service as _ss
+            from backend.screening.candidate_scoring import clear_candidate_score_caches
+            with _ss._cache_lock:
+                _ss._cached_result = None
+                _ss._cache_fetched_at = 0.0
+            clear_candidate_score_caches()
+        except Exception as ce:
+            log.warning("cache invalidation failed: %s", ce)
+        return jsonify(result), 200 if result.get("ok") else 500
+    except Exception as e:
+        log.exception("sync_today failed")
+        return jsonify({"ok": False, "error": str(e)}), 500
 
 
 @app.route("/api/company/<market>/<code>")

@@ -50,3 +50,5 @@ frontend/vite.config.js
 
 # Logs
 *.log
+data/bootstrap_turnover_history.db
+.env.sync
